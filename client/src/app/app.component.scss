@@ -1,0 +1,47 @@
+.sidebar-toggle {
+    display: flex;
+    justify-content: center;
+    /* căn giữa nút */
+    padding: 0.5rem;
+}
+
+.sidebar-toggle button {
+    background-color: #fff;
+    /* nền trắng */
+    border: 1px solid #ccc;
+    /* viền nhẹ */
+    border-radius: 50%;
+    /* nút tròn */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    /* animation smooth */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-toggle button:hover {
+    background-color: #f0f0f0;
+    /* hover sáng hơn */
+    transform: scale(1.1);
+    /* phóng to nhẹ khi hover */
+}
+
+.sidebar-toggle button nb-icon {
+    font-size: 20px;
+    transition: transform 0.3s ease;
+    /* animation khi xoay */
+}
+
+/* Khi sidebar mở rộng */
+.sidebar-toggle button.expanded nb-icon {
+    transform: rotate(0deg);
+}
+
+/* Khi sidebar thu gọn */
+.sidebar-toggle button:not(.expanded) nb-icon {
+    transform: rotate(180deg);
+}
