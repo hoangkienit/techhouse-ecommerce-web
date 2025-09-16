@@ -1,0 +1,35 @@
+<nb-layout-header fixed [isLoading]="isLoading" class="no-select">
+    <div class="header-container d-flex w-100">
+        <!-- Bên trái -->
+        <div class="left-section">
+            <img src="assets/images/logo/logo.png" alt="Logo" class="logo" />
+            <span class="title">DKD {{ 'headerLayout.title' | translate }}</span>
+        </div>
+
+        <!-- Bên phải -->
+        <div class="right-section">
+            <!-- Language Menu -->
+            <nb-select placeholder="Language" [(selected)]="currentLang" (selectedChange)="switchLang($event)">
+                <nb-option *ngFor="let lang of languages" [value]="lang.data">
+                    {{ lang.title }}
+                </nb-option>
+            </nb-select>
+
+            <!-- Toggle Theme -->
+            <button nbButton ghost size="small" (click)="toggleTheme()" nbTooltip="Toggle Theme">
+                <nb-icon [icon]="currentTheme === 'dark' ? 'sun-outline' : 'moon-outline'"
+                    [style.color]="currentTheme === 'dark' ? '#fff' : '#3366FF'"></nb-icon>
+            </button>
+
+            <!-- Giỏ hàng -->
+            <button nbButton ghost size="small" nbTooltip="Cart" class="cart-btn">
+                <nb-icon icon="shopping-cart-outline"
+                    [style.color]="currentTheme === 'dark' ? '#fff' : 'black'"></nb-icon>
+                <span class="cart-count" [style.color]="currentTheme === 'dark' ? '#fff' : 'red'">3</span>
+            </button>
+
+            <!-- Profile -->
+            <nb-user [name]="user.name" [picture]="user.avatar" size="medium"></nb-user>
+        </div>
+    </div>
+</nb-layout-header>

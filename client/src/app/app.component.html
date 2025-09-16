@@ -1,0 +1,29 @@
+<nb-layout>
+
+  <!-- Header -->
+  <nb-layout-header fixed>
+    <app-header></app-header>
+    <!-- Button toggle có thể để ở đây -->
+  </nb-layout-header>
+
+  <!-- Sidebar -->
+  <nb-sidebar tag="menu-sidebar" state="expanded" responsive>
+    <div class="sidebar-toggle">
+      <button nbButton [class.expanded]="isExpanded" (click)="toggleSidebar()">
+        <nb-icon [icon]="'arrow-left-outline'"></nb-icon>
+      </button>
+    </div>
+    <nb-menu [items]="menuItems"></nb-menu>
+  </nb-sidebar>
+
+  <!-- Nội dung chính -->
+  <nb-layout-column>
+    <router-outlet></router-outlet>
+  </nb-layout-column>
+
+  <!-- Footer -->
+  <nb-layout-footer>
+    <app-footer></app-footer>
+  </nb-layout-footer>
+
+</nb-layout>
