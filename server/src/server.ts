@@ -1,17 +1,38 @@
 import express, { Request, Response } from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
+
+// Import routes
+import AuthRoute from './routes/auth.route';
+
+import connectDb from './config/mongo';
+
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import http from "http";
+import mongoSanitize from 'express-mongo-sanitize';
+import cors from 'cors';
+import errorHandler from './middlewares/error.middleware';
+const cookieParser = require("cookie-parser");
 
 const app = express();
-const port = 3000;
+const server = http.createServer(app);
+app.use(cookieParser());
 
-// Middleware để parse JSON
+const port = process.env.PORT as string;
+
+// connectDb();
 app.use(express.json());
 
-// Route cơ bản
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello from Express + TypeScript!');
+// Routes
+app.get('/', (req, res) => {
+    res.send('Hello from TypeScript backend!');
 });
 
-// Khởi chạy server
+app.use('/api/v1/auth', AuthRoute);
+
+app.use(errorHandler);
+
 app.listen(port, () => {
   console.log(`🚀 Server running at http://localhost:${port}`);
 });
