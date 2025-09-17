@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
-import { TranslationService } from './@core/services/translate.service';
-import { NbSidebarComponent, NbSidebarService } from '@nebular/theme';
+import { AppServices } from './@core/services/AppServices.service';
+import { Component } from '@angular/core';
+import { NbSidebarService } from '@nebular/theme';
 
 @Component({
   selector: 'app-root',
@@ -13,26 +13,84 @@ export class AppComponent {
 
   menuItems = [
     {
-      title: 'Dashboard',
+      title: 'Home',
       icon: 'home-outline',
-      link: '/dashboard'
+      link: '/home'
     },
     {
-      title: 'Users',
-      icon: 'people-outline',
-      link: '/users'
+      title: 'Catalog',
+      icon: 'shopping-bag-outline',
+      children: [
+        {
+          title: 'All Products',
+          link: '/catalog/products',
+        },
+        {
+          title: 'Categories',
+          link: '/catalog/categories',
+        },
+        {
+          title: 'Brands',
+          link: '/catalog/brands',
+        },
+      ],
     },
     {
-      title: 'Settings',
+      title: 'Cart',
+      icon: 'shopping-cart-outline',
+      link: '/cart'
+    },
+    {
+      title: 'Orders',
+      icon: 'list-outline',
+      link: '/orders'
+    },
+    {
+      title: 'Account',
+      icon: 'person-outline',
+      children: [
+        {
+          title: 'Login',
+          link: '/auth/login',
+        },
+        {
+          title: 'Register',
+          link: '/auth/register',
+        },
+        {
+          title: 'Profile',
+          link: '/auth/profile',
+        },
+        {
+          title: 'Logout',
+          link: '/auth/logout',
+        },
+      ],
+    },
+    {
+      title: 'Admin',
       icon: 'settings-2-outline',
-      link: '/settings'
-    }
+      children: [
+        {
+          title: 'Manage Users',
+          link: '/admin/users',
+        },
+        {
+          title: 'Manage Products',
+          link: '/admin/products',
+        },
+        {
+          title: 'Manage Orders',
+          link: '/admin/orders',
+        },
+      ],
+    },
   ];
 
-  constructor(private translation: TranslationService, private sidebarService: NbSidebarService) { }
+  constructor(private appServices: AppServices, private sidebarService: NbSidebarService) { }
 
   switchLang(lang: string) {
-    this.translation.useLanguage(lang);
+    this.appServices.TranslateService.useLanguage(lang);
   }
 
 
