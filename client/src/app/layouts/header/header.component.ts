@@ -8,7 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
-  isLoading: boolean = true;
+  isLoading: boolean = false;
   position: NbPosition = NbPosition.BOTTOM_END;
   currentTheme = 'default';
   user = {
@@ -27,9 +27,6 @@ export class HeaderComponent {
   constructor(private themeService: NbThemeService, private translate: TranslateService) { }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 2000)
   }
 
   toggleTheme() {
