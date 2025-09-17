@@ -19,14 +19,15 @@ const app = express();
 const server = http.createServer(app);
 app.use(cookieParser());
 
-const port = process.env.PORT as string;
+const port = process.env.PORT as string || 8080;
 
 // connectDb();
 app.use(express.json());
+app.use(cors());
 
 // Routes
 app.get('/', (req, res) => {
-    res.send('Hello from TypeScript backend!');
+  res.send('Hello from TypeScript backend!');
 });
 
 app.use('/api/v1/auth', AuthRoute);
