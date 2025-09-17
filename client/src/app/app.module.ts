@@ -8,7 +8,7 @@ import { NbThemeModule, NbLayoutModule, NbIconModule, NbUserModule, NbSidebarMod
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { HeaderComponent } from './layouts/header/header.component';
 import { FooterComponent } from './layouts/footer/footer.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { DashboardComponent } from './pages/admin/dashboard/dashboard.component';
 
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
@@ -16,8 +16,19 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { CommonModule } from '@angular/common';
 import { LoadingDirective } from './@core/directives/loading.directive';
-import { AuthComponent } from './pages/settings/auth/auth.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HomeComponent } from './pages/home/home.component';
+import { ProductsComponent } from './pages/catalog/products/products.component';
+import { CategoriesComponent } from './pages/catalog/categories/categories.component';
+import { BrandsComponent } from './pages/catalog/brands/brands.component';
+import { CartComponent } from './pages/cart/cart.component';
+import { OrdersComponent } from './pages/orders/orders.component';
+import { LoyaltyComponent } from './pages/loyalty/loyalty.component';
+import { DiscountComponent } from './pages/discount/discount.component';
+import { ProfileComponent } from './pages/account/profile/profile.component';
+import { UsersComponent } from './pages/admin/users/users.component';
+import { DiscountsComponent } from './pages/admin/discounts/discounts.component';
+import { AuthComponent } from './pages/account/auth/auth.component';
 
 
 // Hàm loader cho ngx-translate
@@ -32,7 +43,18 @@ export function HttpLoaderFactory(http: HttpClient) {
     FooterComponent,
     DashboardComponent,
     LoadingDirective,
-    AuthComponent
+    AuthComponent,
+    HomeComponent,
+    ProductsComponent,
+    CategoriesComponent,
+    BrandsComponent,
+    CartComponent,
+    OrdersComponent,
+    LoyaltyComponent,
+    DiscountComponent,
+    ProfileComponent,
+    UsersComponent,
+    DiscountsComponent
   ],
   imports: [
     BrowserModule,
