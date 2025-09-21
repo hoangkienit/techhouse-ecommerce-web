@@ -101,5 +101,21 @@
             --user-initials-text-color: #fff;
             --user-initials-bg-color: var(--nb-theme-primary-color);
         }
+
+        .cart-popup {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 400px;
+            border-radius: 8px;
+            padding: 10px;
+            z-index: 1000;
+
+            /* fallback: dùng cái nào có thì ăn cái đó */
+            background: var(--nb-card-background-color, var(--card-background-color, #fff));
+            color: var(--nb-text-basic-color, var(--text-basic-color, #222));
+            border: 1px solid var(--nb-border-basic-color-3, var(--border-basic-color-3, #ddd));
+            box-shadow: var(--nb-shadow, 0 2px 12px rgba(0, 0, 0, 0.15));
+        }
     }
 }

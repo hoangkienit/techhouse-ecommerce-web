@@ -6,14 +6,25 @@
             <span class="title">DKD {{ 'headerLayout.title' | translate }}</span>
         </div>
 
+        <!-- Ở giữa -->
+        <div class="center-container w-100 d-flex align-items-center justify-content-center">
+            <div class="w-50">
+                <nb-form-field>
+                    <nb-icon nbPrefix icon="search-outline"></nb-icon>
+                    <input nbInput type="text" placeholder="Tìm kiếm sản phẩm..." [fullWidth]="true" [size]="'medium'"
+                        shape="round" />
+                </nb-form-field>
+            </div>
+        </div>
+
         <!-- Bên phải -->
-        <div class="right-section">
+        <div class=" right-section">
             <!-- Language Menu -->
-            <nb-select placeholder="Language" [(selected)]="currentLang" (selectedChange)="switchLang($event)">
+            <!-- <nb-select placeholder="Language" [(selected)]="currentLang" (selectedChange)="switchLang($event)">
                 <nb-option *ngFor="let lang of languages" [value]="lang.data">
                     {{ lang.title }}
                 </nb-option>
-            </nb-select>
+            </nb-select> -->
 
             <!-- Toggle Theme -->
             <button nbButton ghost size="small" (click)="toggleTheme()" nbTooltip="Toggle Theme">
@@ -22,14 +33,33 @@
             </button>
 
             <!-- Giỏ hàng -->
-            <button nbButton ghost size="small" nbTooltip="Cart" class="cart-btn">
-                <nb-icon icon="shopping-cart-outline"
-                    [style.color]="currentTheme === 'dark' ? '#fff' : 'black'"></nb-icon>
-                <span class="cart-count" [style.color]="currentTheme === 'dark' ? '#fff' : 'red'">3</span>
-            </button>
+            <div class="cart-wrapper cart-btn" (click)="toggleCart()">
+                <button nbButton ghost size="small" class="cart-btn">
+                    <nb-icon icon="shopping-cart-outline"></nb-icon>
+                    <span class="cart-count" [style.color]="currentTheme === 'dark' ? '#fff' : 'red'">3</span>
+                </button>
+
+                <div *ngIf="cartOpen" class="cart-popup shadow">
+                    <div *ngFor="let item of cartItems" class="cart-item">
+                        <img [src]="" class="cart-item-img" />
+                        <div class="cart-item-info">
+                            <div class="fw-bold">{{ item.name }}</div>
+                            <small class="cart-price">{{ item.price | currency:'VND' }}</small>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="cart-footer">
+                        <button nbButton class="primary-btn" fullWidth>Xem giỏ hàng</button>
+                        <button nbButton [status]="'success'" fullWidth>Xem giỏ hàng</button>
+                        <button nbButton [status]="'danger'" fullWidth>Xem giỏ hàng</button>
+                    </div>
+                </div>
+
+            </div>
 
             <!-- Profile -->
             <nb-user [name]="user.name" [picture]="user.avatar" size="medium"></nb-user>
+            <button nbButton status="danger">aaa</button>
         </div>
     </div>
 </nb-layout-header>

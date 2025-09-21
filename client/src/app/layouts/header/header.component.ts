@@ -11,6 +11,10 @@ export class HeaderComponent {
   isLoading: boolean = false;
   position: NbPosition = NbPosition.BOTTOM_END;
   currentTheme = 'default';
+
+  cartItems: any[] = [];
+  cartOpen: boolean = false;
+
   user = {
     name: 'Duy Quang',
     avatar: 'assets/avatar.png',
@@ -27,6 +31,17 @@ export class HeaderComponent {
   constructor(private themeService: NbThemeService, private translate: TranslateService) { }
 
   ngOnInit() {
+    this.isLoading = true;
+    this.loadData();
+  }
+
+  loadData() {
+    this.cartItems = [
+      { name: 'Áo thun nam', price: 150000, image: 'https://via.placeholder.com/60' },
+      { name: 'Giày sneaker', price: 550000, image: 'https://via.placeholder.com/60' },
+      { name: 'Balo du lịch', price: 350000, image: 'https://via.placeholder.com/60' },
+    ];
+    this.isLoading = false;
   }
 
   toggleTheme() {
@@ -37,5 +52,13 @@ export class HeaderComponent {
   switchLang(langCode: string) {
     this.currentLang = langCode;
     this.translate.use(langCode);
+  }
+
+  toggleCart() {
+    this.cartOpen = !this.cartOpen;
+  }
+
+  goToCart() {
+
   }
 }
