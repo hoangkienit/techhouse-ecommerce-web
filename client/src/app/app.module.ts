@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbIconModule, NbUserModule, NbSidebarModule, NbMenuModule, NbSelectModule, NbContextMenuModule, NbCardModule, NbInputModule, NbButtonModule, NbToast, NbToastrModule, NbDialogModule, NbBadgeModule, NbTagModule, NbStepperModule, NbTabsetModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbIconModule, NbUserModule, NbSidebarModule, NbMenuModule, NbSelectModule, NbContextMenuModule, NbCardModule, NbInputModule, NbButtonModule, NbToast, NbToastrModule, NbDialogModule, NbBadgeModule, NbTagModule, NbStepperModule, NbTabsetModule, NbListModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { HeaderComponent } from './layouts/header/header.component';
 import { FooterComponent } from './layouts/footer/footer.component';
@@ -80,6 +80,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     NbTagModule,
     NbStepperModule,
     NbTabsetModule,
+    NbListModule,
     NbDialogModule.forRoot(),
     NbToastrModule.forRoot(),
     TranslateModule.forRoot({

@@ -1,1 +1,69 @@
-<p>home works!</p>
+<nb-layout>
+    <nb-layout-column class="p-0">
+        <div class=" home-wrapper">
+
+            <!-- Sidebar danh mục -->
+            <aside class="categories-sidebar">
+                <nb-card>
+                    <nb-card-header>
+                        <div class="panel-title">Danh mục chính</div>
+                    </nb-card-header>
+                    <nb-card-body class="p-0">
+                        <nb-list>
+                            <nb-list-item *ngFor="let c of categories">
+                                <nb-user size="small" [name]="c" [title]="'Xem sản phẩm ' + c"></nb-user>
+                            </nb-list-item>
+                        </nb-list>
+                    </nb-card-body>
+                </nb-card>
+            </aside>
+
+            <!-- Content chính -->
+            <div class="content-main">
+
+                <!-- Sản phẩm mới -->
+                <section class="panel">
+                    <nb-card class="mb-3">
+                        <nb-card-header class="p-3">
+                            <div class="panel-title">Sản phẩm mới</div>
+                            <div class="panel-action"><a nbButton size="tiny" ghost>Xem tất cả</a></div>
+                        </nb-card-header>
+                        <nb-card-body>
+                            <div class="products-grid">
+                                <nb-card class="product-card" *ngFor="let p of newProducts">
+                                    <img class="product-img" [src]="p.image" [alt]="p.name" />
+                                    <nb-card-body>
+                                        <div class="name">{{ p.name }}</div>
+                                        <div class="price">{{ formatPrice(p.price) }}</div>
+                                    </nb-card-body>
+                                </nb-card>
+                            </div>
+                        </nb-card-body>
+                    </nb-card>
+                </section>
+
+                <!-- Sản phẩm bán chạy -->
+                <section class="panel best-sellers">
+                    <nb-card class="m-0">
+                        <nb-card-header class="p-3">
+                            <div class="panel-title">Sản phẩm bán chạy</div>
+                            <div class="panel-action"><a nbButton size="tiny" ghost>Top</a></div>
+                        </nb-card-header>
+                        <nb-card-body>
+                            <div class="products-row">
+                                <nb-card class="product-card" *ngFor="let p of bestSellers">
+                                    <img class="product-img" [src]="p.image" [alt]="p.name" />
+                                    <nb-card-body>
+                                        <div class="name">{{ p.name }}</div>
+                                        <div class="price">{{ formatPrice(p.price) }}</div>
+                                    </nb-card-body>
+                                </nb-card>
+                            </div>
+                        </nb-card-body>
+                    </nb-card>
+                </section>
+
+            </div>
+        </div>
+    </nb-layout-column>
+</nb-layout>
