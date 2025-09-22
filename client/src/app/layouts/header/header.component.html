@@ -1,35 +1,92 @@
-<nb-layout-header fixed [isLoading]="isLoading" class="no-select">
-    <div class="header-container d-flex w-100">
-        <!-- Bên trái -->
-        <div class="left-section">
+<div class="header-container">
+    <!-- Bên trái -->
+    <div class="left-section">
+        <a href="/home">
             <img src="assets/images/logo/logo.png" alt="Logo" class="logo" />
-            <span class="title">DKD {{ 'headerLayout.title' | translate }}</span>
+        </a>
+        <span class="title">DKD {{ 'headerLayout.title' | translate }}</span>
+    </div>
+
+    <!-- Ở giữa -->
+    <div class="center-container w-100 d-flex align-items-center justify-content-center">
+        <div class="w-50">
+            <nb-form-field>
+                <nb-icon nbPrefix icon="search-outline"></nb-icon>
+                <input nbInput type="text" placeholder="{{ 'product.searchInput' | translate}}" [fullWidth]="true"
+                    [size]="'medium'" shape="round" />
+            </nb-form-field>
         </div>
+    </div>
 
-        <!-- Bên phải -->
-        <div class="right-section">
-            <!-- Language Menu -->
-            <nb-select placeholder="Language" [(selected)]="currentLang" (selectedChange)="switchLang($event)">
-                <nb-option *ngFor="let lang of languages" [value]="lang.data">
-                    {{ lang.title }}
-                </nb-option>
-            </nb-select>
+    <!-- Bên phải -->
+    <div class=" right-section">
+        <!-- Language Menu -->
+        <!-- <nb-select placeholder="Language" [(selected)]="currentLang" (selectedChange)="switchLang($event)">
+            <nb-option *ngFor="let lang of languages" [value]="lang.data">
+                {{ lang.title }}
+            </nb-option>
+        </nb-select> -->
 
-            <!-- Toggle Theme -->
-            <button nbButton ghost size="small" (click)="toggleTheme()" nbTooltip="Toggle Theme">
-                <nb-icon [icon]="currentTheme === 'dark' ? 'sun-outline' : 'moon-outline'"
-                    [style.color]="currentTheme === 'dark' ? '#fff' : '#3366FF'"></nb-icon>
-            </button>
+        <!-- Toggle Theme -->
+        <button nbButton ghost size="small" shape="round" (click)="toggleTheme()" nbTooltip="Toggle Theme">
+            <nb-icon [icon]="currentTheme === 'dark' ? 'sun-outline' : 'moon-outline'"
+                [style.color]="currentTheme === 'dark' ? '#fff' : '#3366FF'"></nb-icon>
+        </button>
 
-            <!-- Giỏ hàng -->
-            <button nbButton ghost size="small" nbTooltip="Cart" class="cart-btn">
-                <nb-icon icon="shopping-cart-outline"
-                    [style.color]="currentTheme === 'dark' ? '#fff' : 'black'"></nb-icon>
+        <!-- Giỏ hàng -->
+        <div class="cart-wrapper cart-btn">
+            <button nbButton id="customCartBtn" ghost size="small" shape="round" class="cart-btn"
+                (click)="toggleCart()">
+                <nb-icon icon="shopping-cart-outline"></nb-icon>
                 <span class="cart-count" [style.color]="currentTheme === 'dark' ? '#fff' : 'red'">3</span>
             </button>
 
-            <!-- Profile -->
-            <nb-user [name]="user.name" [picture]="user.avatar" size="medium"></nb-user>
+            <div *ngIf="cartOpen" class="cart-popup shadow">
+                <div
+                    class="cart-header p-2 border-bottom border-info d-flex justify-content-between align-items-center">
+                    <h6 class="m-0">{{'cart.title' | translate}}</h6>
+                    <button nbButton size="small" class="border-none" shape="round" status="danger" ghost="true"
+                        (click)="toggleCart()">
+                        <nb-icon icon="close-outline"></nb-icon>
+                    </button>
+                </div>
+
+                <!-- Danh sách item -->
+                <div class="cart-items overflow-y-auto">
+                    <ng-container *ngIf="cartItems.length>0; else emptyCart">
+                        <div *ngFor="let item of cartItems"
+                            class="cart-item d-flex align-items-center p-2 border-bottom">
+                            <img [src]="item.image" class="cart-item-img me-2" />
+                            <div class="cart-item-info flex-grow-1">
+                                <div class="fw-bold small">{{ item.name }}</div>
+                                <small class="text-muted">{{ item.price | currency:'VND' }}</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger" (click)="removeFromCart(item)">
+                                <nb-icon icon="trash-2-outline"></nb-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                    <ng-template #emptyCart>
+                        <div class="text-muted text-center p-5">{{ 'cart.empty' | translate}}</div>
+                    </ng-template>
+                </div>
+
+                <!-- Footer -->
+                <div class="cart-footer p-2 border-top border-info">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold">{{'cart.subTotal' | translate }}:</span>
+                        <span class="fw-bold text-danger">{{ getCartTotal() | currency:'VND' }}</span>
+                    </div>
+                    <button class="btn btn-secondary w-100">{{'cart.viewCart' | translate}}</button>
+                </div>
+            </div>
+
         </div>
+
+        <!-- Profile -->
+
+        <nb-user [name]="user.name" [picture]="user.avatar" size="medium" shape="round" [onlyPicture]="false"
+            [showInitials]="true" routerLink="/account/profile">
+        </nb-user>
     </div>
-</nb-layout-header>
+</div>

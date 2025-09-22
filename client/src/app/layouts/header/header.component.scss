@@ -2,7 +2,7 @@
     display: flex; // dùng flex
     justify-content: space-between; // left sát trái, right sát phải
     align-items: center;
-    width: 100%;
+    width: 100% !important;
     height: 64px;
     background: transparent;
 
@@ -28,6 +28,7 @@
         align-items: center;
         gap: 0.75rem;
         margin-left: -25px;
+        cursor: pointer;
 
         .logo {
             height: 36px;
@@ -36,12 +37,7 @@
         .title {
             font-size: 18px;
             font-weight: 600;
-            color: var(--nb-theme-primary-color);
-        }
-
-        .subtitle {
-            font-size: 14px;
-            color: var(--nb-theme-text-hint-color);
+            min-width: 150px;
         }
 
         .logo {
@@ -59,10 +55,8 @@
         gap: 0.75rem;
         margin-right: 20px;
 
-        button[nbButton] {
-            border: none !important;
+        button[nbButton][id="customCartBtn"] {
             background: transparent !important;
-            box-shadow: none !important;
             padding: 0.25rem;
             cursor: pointer;
 
@@ -100,6 +94,33 @@
         nb-user {
             --user-initials-text-color: #fff;
             --user-initials-bg-color: var(--nb-theme-primary-color);
+
+
+            &:hover {
+                --user-initials-bg-color: var(--nb-theme-danger-color);
+            }
+
+            cursor: pointer;
+        }
+
+        .cart-popup {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 400px;
+            border-radius: 8px;
+            padding: 10px;
+            z-index: 1000;
+
+            /* fallback: dùng cái nào có thì ăn cái đó */
+            background: var(--nb-card-background-color, var(--card-background-color, #fff));
+            color: var(--nb-text-basic-color, var(--text-basic-color, #222));
+            border: 1px solid var(--nb-border-basic-color-3, var(--border-basic-color-3, #ddd));
+            box-shadow: var(--nb-shadow, 0 2px 12px rgba(0, 0, 0, 0.15));
+        }
+
+        .cart-items {
+            max-height: 300px;
         }
     }
 }
