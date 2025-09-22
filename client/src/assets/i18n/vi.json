@@ -1,6 +1,7 @@
 {
     "headerLayout": {
-        "title": "Xin chào"
+        "title": "Xin chào",
+        "subtitle": "Chào mừng bạn đến với cửa hàng của chúng tôi"
     },
     "auth": {
         "login": {
@@ -44,5 +45,15 @@
         "logout": "Đăng xuất",
         "admin": "Quản trị",
         "users": "Người dùng"
+    },
+    "product": {
+        "searchInput": "Tìm kiếm sản phẩm..."
+    },
+    "cart": {
+        "title": "Giỏ hàng",
+        "subTotal": "Tạm tính",
+        "empty": "Giỏ hàng trống rồi!. Hãy thêm sản phẩm vào giỏ nhé.",
+        "viewCart": "Xem giỏ hàng",
+        "checkout": "Thanh toán"
     }
 }

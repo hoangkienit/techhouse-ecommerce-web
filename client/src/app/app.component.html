@@ -1,9 +1,8 @@
 <nb-layout [isLoading]="isLoading" windowMode>
 
   <!-- Header -->
-  <nb-layout-header fixed>
-    <app-header></app-header>
-    <!-- Button toggle có thể để ở đây -->
+  <nb-layout-header fixed class="no-select">
+    <app-header class="w-100"></app-header>
   </nb-layout-header>
 
   <!-- Sidebar -->
@@ -20,10 +19,5 @@
   <nb-layout-column class="pt-2">
     <router-outlet></router-outlet>
   </nb-layout-column>
-
-  <!-- Footer -->
-  <!-- <nb-layout-footer>
-    <app-footer></app-footer>
-  </nb-layout-footer> -->
 
 </nb-layout>

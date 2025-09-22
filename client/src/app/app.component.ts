@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NbSidebarService } from '@nebular/theme';
 import { AppServices } from './@core/services/AppServices.service';
 import { Subscription } from 'rxjs';
+import { Product } from './@core/models/product.model';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ export class AppComponent implements OnInit, OnDestroy {
   isExpanded = true;
   menuItems: any[] = [];
   isLoading = true;
+  // userMenu: any[] = [];
 
   constructor(
     private appServices: AppServices,
@@ -20,10 +22,22 @@ export class AppComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
+    this.loadData();
     this.buildMenu();
   }
 
   ngOnDestroy() {
+  }
+
+  loadData() {
+    // this.userMenu = [
+    //   { title: 'Profile', link: '/account/profile' },
+    //   { title: 'Admin', link: '/admin/dashboard' },
+    //   { title: 'Logout', link: '/auth/logout' },
+    //   { title: 'Login', link: '/account/auth' },
+    // ];
+    this.isLoading = false;
   }
 
   buildMenu() {

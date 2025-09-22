@@ -1,10 +1,33 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbIconModule, NbUserModule, NbSidebarModule, NbMenuModule, NbSelectModule, NbContextMenuModule, NbCardModule, NbInputModule, NbButtonModule, NbToast, NbToastrModule, NbDialogModule, NbBadgeModule, NbTagModule, NbStepperModule, NbTabsetModule, NbListModule, NbSearchModule, NbFormFieldModule, NbPopoverModule } from '@nebular/theme';
+import {
+  NbThemeModule,
+  NbLayoutModule,
+  NbIconModule,
+  NbUserModule,
+  NbSidebarModule,
+  NbMenuModule,
+  NbSelectModule,
+  NbContextMenuModule,
+  NbCardModule,
+  NbInputModule,
+  NbButtonModule,
+  NbToastrModule,
+  NbDialogModule,
+  NbBadgeModule,
+  NbTagModule,
+  NbStepperModule,
+  NbTabsetModule,
+  NbListModule,
+  NbSearchModule,
+  NbFormFieldModule,
+  NbPopoverModule,
+  NbActionsModule
+} from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { HeaderComponent } from './layouts/header/header.component';
 import { FooterComponent } from './layouts/footer/footer.component';
@@ -30,7 +53,6 @@ import { UsersComponent } from './pages/admin/users/users.component';
 import { DiscountsComponent } from './pages/admin/discounts/discounts.component';
 import { AuthComponent } from './pages/account/auth/auth.component';
 
-
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -38,9 +60,9 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 @NgModule({
   declarations: [
-    AppComponent,
     HeaderComponent,
     FooterComponent,
+    AppComponent,
     DashboardComponent,
     LoadingDirective,
     AuthComponent,
@@ -54,37 +76,39 @@ export function HttpLoaderFactory(http: HttpClient) {
     DiscountComponent,
     ProfileComponent,
     UsersComponent,
-    DiscountsComponent
+    DiscountsComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    // Nebular Modules - CHỈ import modules
     NbThemeModule.forRoot({ name: 'default' }),
     NbLayoutModule,
+    NbButtonModule, // ← CHỈ cần module này
     NbEvaIconsModule,
     NbIconModule,
     NbUserModule,
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
+    NbContextMenuModule,
+    // Other modules
     HttpClientModule,
     NbSelectModule,
-    NbContextMenuModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     NbCardModule,
     NbInputModule,
-    NbButtonModule,
     NbBadgeModule,
     NbTagModule,
     NbStepperModule,
     NbTabsetModule,
     NbListModule,
-    NbInputModule,
     NbSearchModule,
     NbFormFieldModule,
     NbPopoverModule,
+    NbActionsModule,
     NbDialogModule.forRoot(),
     NbToastrModule.forRoot(),
     TranslateModule.forRoot({
