@@ -7,7 +7,7 @@ import { asyncHandler } from '../utils/asyncHandler';
 
 const router = express.Router();
 
-router.post('/login', validate(loginSchema), asyncHandler(AuthController.Login));
+router.post('/login',  asyncHandler(AuthController.Login));
 
 router.post('/register', validate(registerSchema), asyncHandler(AuthController.Register));
 

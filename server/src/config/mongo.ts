@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const connectDb = async(): Promise<void> => {
     try {
         await mongoose.connect(process.env.MONGO_URL as string, {
-            dbName: "taskify_db",
+            dbName: "ecommerce_db",
             serverSelectionTimeoutMS: 30000,
         });
 

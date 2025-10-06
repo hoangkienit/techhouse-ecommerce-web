@@ -59,7 +59,7 @@ class AuthController {
         const refreshToken = req.cookies.refreshToken;
 
         if (!refreshToken) {
-            throw new BadRequestError("No refresh token provided");
+            throw new BadRequestError("Không có refresh token");
         }
 
         const accessToken = await AuthService.RefreshToken(refreshToken);

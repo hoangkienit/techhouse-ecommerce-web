@@ -1,15 +1,15 @@
 
 export interface LoginRequest {
-    username: string;
+    email: string;
     password: string;
 }
 
 export interface RegisterRequest {
-    username: string;
+    fullname: string;
     email: string;
-    phone: string;
     password: string;
     confirmPassword: string;
+    address: object;
 }
 
 export interface LoginResponse {
@@ -20,6 +20,6 @@ export interface LoginResponse {
 
 export interface JwtPayload {
     userId: string;
-    username: string;
+    fullname: string;
     role: string;
 }

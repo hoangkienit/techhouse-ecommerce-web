@@ -17,7 +17,7 @@ const logger = createLogger({
         new transports.File({
             filename: "logs/error.log",
             level: "error",
-            format: format.combine(format.timestamp(), format.json()) // Ensure format is set
+            format: format.combine(format.timestamp(), format.json())
         }),
         new transports.File({ filename: "logs/combined.log", format: winston.format.combine(
             winston.format.colorize(),

@@ -1,7 +1,16 @@
 import mongoose from "mongoose";
 
+const addressSchema = new mongoose.Schema({
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String },
+    postalCode: { type: String },
+    country: { type: String, required: true },
+    isDefault: { type: Boolean, default: false }
+}, { _id: false });
+
 const userSchema = new mongoose.Schema({
-    username: {
+    fullname: {
         type: String,
         required: true
     },
@@ -9,30 +18,31 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    phone: {
-        type: String,
-        required: true
-    },
     password: {
         type: String,
-        required: true
+        default: ''
     },
     profileImg: {
         type: String,
         default: "https://iampesmobile.com/uploads/user-avatar-taskify.jpg"
     },
-    isBanned: {
-        type: Boolean,
-        default: false
-    },
-    isVerified: {
-        type: Boolean,
-        default: false
-    },
-    role: {
+     role: {
         type: String,
-        enum: ['employee', 'manager', 'admin', 'not_assign'],
-        default: 'not_assign',
+        enum: ['user', 'admin', 'manager'],
+        default: 'user'
+     },
+     socialProvider: {
+        type: String,
+        enum: ["google", "facebook", "github", "apple"],
+        default: null
+    },
+    socialId: {
+        type: String,
+        default: null
+    },
+    addresses: {
+        type: [addressSchema],
+        default: []
     }
 }, {
     timestamps: true

@@ -15,11 +15,11 @@ class AuthService {
     }
 
     static async Login(
-        { username, password }: LoginRequest,
+        { email, password }: LoginRequest,
     ): Promise<LoginResponse> {
-        const user = await User.findOne({ username }).lean();
+        const user = await User.findOne({ email }).lean();
         if (!user) {
-            throw new NotFoundError("Tên đăng nhập không tồn tại");
+            throw new NotFoundError("Email không tồn tại");
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -29,13 +29,13 @@ class AuthService {
 
         // Generate JWT tokens
         const accessToken = jwt.sign(
-            { userId: user._id, username: user.username, role: user.role },
+            { userId: user._id, email: user.email, role: user.role },
             process.env.JWT_ACCESS_SECRET as string,
             { expiresIn: '30m' }
         );
 
         const refreshToken = jwt.sign(
-            { userId: user._id, username: user.username, role: user.role },
+            { userId: user._id, email: user.email, role: user.role },
             process.env.JWT_REFRESH_SECRET as string,
             { expiresIn: '7d' }
         );
@@ -51,12 +51,10 @@ class AuthService {
     }
 
     static async Register(
-        { username, email, phone, password, confirmPassword }: RegisterRequest,
+        { fullname, email, password, confirmPassword, address }: RegisterRequest,
     ): Promise<boolean> {
         // Check for existing username, email, phone
-        await this.checkUserExists('username', username, "Người dùng đã tồn tại");
         await this.checkUserExists('email', email, "Email đã tồn tại");
-        await this.checkUserExists('phone', phone, "Số điện thoại đã tồn tại");
 
         if (password !== confirmPassword) {
             throw new NotFoundError('Mật khẩu không khớp');
@@ -65,10 +63,10 @@ class AuthService {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new User({
-            username,
+            fullname,
             email,
-            phone,
-            password: hashedPassword
+            password: hashedPassword,
+            address: address
         });
 
         await newUser.save();
@@ -87,7 +85,7 @@ class AuthService {
             const newAccessToken = jwt.sign(
                 {
                     userId: decoded.userId,
-                    username: decoded.username,
+                    fullname: decoded.fullname,
                     role: decoded.role,
                 },
                 process.env.JWT_ACCESS_SECRET as string,
