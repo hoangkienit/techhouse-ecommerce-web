@@ -5,6 +5,9 @@ import jwt from "jsonwebtoken";
 import AuthService from "../../services/auth.service";
 import User from "../../models/user.model";
 import { NotFoundError, BadRequestError, UnauthorizedError } from "../../core/error.response";
+import request from "supertest";
+import server from "../../server";
+
 
 let mongoServer: MongoMemoryServer;
 
@@ -102,6 +105,24 @@ describe("AuthService", () => {
 
       const decoded = jwt.verify(res.accessToken, process.env.JWT_ACCESS_SECRET!);
       expect((decoded as any).email).toBe("login@example.com");
+    });
+
+    it("should set token to cookie", async () => {
+      const res = await request(server)
+        .post("/api/v1/auth/login")
+        .send({ email: "login@example.com", password: "123456" })
+        .expect(200);
+
+      const rawCookies = res.headers["set-cookie"];
+      expect(rawCookies).toBeDefined();
+
+      const cookies = Array.isArray(rawCookies) ? rawCookies : [rawCookies];
+
+      const accessCookie = cookies.find((c: string) => c.startsWith("accessToken="));
+      const refreshCookie = cookies.find((c: string) => c.startsWith("refreshToken="));
+
+      expect(accessCookie).toBeDefined();
+      expect(refreshCookie).toBeDefined();
     });
 
     it("should throw error if email not found", async () => {

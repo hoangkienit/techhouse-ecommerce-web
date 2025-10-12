@@ -12,3 +12,11 @@
 {"level":"error","message":"Error: Operation `users.findOne()` buffering timed out after 10000ms | URL: /api/v1/auth/login | Method: POST","timestamp":"2025-10-06 20:50:44"}
 {"level":"error","message":"Error: Tên đăng nhập không tồn tại | URL: /api/v1/auth/login | Method: POST","timestamp":"2025-10-06 20:51:23"}
 {"0":"j","1":"w","10":"m","11":"e","12":"d","2":"t","3":" ","4":"m","5":"a","6":"l","7":"f","8":"o","9":"r","level":"error","message":"Failed to fresh token:","timestamp":"2025-10-06 21:42:53"}
+{"0":"j","1":"w","10":"m","11":"e","12":"d","2":"t","3":" ","4":"m","5":"a","6":"l","7":"f","8":"o","9":"r","level":"error","message":"Failed to fresh token:","timestamp":"2025-10-12 10:47:28"}
+{"0":"j","1":"w","10":"m","11":"e","12":"d","2":"t","3":" ","4":"m","5":"a","6":"l","7":"f","8":"o","9":"r","level":"error","message":"Failed to fresh token:","timestamp":"2025-10-12 11:14:18"}
+{"0":"j","1":"w","10":"m","11":"e","12":"d","2":"t","3":" ","4":"m","5":"a","6":"l","7":"f","8":"o","9":"r","level":"error","message":"Failed to fresh token:","timestamp":"2025-10-12 11:27:29"}
+{"0":"j","1":"w","10":"m","11":"e","12":"d","2":"t","3":" ","4":"m","5":"a","6":"l","7":"f","8":"o","9":"r","level":"error","message":"Failed to fresh token:","timestamp":"2025-10-12 11:27:56"}
+{"0":"j","1":"w","10":"m","11":"e","12":"d","2":"t","3":" ","4":"m","5":"a","6":"l","7":"f","8":"o","9":"r","level":"error","message":"Failed to fresh token:","timestamp":"2025-10-12 11:29:04"}
+{"level":"error","message":"Error: Email không tồn tại | URL: /api/v1/auth/login | Method: POST","timestamp":"2025-10-12 11:29:25"}
+{"0":"j","1":"w","10":"m","11":"e","12":"d","2":"t","3":" ","4":"m","5":"a","6":"l","7":"f","8":"o","9":"r","level":"error","message":"Failed to fresh token:","timestamp":"2025-10-12 11:29:25"}
+{"0":"j","1":"w","10":"m","11":"e","12":"d","2":"t","3":" ","4":"m","5":"a","6":"l","7":"f","8":"o","9":"r","level":"error","message":"Failed to fresh token:","timestamp":"2025-10-12 11:33:20"}

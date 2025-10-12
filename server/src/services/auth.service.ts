@@ -5,6 +5,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from 'bcrypt';
 import { LoginRequest, LoginResponse, RegisterRequest } from "../interfaces/auth.interface";
 import logger from "../config/logger";
+import generateTokenPair from "../utils/tokens.helper";
 
 class AuthService {
     private static async checkUserExists(field: string, value: string, errorMsg: string) {
@@ -27,18 +28,14 @@ class AuthService {
             throw new NotFoundError('Sai mật khẩu');
         }
 
-        // Generate JWT tokens
-        const accessToken = jwt.sign(
-            { userId: user._id, email: user.email, role: user.role },
-            process.env.JWT_ACCESS_SECRET as string,
-            { expiresIn: '30m' }
-        );
-
-        const refreshToken = jwt.sign(
-            { userId: user._id, email: user.email, role: user.role },
-            process.env.JWT_REFRESH_SECRET as string,
-            { expiresIn: '7d' }
-        );
+        // Generate token pair
+        const userPayload = {
+            userId: user._id.toString(),
+            fullname: user.fullname,
+            email: user.email,
+            role: user.role
+        }
+        const { accessToken, refreshToken } = generateTokenPair(userPayload);
 
         // Remove sensitive fields
         const { password: _, __v, ...safeUser } = user;
