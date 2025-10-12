@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 const port = process.env.PORT as string || 8080;
 
-// connectDb();
+connectDb();
 app.use(express.json());
 app.use(cors());
 
@@ -34,8 +34,8 @@ app.use('/api/v1/auth', AuthRoute);
 
 app.use(errorHandler);
 
-// app.listen(port, () => {
-//   console.log(`🚀 Server running at http://localhost:${port}`);
-// });
+app.listen(port, () => {
+  console.log(`🚀 Server running at http://localhost:${port}`);
+});
 
 export default app;

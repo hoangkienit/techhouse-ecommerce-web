@@ -12,13 +12,15 @@ router.post('/login', validate(loginSchema), asyncHandler(AuthController.Login))
 
 router.post('/register', validate(registerSchema), asyncHandler(AuthController.Register));
 
-// router.get('/logout', asyncHandler(AuthController.Logout));
+router.get('/logout', asyncHandler(AuthController.Logout));
 
-// router.post('/refresh-token', Authenticate, asyncHandler(AuthController.RefreshToken));
+router.post('/refresh-token', Authenticate, asyncHandler(AuthController.RefreshToken));
 
 // GOOGLE
 router.get('/google', passport.authenticate("google", { scope: ["email", "profile"] }));
 
 router.get('/google/callback', passport.authenticate("google", { session: false }), asyncHandler(AuthController.GoogleCallback));
+
+// FACEBOOK
 
 export default router;
