@@ -1,14 +1,5 @@
 import mongoose from "mongoose";
 
-const addressSchema = new mongoose.Schema({
-    street: { type: String, required: true },
-    city: { type: String, required: true },
-    state: { type: String },
-    postalCode: { type: String },
-    country: { type: String, required: true },
-    isDefault: { type: Boolean, default: false }
-}, { _id: false });
-
 const userSchema = new mongoose.Schema({
     fullname: {
         type: String,
@@ -45,8 +36,12 @@ const userSchema = new mongoose.Schema({
         default: null
     },
     addresses: {
-        type: [addressSchema],
+        type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Address", required: true }],
         default: []
+    },
+    isBanned: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true

@@ -1,5 +1,6 @@
 
 import User from "../models/user.model";
+import Address from "../models/address.model";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../core/error.response";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from 'bcrypt';
@@ -63,8 +64,21 @@ class AuthService {
             fullname,
             email,
             password: hashedPassword,
-            address: address
+            address: []
         });
+
+        const newAddress = new Address({
+            userId: newUser._id,
+            street: address.street,
+            city: address.city,
+            state: address.state,
+            country: address.country,
+            isDefault: true
+        });
+
+        await newAddress.save();
+
+        newUser.addresses.push(newAddress._id);
 
         await newUser.save();
 

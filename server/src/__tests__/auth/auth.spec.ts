@@ -41,7 +41,9 @@ describe("AuthService", () => {
         address: {
           street: "123 Test",
           city: "Hanoi",
+          state: "Cau Giay",
           country: "Vietnam",
+          isDefault: true
         },
       });
 
@@ -65,7 +67,13 @@ describe("AuthService", () => {
           email: "kien@example.com",
           password: "123456",
           confirmPassword: "123456",
-          address: { street: "123", city: "HCM", country: "Vietnam" },
+          address: {
+            street: "123 Test",
+            city: "Hanoi",
+            state: "Cau Giay",
+            country: "Vietnam",
+            isDefault: true
+          },
         })
       ).rejects.toThrow(BadRequestError);
     });
@@ -77,7 +85,13 @@ describe("AuthService", () => {
           email: "kien2@example.com",
           password: "123456",
           confirmPassword: "wrong",
-          address: { street: "123", city: "HCM", country: "Vietnam" },
+          address: {
+            street: "123 Test",
+            city: "Hanoi",
+            state: "Cau Giay",
+            country: "Vietnam",
+            isDefault: true
+          },
         })
       ).rejects.toThrow(NotFoundError);
     });

@@ -1,3 +1,4 @@
+import { Address } from "./address.interface";
 
 export interface LoginRequest {
     email: string;
@@ -9,7 +10,7 @@ export interface RegisterRequest {
     email: string;
     password: string;
     confirmPassword: string;
-    address: object;
+    address: Address;
 }
 
 export interface LoginResponse {
