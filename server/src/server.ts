@@ -4,6 +4,7 @@ dotenv.config();
 
 // Import routes
 import AuthRoute from './routes/auth.route';
+import UserRoute from './routes/user.route';
 
 import connectDb from './config/mongo';
 
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1/auth', AuthRoute);
+app.use('/api/v1/user', UserRoute);
 
 app.use(errorHandler);
 
