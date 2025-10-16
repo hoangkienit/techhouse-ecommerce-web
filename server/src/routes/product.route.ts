@@ -1,17 +1,23 @@
 import express from 'express';
 import { Authenticate, AuthorizeAdmin } from '../middlewares/verify.middleware';
 import { validate } from '../middlewares/validate.middleware';
-import { asyncHandler } from '../utils/async.handler';
+import { AsyncHandler } from '../utils/async.handler';
 import { addProductSchema } from '../validators/product.validator';
 import ProductController from '../controllers/product.controller';
+import UploadMiddleware from '../middlewares/upload.middleware';
 
 const router = express.Router();
 
-router.post('/add', Authenticate, AuthorizeAdmin, validate(addProductSchema), asyncHandler(ProductController.AddProduct));
+router.post('/add',
+    Authenticate,
+    AuthorizeAdmin,
+    validate(addProductSchema),
+    UploadMiddleware.upload.array('images', 5),
+    AsyncHandler(ProductController.AddProduct));
 
-router.patch('/update', Authenticate, AuthorizeAdmin, validate(addProductSchema), asyncHandler(ProductController.UpdateProduct));
+router.patch('/update', Authenticate, AuthorizeAdmin, validate(addProductSchema), AsyncHandler(ProductController.UpdateProduct));
 
-router.post('/delete', Authenticate, AuthorizeAdmin, validate(addProductSchema), asyncHandler(ProductController.DeleteProduct));
+router.post('/delete', Authenticate, AuthorizeAdmin, validate(addProductSchema), AsyncHandler(ProductController.DeleteProduct));
 
 
 

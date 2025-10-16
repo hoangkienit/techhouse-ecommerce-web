@@ -3,17 +3,17 @@ import UserController from '../controllers/user.controller';
 import { Authenticate } from '../middlewares/verify.middleware';
 import { validate } from '../middlewares/validate.middleware';
 import { updateInformationSchema } from '../validators/user.validator';
-import { asyncHandler } from '../utils/async.handler';
+import { AsyncHandler } from '../utils/async.handler';
 
 const router = express.Router();
 
-router.post('/update-information', Authenticate, validate(updateInformationSchema), asyncHandler(UserController.UpdateInformation));
+router.post('/update-information', Authenticate, validate(updateInformationSchema), AsyncHandler(UserController.UpdateInformation));
 
-router.post('/change-password', Authenticate, asyncHandler(UserController.ChangePassword));
+router.post('/change-password', Authenticate, AsyncHandler(UserController.ChangePassword));
 
-router.post('/reset-password', Authenticate, asyncHandler(UserController.ResetPassword));
+router.post('/reset-password', Authenticate, AsyncHandler(UserController.ResetPassword));
 
-router.post('/update-addresses', Authenticate, asyncHandler(UserController.UpdateAddresses));
+router.post('/update-addresses', Authenticate, AsyncHandler(UserController.UpdateAddresses));
 
 
 export default router;
