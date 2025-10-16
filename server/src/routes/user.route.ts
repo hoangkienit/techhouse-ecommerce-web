@@ -1,6 +1,6 @@
 import express from 'express';
 import UserController from '../controllers/user.controller';
-import { Authenticate } from '../middlewares/verify.middleware';
+import { Authenticate, AuthorizeAdmin } from '../middlewares/verify.middleware';
 import { validate } from '../middlewares/validate.middleware';
 import { updateInformationSchema } from '../validators/user.validator';
 import { AsyncHandler } from '../utils/async.handler';
@@ -14,6 +14,8 @@ router.post('/change-password', Authenticate, AsyncHandler(UserController.Change
 router.post('/reset-password', Authenticate, AsyncHandler(UserController.ResetPassword));
 
 router.post('/update-addresses', Authenticate, AsyncHandler(UserController.UpdateAddresses));
+
+router.patch('/set-status/:userId', Authenticate, AuthorizeAdmin, AsyncHandler(UserController.SetBanStatus));
 
 
 export default router;

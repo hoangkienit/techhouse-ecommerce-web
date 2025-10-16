@@ -15,7 +15,11 @@ router.post('/add',
     validate(addProductSchema),
     AsyncHandler(ProductController.AddProduct));
 
-router.patch('/update', Authenticate, AuthorizeAdmin, validate(addProductSchema), AsyncHandler(ProductController.UpdateProduct));
+router.patch('/update/:productId', 
+    Authenticate, 
+    AuthorizeAdmin, 
+    validate(addProductSchema), 
+    AsyncHandler(ProductController.UpdateProduct));
 
 router.post('/delete', Authenticate, AuthorizeAdmin, validate(addProductSchema), AsyncHandler(ProductController.DeleteProduct));
 

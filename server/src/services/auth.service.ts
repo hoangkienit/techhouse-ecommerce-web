@@ -1,5 +1,4 @@
 
-import User from "../models/user.model";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../core/error.response";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from 'bcrypt';
@@ -9,13 +8,6 @@ import generateTokenPair from "../utils/tokens.helper";
 import UserRepo from "../repositories/user.repository";
 
 class AuthService {
-    private static async checkUserExists(field: string, value: string, errorMsg: string) {
-        const exists = await User.findOne({ [field]: value }).lean();
-        if (exists) {
-            throw new BadRequestError(errorMsg);
-        }
-    }
-
     static async Login(
         { email, password }: ILoginRequest,
     ): Promise<ILoginResponse> {
@@ -51,11 +43,11 @@ class AuthService {
     static async Register(
         { fullname, email, password, confirmPassword, address }: IRegisterRequest,
     ): Promise<boolean> {
-        // Check for existing email, phone
-        await this.checkUserExists('email', email, "Email đã tồn tại");
+        // Check for existing email
+        if(await UserRepo.findByEmail(email)) throw new BadRequestError("Email đã tồn tại");
 
         if (password !== confirmPassword) {
-            throw new NotFoundError('Mật khẩu không khớp');
+            throw new BadRequestError('Mật khẩu không khớp');
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -69,10 +61,7 @@ class AuthService {
         await UserRepo.addAddress(
             newUser._id.toString(),
             {
-                street: address.street,
-                city: address.city,
-                state: address.state,
-                country: address.country,
+                ...address,
                 isDefault: true
             });
 

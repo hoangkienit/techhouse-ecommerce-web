@@ -27,6 +27,10 @@ class ProductRepo {
     static async deleteMany(ids: string[]) {
         return await Product.deleteMany({ _id: { $in: ids } });
     }
+
+    static async update(productId: string, productData: Partial<IProduct>) {
+        return Product.findByIdAndUpdate(productId, productData, { new: true }).exec();
+    }
 }
 
 export default ProductRepo;

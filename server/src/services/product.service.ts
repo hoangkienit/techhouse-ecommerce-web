@@ -1,5 +1,5 @@
 import { BadRequestError, NotFoundError } from "../core/error.response";
-import { IAddProduct } from "../interfaces/product.interface";
+import { IAddProduct, IProduct } from "../interfaces/product.interface";
 import ProductRepo from "../repositories/product.repository";
 import { SlugifyProductName } from "../utils/product.helper";
 import { deleteMultipleCloudinaryImages, uploadMultipleToCloudinary } from "../utils/upload.helper";
@@ -27,6 +27,24 @@ class ProductService {
         };
 
         return await ProductRepo.create(newProduct);
+    }
+
+    static async UpdateProduct(productId: string, productData: Partial<IProduct>) {
+        const existingProduct = await ProductRepo.findById(productId);
+        if (!existingProduct) {
+            throw new NotFoundError("Sản phẩm không tồn tại");
+        }
+
+        if (productData.product_name) {
+            productData.product_slug = SlugifyProductName(productData.product_name);
+        }
+
+        // If images are being replaced
+        if (productData.product_imgs && !Array.isArray(productData.product_imgs)) {
+            throw new BadRequestError("product_imgs phải là mảng URL hình ảnh");
+        }
+        
+        return await ProductRepo.update(productId, productData);
     }
 
     static async DeleteProduct(productId: string) {

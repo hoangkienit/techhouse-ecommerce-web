@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
+import Product from "../../models/product.model";
 
 jest.mock("../../utils/upload.helper", () => ({
   uploadMultipleToCloudinary: jest.fn().mockResolvedValue([
@@ -33,6 +34,10 @@ beforeAll(async () => {
 afterAll(async () => {
   await mongoose.disconnect();
   await mongoServer.stop();
+});
+
+afterEach(async () => {
+  await Product.deleteMany({});
 });
 
 
@@ -70,5 +75,48 @@ describe("POST /api/v1/product/add (Image Upload)", () => {
 
     expect(response.status).toBe(400);
     expect(response.body.message).toMatch(/Cần ít nhất 1 ảnh cho sản phẩm/);
+  });
+});
+
+describe("PATCH /api/v1/product/update/:productId (Update Product)", () => {
+  let productId: string;
+
+  beforeEach(async () => {
+    const product = await Product.create({
+      product_name: "MacBook Pro 2025",
+      product_description: "Apple MacBook Pro with M5 Chip, 32GB RAM, 1TB SSD",
+      product_slug: "macbook-pro-2025",
+      product_price: "2999",
+      product_imgs: [
+        "https://example.com/images/macbook-front.jpg",
+        "https://example.com/images/macbook-back.jpg"
+      ],
+      product_category: "laptop",
+      product_attributes: {
+        cpu: "Apple M5",
+        ram: "32GB",
+        storage: "1TB SSD",
+        screen: "14-inch MiniLED",
+        color: "Space Gray"
+      },
+      product_stock: 50,
+      product_sold_amount: 10,
+      product_status: "active"
+    });
+
+    productId = product._id.toString();
+  });
+
+  it("should update product and return updatedProduct successfully", async () => {
+    const response = await request(app)
+      .patch(`/api/v1/product/update/${productId}`)
+      .send({
+        product_name: "Updated MacBook Pro 2026",
+        product_price: "3499"
+      });
+
+    expect(response.status).toBe(201);
+    expect(response.body.data.updatedProduct.product_name).toBe("Updated MacBook Pro 2026");
+    expect(response.body.data.updatedProduct.product_price).toBe("3499");
   });
 });

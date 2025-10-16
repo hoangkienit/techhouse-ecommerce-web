@@ -31,7 +31,19 @@ class ProductController {
     }
 
     static async UpdateProduct(req: Request, res: Response): Promise<void> {
-        
+        const productId = req.params.productId as string;
+        const productData = req.body;
+
+        if(!productId) throw new NotFoundError("Missing credentials");
+
+        const updatedProduct = await ProductService.UpdateProduct(productId, productData);
+
+        new CREATED({
+            message: "Cập nhật sản phẩm thành công",
+            data: {
+                updatedProduct
+            }
+        }).send(res);
     }
 
     static async DeleteProduct(req: Request, res: Response): Promise<void> {
