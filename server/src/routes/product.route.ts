@@ -11,8 +11,8 @@ const router = express.Router();
 router.post('/add',
     Authenticate,
     AuthorizeAdmin,
-    validate(addProductSchema),
     UploadMiddleware.upload.array('images', 5),
+    validate(addProductSchema),
     AsyncHandler(ProductController.AddProduct));
 
 router.patch('/update', Authenticate, AuthorizeAdmin, validate(addProductSchema), AsyncHandler(ProductController.UpdateProduct));

@@ -3,7 +3,7 @@ import multer from "multer";
 class UploadMiddleware {
   static upload = multer({
     storage: multer.memoryStorage(),
-    limits: { fileSize: 2 * 1024 * 1024 },
+    limits: { fileSize: 10 * 1024 * 1024 }, // 5 MB
     fileFilter: (req, file, cb: any) => {
       const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
       if (!allowedTypes.includes(file.mimetype)) {
