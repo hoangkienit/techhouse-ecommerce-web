@@ -1,12 +1,12 @@
 
 import User from "../models/user.model";
-import Address from "../models/address.model";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../core/error.response";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from 'bcrypt';
 import { ILoginRequest, ILoginResponse, IRegisterRequest } from "../interfaces/auth.interface";
 import logger from "../config/logger";
 import generateTokenPair from "../utils/tokens.helper";
+import UserRepo from "../repositories/user.repository";
 
 class AuthService {
     private static async checkUserExists(field: string, value: string, errorMsg: string) {
@@ -19,7 +19,7 @@ class AuthService {
     static async Login(
         { email, password }: ILoginRequest,
     ): Promise<ILoginResponse> {
-        const user = await User.findOne({ email }).lean();
+        const user = await UserRepo.findByEmail(email);
         if (!user) {
             throw new NotFoundError("Email không tồn tại");
         }
@@ -51,7 +51,7 @@ class AuthService {
     static async Register(
         { fullname, email, password, confirmPassword, address }: IRegisterRequest,
     ): Promise<boolean> {
-        // Check for existing username, email, phone
+        // Check for existing email, phone
         await this.checkUserExists('email', email, "Email đã tồn tại");
 
         if (password !== confirmPassword) {
@@ -60,27 +60,21 @@ class AuthService {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = new User({
-            fullname,
-            email,
-            password: hashedPassword,
-            address: []
+        const newUser = await UserRepo.create({
+            fullname: fullname,
+            email: email,
+            password: hashedPassword
         });
 
-        const newAddress = new Address({
-            userId: newUser._id,
-            street: address.street,
-            city: address.city,
-            state: address.state,
-            country: address.country,
-            isDefault: true
-        });
-
-        await newAddress.save();
-
-        newUser.addresses.push(newAddress._id);
-
-        await newUser.save();
+        await UserRepo.addAddress(
+            newUser._id.toString(),
+            {
+                street: address.street,
+                city: address.city,
+                state: address.state,
+                country: address.country,
+                isDefault: true
+            });
 
         return true;
     }
