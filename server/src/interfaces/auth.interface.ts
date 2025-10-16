@@ -1,26 +1,27 @@
-import { Address } from "./address.interface";
+import { IAddress } from "./address.interface";
 
-export interface LoginRequest {
+export interface ILoginRequest {
     email: string;
     password: string;
 }
 
-export interface RegisterRequest {
+export interface IRegisterRequest {
     fullname: string;
     email: string;
     password: string;
     confirmPassword: string;
-    address: Address;
+    address: IAddress;
 }
 
-export interface LoginResponse {
+export interface ILoginResponse {
     accessToken: string;
     refreshToken: string;
     user: object;
 }
 
-export interface JwtPayload {
+export interface IJwtPayload {
     userId: string;
     fullname: string;
+    email: string;
     role: string;
 }

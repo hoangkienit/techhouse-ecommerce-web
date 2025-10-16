@@ -1,0 +1,32 @@
+import { IProduct } from "../interfaces/product.interface";
+import Product from "../models/product.model";
+
+
+class ProductRepo {
+    static async create(data: Partial<IProduct>) {
+        const product = new Product(data);
+        return await product.save();
+    }
+
+    static async findById(id: string) {
+        return await Product.findById(id).lean();
+    }
+
+    static async findByName(name: string) {
+        return await Product.findOne({ product_name: name }).lean();
+    }
+
+    static async findBySlug(slug: string) {
+        return await Product.findOne({ product_slug: slug }).lean();
+    }
+
+    static async deleteById(id: string) {
+        return await Product.findByIdAndDelete(id);
+    }
+
+    static async deleteMany(ids: string[]) {
+        return await Product.deleteMany({ _id: { $in: ids } });
+    }
+}
+
+export default ProductRepo;

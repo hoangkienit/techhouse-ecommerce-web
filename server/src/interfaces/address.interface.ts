@@ -1,6 +1,6 @@
 
 
-export interface Address {
+export interface IAddress {
     street: string;
     city: string;
     state: string;

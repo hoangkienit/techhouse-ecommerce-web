@@ -4,7 +4,7 @@ import Address from "../models/address.model";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../core/error.response";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from 'bcrypt';
-import { LoginRequest, LoginResponse, RegisterRequest } from "../interfaces/auth.interface";
+import { ILoginRequest, ILoginResponse, IRegisterRequest } from "../interfaces/auth.interface";
 import logger from "../config/logger";
 import generateTokenPair from "../utils/tokens.helper";
 
@@ -17,8 +17,8 @@ class AuthService {
     }
 
     static async Login(
-        { email, password }: LoginRequest,
-    ): Promise<LoginResponse> {
+        { email, password }: ILoginRequest,
+    ): Promise<ILoginResponse> {
         const user = await User.findOne({ email }).lean();
         if (!user) {
             throw new NotFoundError("Email không tồn tại");
@@ -49,7 +49,7 @@ class AuthService {
     }
 
     static async Register(
-        { fullname, email, password, confirmPassword, address }: RegisterRequest,
+        { fullname, email, password, confirmPassword, address }: IRegisterRequest,
     ): Promise<boolean> {
         // Check for existing username, email, phone
         await this.checkUserExists('email', email, "Email đã tồn tại");
@@ -85,14 +85,14 @@ class AuthService {
         return true;
     }
 
-    static async RefreshToken( refreshToken: string) {
+    static async RefreshToken(refreshToken: string) {
         try {
             const decoded = jwt.verify(
                 refreshToken,
                 process.env.JWT_REFRESH_SECRET as string
             ) as JwtPayload;
 
-            
+
             const newAccessToken = jwt.sign(
                 {
                     userId: decoded.userId,

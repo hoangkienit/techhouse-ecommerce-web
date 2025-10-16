@@ -1,6 +1,6 @@
-export interface UserPayload {
+export interface IUserPayload {
     userId: string;
     fullname: string;
     email: string;
-    role?: string;
+    role: string;
 }

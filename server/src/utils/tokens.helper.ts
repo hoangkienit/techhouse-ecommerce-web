@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import { UserPayload } from "../interfaces/jwt.interface";
+import { IUserPayload } from "../interfaces/jwt.interface";
 
-const generateTokenPair = (payload: UserPayload) => {
+const generateTokenPair = (payload: IUserPayload) => {
     const accessToken = jwt.sign(
         payload,
         process.env.JWT_ACCESS_SECRET as string,
@@ -15,7 +15,7 @@ const generateTokenPair = (payload: UserPayload) => {
     );
 
     return {
-        accessToken, 
+        accessToken,
         refreshToken
     }
 }

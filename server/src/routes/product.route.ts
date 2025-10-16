@@ -1,17 +1,17 @@
 import express from 'express';
-import UserController from '../controllers/user.controller';
-import { Authenticate } from '../middlewares/verify.middleware';
+import { Authenticate, AuthorizeAdmin } from '../middlewares/verify.middleware';
 import { validate } from '../middlewares/validate.middleware';
-import { updateInformationSchema } from '../validators/user.validator';
 import { asyncHandler } from '../utils/async.handler';
+import { addProductSchema } from '../validators/product.validator';
+import ProductController from '../controllers/product.controller';
 
 const router = express.Router();
 
-router.post('/add', Authenticate, validate(updateInformationSchema), asyncHandler(UserController.UpdateInformation));
+router.post('/add', Authenticate, AuthorizeAdmin, validate(addProductSchema), asyncHandler(ProductController.AddProduct));
 
-router.patch('/update', Authenticate, validate(updateInformationSchema), asyncHandler(UserController.UpdateInformation));
+router.patch('/update', Authenticate, AuthorizeAdmin, validate(addProductSchema), asyncHandler(ProductController.UpdateProduct));
 
-router.post('/delete', Authenticate, validate(updateInformationSchema), asyncHandler(UserController.UpdateInformation));
+router.post('/delete', Authenticate, AuthorizeAdmin, validate(addProductSchema), asyncHandler(ProductController.DeleteProduct));
 
 
 

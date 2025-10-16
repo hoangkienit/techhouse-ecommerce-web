@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
+import { IUserPayload } from '../interfaces/jwt.interface';
 
 export const Authenticate = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
@@ -34,13 +35,14 @@ export const Authenticate = async (req: Request, res: Response, next: NextFuncti
 
             try {
                 // Verify refresh token
-                const refreshPayload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as any;
+                const refreshPayload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as IUserPayload;
 
                 // Generate new access token
                 const newAccessToken = jwt.sign(
                     {
                         userId: refreshPayload.userId,
-                        username: refreshPayload.username,
+                        fullname: refreshPayload.fullname,
+                        email: refreshPayload.email,
                         role: refreshPayload.role,
                     },
                     process.env.JWT_ACCESS_SECRET!,
@@ -79,3 +81,12 @@ export const Authenticate = async (req: Request, res: Response, next: NextFuncti
         });
     }
 };
+
+export const AuthorizeAdmin = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    if (req.user?.role !== "admin") {
+        return res.status(403).json({
+            message: "Forbidden - Admins only"
+        });
+    }
+    next();
+}

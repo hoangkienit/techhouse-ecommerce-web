@@ -2,14 +2,14 @@ import { Request, Response } from 'express';
 import { CREATED, OK } from '../core/success.response';
 import AuthService from '../services/auth.service';
 import { BadRequestError, UnauthorizedError } from '../core/error.response';
-import { UserPayload } from '../interfaces/jwt.interface';
+import { IUserPayload } from '../interfaces/jwt.interface';
 import generateTokenPair from '../utils/tokens.helper';
 import saveTokenToCookie from '../utils/cookie.helper';
 
 class AuthController {
     static async Login(req: Request, res: Response): Promise<void> {
         const response = await AuthService.Login(req.body);
-        
+
         // Save tokens to cookie
         saveTokenToCookie(response.accessToken, response.refreshToken, res);
 
@@ -71,8 +71,8 @@ class AuthController {
     }
 
     static async GoogleCallback(req: Request, res: Response): Promise<void> {
-        const user = req.user as UserPayload;
-        if(!user) throw new UnauthorizedError("Unauthorized user!");
+        const user = req.user as IUserPayload;
+        if (!user) throw new UnauthorizedError("Unauthorized user!");
 
         // Generate token pair
         const { accessToken, refreshToken } = generateTokenPair(user);
@@ -84,7 +84,7 @@ class AuthController {
             message: "Success",
             data: {}
         }).send(res);
-        
+
     }
 }
 
