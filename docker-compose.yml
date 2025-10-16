@@ -5,8 +5,25 @@ services:
     build:
       context: ./server
     ports:
-      - "5000:5000"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     environment:
       - NODE_ENV=production
     env_file:
       - ./server/.env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${BACKEND_PORT}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    labels:
+      autoheal: "true"
+  autoheal:
+    image: willfarrell/autoheal
+    restart: always
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: autoheal   # Watch containers with this label
+      AUTOHEAL_INTERVAL: 10                # Check every 10 seconds
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

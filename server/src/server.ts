@@ -29,9 +29,9 @@ app.use(cors());
 
 // Routes
 app.get('/', (req, res) => {
-  res.send('Hello from TypeScript backend!');
+  res.send('Hello word!');
 });
-
+app.get("/health", (req, res) => res.send("OK"));
 app.use('/api/v1/auth', AuthRoute);
 app.use('/api/v1/user', UserRoute);
 app.use('/api/v1/product', ProductRoute);
