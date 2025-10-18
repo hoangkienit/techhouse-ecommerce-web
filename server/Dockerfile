@@ -14,6 +14,8 @@ RUN npm install
 # Copy the rest of your app source code
 COPY . .
 
+RUN npm run build
+
 # Expose port your app runs on (adjust if needed)
 EXPOSE 5000
 

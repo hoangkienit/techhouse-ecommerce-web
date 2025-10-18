@@ -1,0 +1,27 @@
+name: TechHouse Ecommerce
+
+on: 
+  push:
+    branches: [production]
+
+jobs: 
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy using SSH
+        uses: appleboy/ssh-action@master
+        with: 
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+            cd ~/app/techhouse-ecommerce-web
+            git remote set-url origin git@github.com:hoangkienit/techhouse-ecommerce-web.git
+            git fetch origin
+            git checkout production || git checkout -b production origin/production
+            git pull origin production
+            docker-compose down
+            docker-compose up -d --build
+            docker image prune -f
