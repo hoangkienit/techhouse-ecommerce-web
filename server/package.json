@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "jest --detectOpenHandles",
-    "build": "tsc --build --incremental",
+    "build": "tsc --noIncremental",
     "start": "node dist/server.js"
   },
   "keywords": [],
