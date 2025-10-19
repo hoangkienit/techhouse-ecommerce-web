@@ -1,0 +1,103 @@
+paths:
+  /login:
+    post:
+      summary: Login with email & password
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user@example.com
+                password:
+                  type: string
+                  example: "123456"
+      responses:
+        200:
+          description: Login successful (Token stored in Cookie)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successful
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          _id:
+                            type: string
+                            example: "65ad1f..."
+                          email:
+                            type: string
+                            example: user@example.com
+                          fullname:
+                            type: string
+                            example: Nguyen Hoang Kien
+        401:
+          description: Invalid credentials
+
+  /register:
+    post:
+      summary: Register a new user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                fullName:
+                  type: string
+      responses:
+        201:
+          description: User registered successfully
+
+  /logout:
+    get:
+      summary: Logout current user
+      tags: [Auth]
+      responses:
+        200:
+          description: Logged out successfully
+
+  /refresh-token:
+    post:
+      summary: Refresh access token
+      tags: [Auth]
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: Token refreshed
+        401:
+          description: Invalid or expired refresh token
+
+  /google:
+    get:
+      summary: Redirect to Google OAuth
+      tags: [Auth]
+      responses:
+        302:
+          description: Redirect to Google login page
+
+  /google/callback:
+    get:
+      summary: Google OAuth callback
+      tags: [Auth]
+      responses:
+        200:
+          description: Login with Google successful

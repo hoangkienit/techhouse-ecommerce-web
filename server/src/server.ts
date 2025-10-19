@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -8,7 +8,6 @@ import UserRoute from './routes/user.route';
 import ProductRoute from './routes/product.route';
 
 import connectDb from './config/mongo';
-
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import http from "http";
@@ -16,6 +15,11 @@ import mongoSanitize from 'express-mongo-sanitize';
 import cors from 'cors';
 import errorHandler from './middlewares/error.middleware';
 const cookieParser = require("cookie-parser");
+import requestLogger from './middlewares/request.middleware';
+import xssClean = require('xss-clean');
+import hpp from 'hpp';
+import { setupSwagger } from './config/swagger';
+
 
 const app = express();
 // const server = http.createServer(app);
@@ -26,6 +30,16 @@ const port = process.env.PORT as string || 8080;
 connectDb();
 app.use(express.json());
 app.use(cors());
+app.use(requestLogger)
+
+//===========SWAGGER===========
+setupSwagger(app);
+
+//===========SECURITY MIDDLEWARE===========
+app.use(helmet()); // Set security HTTP headers
+app.use(mongoSanitize()); // Sanitize data against NoSQL injection
+app.use(xssClean()); // Sanitize data against XSS attacks
+app.use(hpp()); // Protect against HTTP Parameter Pollution
 
 // Routes
 app.get('/', (req, res) => {
