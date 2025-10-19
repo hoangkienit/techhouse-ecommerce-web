@@ -23,12 +23,6 @@ jobs:
             git checkout production || git checkout -b production origin/production
             git pull origin production
             docker-compose down
-            docker-compose up -d --build
-            docker image prune -f
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+            docker system prune -af
+            export NODE_OPTIONS="--max-old-space-size=2048"
+            docker-compose up -d --build --force-recreate --no-deps
