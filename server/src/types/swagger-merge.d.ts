@@ -1,1 +1,3 @@
-declare module 'swagger-merge';
+declare module "swagger-merge" {
+  export default function mergeSpecs(specs: any[]): any;
+}
