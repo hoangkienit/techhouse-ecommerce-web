@@ -18,6 +18,7 @@ const cookieParser = require("cookie-parser");
 import requestLogger from './middlewares/request.middleware';
 import xssClean = require('xss-clean');
 import hpp from 'hpp';
+import { setupSwagger } from './config/swagger';
 
 
 const app = express();
@@ -30,6 +31,9 @@ connectDb();
 app.use(express.json());
 app.use(cors());
 app.use(requestLogger)
+
+//===========SWAGGER===========
+setupSwagger(app);
 
 //===========SECURITY MIDDLEWARE===========
 app.use(helmet()); // Set security HTTP headers
