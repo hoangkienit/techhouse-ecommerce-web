@@ -1,3 +1,3 @@
-GET https://hoangkien.cloud/health
+GET https://hoangkien.cloud/api-docs
 
 Content-Type: application/json
