@@ -32,7 +32,7 @@ class ProductRepo {
         return Product.findByIdAndUpdate(productId, productData, { new: true }).exec();
     }
 
-    static async findAll(filter: Partial<IProduct> = {}, skip = 0, limit = 10, sort: any = { createdAt: -1 }) {
+    static async findAll(filter = {}, skip = 0, limit = 10, sort: any = { createdAt: -1 }) {
         const [products, total] = await Promise.all([
             Product.find(filter).skip(skip).limit(limit).sort(sort).lean(),
             Product.countDocuments(filter)

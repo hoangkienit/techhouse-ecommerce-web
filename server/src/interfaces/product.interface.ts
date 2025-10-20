@@ -29,13 +29,14 @@ export interface IAddProduct {
 }
 
 export interface IProductQueryOptions {
-  q?: string;
-  brand?: string | string[];
-  category?: string | string[];
-  minPrice?: number;
-  maxPrice?: number;
-  minRating?: number;
-  sort?: string;
+  q?: string | undefined;
+  brand?: string | string[] | undefined;
+  category?: string | string[] | undefined;
+  minPrice?: number | undefined;
+  maxPrice?: number | undefined;
+  minRating?: number | undefined;
+  sort?: string | undefined;
   page: number;
   limit: number;
 }
+
