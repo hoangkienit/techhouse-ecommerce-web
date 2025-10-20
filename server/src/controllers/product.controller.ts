@@ -61,24 +61,25 @@ class ProductController {
     static async AllProducts(req: Request, res: Response): Promise<void> {
         const { q, brand, category, minPrice, maxPrice, minRating, sort, page, limit } = req.query;
 
-        const products = await ProductService.AllProducts({
-            q: String(q),
-            brand: String(brand),
-            category: String(category),
-            minPrice: Number(minPrice),
-            maxPrice: Number(maxPrice),
-            minRating: Number(minRating),
-            sort: String(sort),
+        const response = await ProductService.AllProducts({
+            q: q ? String(q) : undefined,
+            brand: brand ? String(brand): undefined,
+            category: category ? String(category): undefined,
+            minPrice: minPrice ? Number(minPrice): undefined,
+            maxPrice: maxPrice ? Number(maxPrice): undefined,
+            minRating: maxPrice ? Number(minRating): undefined,
+            sort: sort ? String(sort): undefined,
             page: Number(page),
             limit: Number(limit)
         });
+        console.log("Result: ", response);
 
         new OK({
             message: "Lấy danh sách sản phẩm thành công",
             data: {
-                products: products,
+                products: response.products,
                 page: Number(page),
-                total: products.total
+                total: response.total
             }
         }).send(res);
     }

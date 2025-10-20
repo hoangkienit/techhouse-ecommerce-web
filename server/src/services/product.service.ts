@@ -94,9 +94,12 @@ class ProductService {
         const skip = (page - 1) * limit;
 
         // Fetch products from the repository
-        const { products, total } = await ProductRepo.findAll(filter, skip, limit, sortOption);
+        const result = await ProductRepo.findAll(filter, skip, limit, sortOption);
+        console.log("Filter: ", filter);
+        console.log("Sort: ", sortOption);
+        console.log("Search result: ", result);
 
-        return { products, total };
+        return result;
     }
 }
 

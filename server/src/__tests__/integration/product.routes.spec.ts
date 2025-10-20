@@ -53,7 +53,7 @@ describe("POST /api/v1/product/add (Image Upload)", () => {
       .field("product_price", "999")
       .field("product_category", "laptop")
       .field("product_attributes", JSON.stringify({}))
-      .field("product_stock", "10") 
+      .field("product_stock", "10")
       .attach("images", img1)
       .attach("images", img2);
 
@@ -120,5 +120,69 @@ describe("PATCH /api/v1/product/update/:productId (Update Product)", () => {
     expect(response.body.data.updatedProduct.product_name).toBe("Updated MacBook Pro 2026");
     expect(response.body.data.updatedProduct.product_price).toBe("3499");
     expect(response.body.data.updatedProduct.product_brand).toBe("Vivo");
+  });
+});
+
+describe("GET /api/v1/product/list (Get All Products)", () => {
+  beforeEach(async () => {
+    await Product.insertMany([{
+      product_name: "MacBook Pro 2025",
+      product_description: "Apple MacBook Pro with M5 Chip, 32GB RAM, 1TB SSD",
+      product_slug: "macbook-pro-2025",
+      product_brand: "Apple",
+      product_price: "2999",
+      product_imgs: [
+        "https://example.com/images/macbook-front.jpg",
+        "https://example.com/images/macbook-back.jpg"
+      ],
+      product_category: "laptop",
+      product_attributes: {
+        cpu: "Apple M5",
+        ram: "32GB",
+        storage: "1TB SSD",
+        screen: "14-inch MiniLED",
+        color: "Space Gray"
+      },
+      product_stock: 50,
+      product_sold_amount: 10,
+      product_status: "active"
+    },
+    {
+      product_name: "Surface Laptop 6",
+      product_description: "Microsoft Surface Laptop 6 with Intel Core Ultra, 16GB RAM, 512GB SSD",
+      product_slug: "surface-laptop-6",
+      product_brand: "Microsoft",
+      product_price: "1899",
+      product_imgs: [
+        "https://example.com/images/surface-front.jpg",
+        "https://example.com/images/surface-back.jpg"
+      ],
+      product_category: "laptop",
+      product_attributes: {
+        cpu: "Intel Core Ultra",
+        ram: "16GB",
+        storage: "512GB SSD",
+        screen: "13.5-inch PixelSense",
+        color: "Platinum"
+      },
+      product_stock: 30,
+      product_sold_amount: 5,
+      product_status: "active"
+    }]);
+  });
+  it("should return product list with pagination metadata", async () => {
+    const existingProducts = await Product.countDocuments({});
+    expect(existingProducts).toBe(2);
+
+    const response = await request(app)
+      .get("/api/v1/product/list")
+      .query({ q: "mac", page: 1, limit: 10 });
+
+
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body.data.products)).toBe(true);
+    expect(response.body.data.products.length).toBe(1);
+    expect(response.body.data.total).toBe(1);
+    expect(response.body.data.page).toBe(1);
   });
 });
