@@ -25,7 +25,7 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: hoangkiendev/techhouse-ecommerce-web:latest
+          tags: hoangkienit/techhouse-api:latest
 
       - name: Deploy using SSH
         uses: appleboy/ssh-action@master
@@ -37,6 +37,6 @@ jobs:
           script: |
             cd ~/app/techhouse-ecommerce-web
             docker-compose down || true
-            docker pull hoangkiendev/techhouse-ecommerce-web:latest
+            docker pull hoangkienit/techhouse-api:latest
             docker-compose up -d --force-recreate --no-build
             docker system prune -af

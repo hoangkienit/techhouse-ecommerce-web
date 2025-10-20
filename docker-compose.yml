@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   backend:
-    image: hoangkiendev/techhouse-ecommerce-web:latest
+    image: hoangkienit/techhouse-api:latest
+
     ports:
       - "5000:5000"
     environment:
