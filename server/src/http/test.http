@@ -1,3 +1,7 @@
-GET https://hoangkien.cloud/api-docs
+GET http://localhost:5000/api/v1/product/add
 
-Content-Type: application/json
+Content-Type: multipart/form-data
+
+{
+    "product_name": ""
+}

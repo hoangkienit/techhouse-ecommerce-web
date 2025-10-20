@@ -2,7 +2,7 @@ import express from 'express';
 import { Authenticate, AuthorizeAdmin } from '../middlewares/verify.middleware';
 import { validate } from '../middlewares/validate.middleware';
 import { AsyncHandler } from '../utils/async.handler';
-import { addProductSchema } from '../validators/product.validator';
+import { addProductSchema, productQuerySchema } from '../validators/product.validator';
 import ProductController from '../controllers/product.controller';
 import UploadMiddleware from '../middlewares/upload.middleware';
 
@@ -21,8 +21,15 @@ router.patch('/update/:productId',
     validate(addProductSchema), 
     AsyncHandler(ProductController.UpdateProduct));
 
-router.post('/delete', Authenticate, AuthorizeAdmin, validate(addProductSchema), AsyncHandler(ProductController.DeleteProduct));
+router.post('/delete', 
+    Authenticate, 
+    AuthorizeAdmin, 
+    validate(addProductSchema), 
+    AsyncHandler(ProductController.DeleteProduct));
 
+router.get('/list', 
+    validate(productQuerySchema), 
+    AsyncHandler(ProductController.AllProducts));
 
 
 export default router;
