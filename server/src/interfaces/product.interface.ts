@@ -4,6 +4,7 @@ export interface IProduct {
   _id?: Types.ObjectId;
   product_name: string;
   product_description: string;
+  product_brand: string;
   product_slug: string;
   product_price: number;
   product_imgs: string[];
@@ -19,9 +20,22 @@ export interface IProduct {
 
 export interface IAddProduct {
   product_name: string;
+  product_brand: string;
   product_description: string;
   product_price: number;
   product_category: "laptop" | "phone" | "tablet" | "computer";
   product_attributes: Record<string, any> | any;
   product_stock: number;
+}
+
+export interface IProductQueryOptions {
+  q?: string;
+  brand?: string | string[];
+  category?: string | string[];
+  minPrice?: number;
+  maxPrice?: number;
+  minRating?: number;
+  sort?: string;
+  page: number;
+  limit: number;
 }

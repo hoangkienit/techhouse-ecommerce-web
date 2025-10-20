@@ -1,7 +1,6 @@
 import request from "supertest";
 import app from "../../app";
 import path from "path";
-import fs from "fs";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import Product from "../../models/product.model";
@@ -46,16 +45,15 @@ describe("POST /api/v1/product/add (Image Upload)", () => {
     const img1 = path.resolve(__dirname, "../mock-images/sample_1.jpeg");
     const img2 = path.resolve(__dirname, "../mock-images/sample_2.jpg");
 
-    console.log("File exists:", fs.existsSync(img1), fs.existsSync(img2));
-
     const response = await request(app)
       .post("/api/v1/product/add")
-      .set("Content-Type", "multipart/form-data")
       .field("product_name", "Test Product")
+      .field("product_brand", "Apple")
       .field("product_description", "Test description")
       .field("product_price", "999")
       .field("product_category", "laptop")
-      .field("product_attributes", "{}")
+      .field("product_attributes", JSON.stringify({}))
+      .field("product_stock", "10") 
       .attach("images", img1)
       .attach("images", img2);
 
@@ -70,6 +68,7 @@ describe("POST /api/v1/product/add (Image Upload)", () => {
       .field("product_name", "Test Product")
       .field("product_description", "Test description")
       .field("product_price", "999")
+      .field("product_brand", "Acer")
       .field("product_category", "laptop")
       .field("product_stock", 2);
 
@@ -86,6 +85,7 @@ describe("PATCH /api/v1/product/update/:productId (Update Product)", () => {
       product_name: "MacBook Pro 2025",
       product_description: "Apple MacBook Pro with M5 Chip, 32GB RAM, 1TB SSD",
       product_slug: "macbook-pro-2025",
+      product_brand: "Apple",
       product_price: "2999",
       product_imgs: [
         "https://example.com/images/macbook-front.jpg",
@@ -112,11 +112,13 @@ describe("PATCH /api/v1/product/update/:productId (Update Product)", () => {
       .patch(`/api/v1/product/update/${productId}`)
       .send({
         product_name: "Updated MacBook Pro 2026",
-        product_price: "3499"
+        product_price: "3499",
+        product_brand: "Vivo"
       });
 
     expect(response.status).toBe(201);
     expect(response.body.data.updatedProduct.product_name).toBe("Updated MacBook Pro 2026");
     expect(response.body.data.updatedProduct.product_price).toBe("3499");
+    expect(response.body.data.updatedProduct.product_brand).toBe("Vivo");
   });
 });

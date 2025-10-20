@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { BadRequestError, NotFoundError } from "../core/error.response";
 import ProductService from "../services/product.service";
 import { UploadedFilesArray } from "../types/multer";
-import { IAddProduct } from "../interfaces/product.interface";
+import { IAddProduct, IProductQueryOptions } from "../interfaces/product.interface";
 import { CREATED, OK } from "../core/success.response";
 
 
@@ -57,6 +57,32 @@ class ProductController {
             data: {}
         }).send(res);
     }
+
+    static async AllProducts(req: Request, res: Response): Promise<void> {
+        const { q, brand, category, minPrice, maxPrice, minRating, sort, page, limit } = req.query;
+
+        const products = await ProductService.AllProducts({
+            q: String(q),
+            brand: String(brand),
+            category: String(category),
+            minPrice: Number(minPrice),
+            maxPrice: Number(maxPrice),
+            minRating: Number(minRating),
+            sort: String(sort),
+            page: Number(page),
+            limit: Number(limit)
+        });
+
+        new OK({
+            message: "Lấy danh sách sản phẩm thành công",
+            data: {
+                products: products,
+                page: Number(page),
+                total: products.total
+            }
+        }).send(res);
+    }
+
 }
 
 export default ProductController;
