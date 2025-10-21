@@ -19,7 +19,7 @@ class UserController {
     }
 
     static async UpdateAddresses(req: Request, res: Response): Promise<void> {
-
+        
     }
 
     static async SetBanStatus(req: Request, res: Response): Promise<void> {
