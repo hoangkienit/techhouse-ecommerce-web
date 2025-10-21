@@ -13,9 +13,12 @@ RUN npm install
 # Copy the rest of your app source code
 COPY . .
 
+
 ENV NODE_OPTIONS=--max-old-space-size=2048
 
 RUN npm run build
+
+COPY src/docs ./dist/docs
 
 # Expose port your app runs on (adjust if needed)
 EXPOSE 5000
