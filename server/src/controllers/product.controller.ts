@@ -67,12 +67,11 @@ class ProductController {
             category: category ? String(category): undefined,
             minPrice: minPrice ? Number(minPrice): undefined,
             maxPrice: maxPrice ? Number(maxPrice): undefined,
-            minRating: maxPrice ? Number(minRating): undefined,
+            minRating: minRating ? Number(minRating): undefined,
             sort: sort ? String(sort): undefined,
             page: Number(page),
             limit: Number(limit)
         });
-        console.log("Result: ", response);
 
         new OK({
             message: "Lấy danh sách sản phẩm thành công",

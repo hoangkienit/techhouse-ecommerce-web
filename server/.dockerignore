@@ -38,3 +38,5 @@ tmp
 # Docker cache / uploads
 docker-compose.override.yml
 uploads
+
+!src/docs

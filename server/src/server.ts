@@ -6,6 +6,7 @@ dotenv.config();
 import AuthRoute from './routes/auth.route';
 import UserRoute from './routes/user.route';
 import ProductRoute from './routes/product.route';
+import ReviewRoute from './routes/review.route';
 
 import connectDb from './config/mongo';
 import helmet from 'helmet';
@@ -49,6 +50,7 @@ app.get("/health", (req, res) => res.send("OK"));
 app.use('/api/v1/auth', AuthRoute);
 app.use('/api/v1/user', UserRoute);
 app.use('/api/v1/product', ProductRoute);
+app.use('/api/v1/review', ReviewRoute);
 
 app.use(errorHandler);
 
