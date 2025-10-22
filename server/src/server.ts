@@ -19,22 +19,25 @@ const cookieParser = require("cookie-parser");
 import requestLogger from './middlewares/request.middleware';
 import xssClean = require('xss-clean');
 import hpp from 'hpp';
-import { setupSwagger } from './config/swagger';
+import { initializeSocket } from './config/socket';
+// import { setupSwagger } from './config/swagger';
 
 
 const app = express();
-// const server = http.createServer(app);
+const server = http.createServer(app);
+initializeSocket(server);
 app.use(cookieParser());
 
 const port = process.env.PORT as string || 8080;
 
 connectDb();
+app.set('trust proxy', 1);
 app.use(express.json());
 app.use(cors());
 app.use(requestLogger)
 
 //===========SWAGGER===========
-setupSwagger(app);
+// setupSwagger(app);
 
 //===========SECURITY MIDDLEWARE===========
 app.use(helmet()); // Set security HTTP headers

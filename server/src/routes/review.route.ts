@@ -19,8 +19,6 @@ router.post('/:productId/comment',
     AsyncHandler(ReviewController.AddComment));
 
 router.get('/:productId/ratings',
-    commentLimiter,
-    validate(createCommentSchema),
     AsyncHandler(ReviewController.ListRatings));
 
 router.post('/:productId/rating',
