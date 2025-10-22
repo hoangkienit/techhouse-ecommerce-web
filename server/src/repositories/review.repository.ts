@@ -1,6 +1,7 @@
 
-import { IComment } from "../interfaces/review.interface";
+import { IComment, IRating } from "../interfaces/review.interface";
 import Comment from "../models/comment.model";
+import Rating from "../models/rating.model";
 
 
 class ReviewRepo {
@@ -36,6 +37,35 @@ class ReviewRepo {
     }
 
     // ==============RATING===============
+    static async createRating(data: Partial<IRating>) {
+        const rating = new Rating(data);
+        return await rating.save();
+    }
+
+    static async findRatingById(id: string) {
+        return await Rating.findById(id).lean();
+    }
+
+    static async deleteRatingById(id: string) {
+        return await Rating.findByIdAndDelete(id);
+    }
+
+    static async deleteManyRating(ids: string[]) {
+        return await Rating.deleteMany({ _id: { $in: ids } });
+    }
+
+    static async updateRating(commentId: string, commentData: Partial<IComment>) {
+        return Rating.findByIdAndUpdate(commentId, commentData, { new: true }).exec();
+    }
+
+    static async findAllRatings(productId: string, skip = 0, limit = 10) {
+        const [ratings, total] = await Promise.all([
+            Rating.find({ productId }).skip(skip).limit(limit).sort({ createdAt: -1 }).lean(),
+            Rating.countDocuments({ productId })
+        ]);
+
+        return { ratings, total };
+    }
 }
 
 export default ReviewRepo;
