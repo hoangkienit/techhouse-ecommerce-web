@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   backend:
-    build:
-      context: ./server
+    image: hoangkienit/techhouse-api:latest
+
     ports:
       - "5000:5000"
     environment:
@@ -19,11 +19,12 @@ services:
       start_period: 20s
     labels:
       autoheal: "true"
+
   autoheal:
     image: willfarrell/autoheal
     restart: always
     environment:
-      AUTOHEAL_CONTAINER_LABEL: autoheal   # Watch containers with this label
-      AUTOHEAL_INTERVAL: 10                # Check every 10 seconds
+      AUTOHEAL_CONTAINER_LABEL: autoheal
+      AUTOHEAL_INTERVAL: 10
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

@@ -1,7 +1,6 @@
 # Use the official Node.js LTS image
 FROM node:18
 
-
 # Set working directory inside the container
 WORKDIR /app
 
@@ -14,7 +13,12 @@ RUN npm install
 # Copy the rest of your app source code
 COPY . .
 
+
+ENV NODE_OPTIONS=--max-old-space-size=2048
+
 RUN npm run build
+
+COPY src/docs ./dist/docs
 
 # Expose port your app runs on (adjust if needed)
 EXPOSE 5000

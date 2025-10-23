@@ -64,6 +64,7 @@ class UserController {
             message: "Addresses updated successfully",
             data: { updatedUser },
         }).send(res);
+        
     }
 
     static async SetBanStatus(req: Request, res: Response): Promise<void> {
