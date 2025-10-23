@@ -70,6 +70,7 @@
     "@types/yamljs": "^0.2.34",
     "jest": "^30.2.0",
     "mongodb-memory-server": "^10.2.2",
+    "socket.io-client": "^4.8.1",
     "ts-jest": "^29.4.4",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"

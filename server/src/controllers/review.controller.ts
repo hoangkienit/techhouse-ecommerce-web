@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { NotFoundError } from "../core/error.response";
 import ReviewService from "../services/review.service";
-import { OK } from "../core/success.response";
+import { CREATED, OK } from "../core/success.response";
 import { HashIP } from "../utils/crypto.handler";
 import { Types } from "mongoose";
 
@@ -24,7 +24,7 @@ class ReviewController {
             ipHash: hashedIP || ""
         });
 
-        new OK({
+        new CREATED({
             message: "Thêm comment thành công",
             data: { comment: response }
         }).send(res);
