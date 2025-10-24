@@ -14,7 +14,7 @@ class ReviewController {
         const { content, displayName } = req.body;
         const hashedIP = HashIP(req.ip);
 
-        if (!productId) throw new NotFoundError("Missing productId");
+        if (!productId) throw new NotFoundError("Missing credentials");
 
         const response = await ReviewService.AddComment({
             productId: Types.ObjectId.isValid(productId) ? new Types.ObjectId(productId) : productId,
@@ -50,7 +50,19 @@ class ReviewController {
     }
 
     static async RateProduct(req: Request, res: Response): Promise<void> {
+        const { productId } = req.params;
+        const { stars } = req.body;
+        const userId = req.user?.userId;
+        if (!productId) throw new NotFoundError("Missing credentials");
 
+        const response = await ReviewService.RateProduct(userId ? userId : "", productId, stars);
+
+        new OK({
+            message: "Đánh giá sản phẩm thành công",
+            data: {
+                rating: response
+            }
+        }).send(res);
     }
 
     static async ListRatings(req: Request, res: Response): Promise<void> {

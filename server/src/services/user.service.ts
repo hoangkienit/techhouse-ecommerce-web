@@ -1,7 +1,6 @@
 import { NotFoundError, BadRequestError } from "../core/error.response";
 import UserRepo from "../repositories/user.repository";
 import bcrypt from "bcrypt";
-import User from "../models/user.model";
 
 class UserService {
     static async UpdateInformation(

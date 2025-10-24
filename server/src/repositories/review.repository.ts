@@ -54,7 +54,7 @@ class ReviewRepo {
         return await Rating.deleteMany({ _id: { $in: ids } });
     }
 
-    static async updateRating(commentId: string, commentData: Partial<IComment>) {
+    static async updateRating(commentId: string, commentData: Partial<IRating>) {
         return Rating.findByIdAndUpdate(commentId, commentData, { new: true }).exec();
     }
 
