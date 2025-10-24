@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "jest --detectOpenHandles",
+    "test:one": "jest --runTestsByPath",
     "build": "tsc",
     "start": "node dist/server.js"
   },

@@ -15,20 +15,23 @@ router.post('/add',
     validate(addProductSchema),
     AsyncHandler(ProductController.AddProduct));
 
-router.patch('/update/:productId', 
-    Authenticate, 
-    AuthorizeAdmin, 
-    validate(addProductSchema), 
+router.patch('/update/:productId',
+    Authenticate,
+    AuthorizeAdmin,
+    validate(addProductSchema),
     AsyncHandler(ProductController.UpdateProduct));
 
-router.post('/delete', 
-    Authenticate, 
-    AuthorizeAdmin, 
-    validate(addProductSchema), 
+router.post('/delete',
+    Authenticate,
+    AuthorizeAdmin,
+    validate(addProductSchema),
     AsyncHandler(ProductController.DeleteProduct));
 
-router.get('/list', 
-    validate(productQuerySchema), 
+router.get('/list/:productId',
+    AsyncHandler(ProductController.GetSingleProduct));
+
+router.get('/list',
+    validate(productQuerySchema),
     AsyncHandler(ProductController.AllProducts));
 
 
