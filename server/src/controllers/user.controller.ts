@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import UserService from "../services/user.service";
 import { NotFoundError } from "../core/error.response";
 import { OK } from "../core/success.response";
-import Address from "../models/address.model";
 
 class UserController {
     static async UpdateInformation(req: Request, res: Response): Promise<void> {
@@ -13,8 +12,7 @@ class UserController {
 
         const updatedUser = await UserService.UpdateInformation(userId, {
             fullname,
-            phone,
-            
+            phone,      
         });
 
         new OK({
@@ -34,6 +32,7 @@ class UserController {
 
         new OK({
             message: "Password changed successfully",
+            data: {}
         }).send(res);
     }
 
@@ -47,6 +46,7 @@ class UserController {
 
         new OK({
             message: "Password reset successfully",
+            data: {}
         }).send(res);
     }
 

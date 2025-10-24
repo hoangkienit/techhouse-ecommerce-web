@@ -4,13 +4,14 @@ import ProductRepo from "../repositories/product.repository";
 import ReviewRepo from "../repositories/review.repository";
 import { Types } from 'mongoose';
 import { getIO } from './../config/socket';
+import { convertToObjectId } from "../utils/convert";
 
 
 class ReviewService {
     static async ensureProductExists(productId: string | Types.ObjectId) {
         const product = await ProductRepo.findById(String(productId));
-        if (!product) false;
-        return true;
+        if (!product) throw new NotFoundError("Sản phẩm không tồn tại");
+        return product;
     }
 
     static async ListComments(options: ICommentListOptions) {
@@ -62,8 +63,19 @@ class ReviewService {
 
     }
 
-    static async RateProduct() {
+    static async RateProduct(userId: string, productId: string, stars: number) {
+        await this.ensureProductExists(productId as string);
+        let userObjectId = undefined;
+        if (userId && typeof userId === 'string' && userId.trim() !== '') {
+            userObjectId = convertToObjectId(userId);
+        }
+        const ratingData: any = {
+            productId,
+            stars
+        };
+        if (userObjectId) ratingData.userId = userObjectId;
 
+        return await ReviewRepo.createRating(ratingData);
     }
 }
 
