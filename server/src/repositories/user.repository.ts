@@ -49,9 +49,11 @@ class UserRepo {
 
         const savedAddress = await address.save();
 
-        await User.findByIdAndUpdate(userId, {
-            $push: { addresses: savedAddress._id }
-        });
+        await User.findByIdAndUpdate(
+        userId,
+        { $addToSet: { addresses: savedAddress._id } },
+        { new: true }
+    );
 
         return savedAddress;
     }

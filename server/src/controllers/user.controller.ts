@@ -34,6 +34,7 @@ class UserController {
 
         new OK({
             message: "Password changed successfully",
+            data: {}, 
         }).send(res);
     }
 
@@ -47,24 +48,47 @@ class UserController {
 
         new OK({
             message: "Password reset successfully",
+            data: {},
         }).send(res);
     }
 
-    static async UpdateAddresses(req: Request, res: Response): Promise<void> {
-        const userId = req.user?.userId;
-        const { addresses } = req.body;
+static async UpdateAddresses(req: Request, res: Response): Promise<void> {
+  const userId = req.user?.userId;
+  const { action, addressId, address } = req.body;
 
-        if (!userId) throw new NotFoundError("User not found");
-        if (!Array.isArray(addresses))
-            throw new NotFoundError("Invalid address format");
+  if (!userId) throw new NotFoundError("User not found");
 
-        const updatedUser = await UserService.UpdateAddresses(userId, addresses);
+  let result;
 
-        new OK({
-            message: "Addresses updated successfully",
-            data: { updatedUser },
-        }).send(res);
-    }
+  switch (action) {
+    case "add":
+      if (!address) throw new NotFoundError("Missing address data");
+      result = await UserService.AddAddress(userId, address);
+      break;
+
+    case "remove":
+      if (!addressId) throw new NotFoundError("Missing addressId");
+      result = await UserService.RemoveAddress(userId, addressId);
+      break;
+
+    case "set_default":
+      if (!addressId) throw new NotFoundError("Missing addressId");
+      result = await UserService.SetDefaultAddress(userId, addressId);
+      break;
+
+    case "list":
+      result = await UserService.ListAddresses(userId);
+      break;
+
+    default:
+      throw new NotFoundError("Invalid action type");
+  }
+
+  new OK({
+    message: "Address action executed successfully",
+    data: { result },
+  }).send(res);
+}
 
     static async SetBanStatus(req: Request, res: Response): Promise<void> {
         const userId = req.params.userId as string;

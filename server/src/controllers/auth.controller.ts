@@ -9,7 +9,6 @@ import saveTokenToCookie from '../utils/cookie.helper';
 class AuthController {
     static async Login(req: Request, res: Response): Promise<void> {
         const response = await AuthService.Login(req.body);
-
         // Save tokens to cookie
         saveTokenToCookie(response.accessToken, response.refreshToken, res);
 
