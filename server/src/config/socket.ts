@@ -43,6 +43,29 @@ export const initializeSocket = (server: any) => {
       console.log(`📦 Socket ${socket.id} joined room: ${productId}`);
     });
 
+    socket.on("join_cart", (payload: { type: "user" | "guest"; id: string }) => {
+      if (!payload?.id) return;
+
+      if (payload.type === "user") {
+        if (socket.user?.userId === payload.id) {
+          const room = `cart:user:${payload.id}`;
+          socket.join(room);
+          console.log(`🛒 Socket ${socket.id} joined user cart room: ${room}`);
+        }
+      } else {
+        const room = `cart:guest:${payload.id}`;
+        socket.join(room);
+        console.log(`🛒 Socket ${socket.id} joined guest cart room: ${room}`);
+      }
+    });
+
+    socket.on("leave_cart", (payload: { type: "user" | "guest"; id: string }) => {
+      if (!payload?.id) return;
+      const room = payload.type === "user" ? `cart:user:${payload.id}` : `cart:guest:${payload.id}`;
+      socket.leave(room);
+      console.log(`🛒 Socket ${socket.id} left cart room: ${room}`);
+    });
+
     socket.on("disconnect", () => {
       console.log(`🔌 Socket disconnected: ${socket.id}`);
     });

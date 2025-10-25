@@ -95,8 +95,15 @@ class ProductService {
 
         // Fetch products from the repository
         const result = await ProductRepo.findAll(filter, skip, limit, sortOption);
-        
+
         return result;
+    }
+
+    static async GetSingleProduct(productId: string) {
+        const product = await ProductRepo.findById(productId);
+        if (!product) throw new NotFoundError("Sản phẩm không tồn tại");
+
+        return product;
     }
 }
 

@@ -275,3 +275,45 @@ describe("GET /api/v1/product/list (Get All Products)", () => {
     expect(response.body.data.total).toBe(0);
   });
 });
+
+describe("GET /api/v1/product/list/:productId (Get Single Product)", () => {
+  let productId: string;
+
+  beforeEach(async () => {
+    const product = await Product.create({
+      product_name: "MacBook Pro 2025",
+      product_description: "Apple MacBook Pro with M5 Chip, 32GB RAM, 1TB SSD",
+      product_slug: "macbook-pro-2025",
+      product_brand: "Apple",
+      product_price: 2999,
+      product_imgs: [
+        "https://example.com/images/macbook-front.jpg",
+        "https://example.com/images/macbook-back.jpg"
+      ],
+      product_category: "laptop",
+      product_attributes: {
+        cpu: "Apple M5",
+        ram: "32GB",
+        storage: "1TB SSD",
+        screen: "14-inch MiniLED",
+        color: "Space Gray"
+      },
+      product_stock: 50,
+      product_sold_amount: 10,
+      product_status: "active"
+    });
+
+    productId = product._id.toString();
+  });
+
+  it("should return product with metadata successfully", async () => {
+    const response = await request(app)
+      .get(`/api/v1/product/list/${productId}`)
+
+      console.log(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data.product.product_name).toBe("MacBook Pro 2025");
+    expect(response.body.data.product.product_price).toBe(2999);
+    expect(response.body.data.product.product_brand).toBe("Apple");
+  });
+});

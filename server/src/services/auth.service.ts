@@ -58,12 +58,30 @@ class AuthService {
             password: hashedPassword
         });
 
-        await UserRepo.addAddress(
-            newUser._id.toString(),
-            {
-                ...address,
-                isDefault: true
-            });
+        const initialAddress: {
+            street: string;
+            city: string;
+            state?: string;
+            postalCode?: string;
+            country: string;
+            label?: string;
+            fullName?: string;
+            phone?: string;
+            isDefault?: boolean;
+        } = {
+            street: address.street,
+            city: address.city,
+            country: address.country,
+            isDefault: true
+        };
+
+        if (address.state) initialAddress.state = address.state;
+        if (address.postalCode) initialAddress.postalCode = address.postalCode;
+        if (address.label) initialAddress.label = address.label;
+        if (address.fullName) initialAddress.fullName = address.fullName;
+        if (address.phone) initialAddress.phone = address.phone;
+
+        await UserRepo.addAddress(newUser._id.toString(), initialAddress);
 
         return true;
     }
