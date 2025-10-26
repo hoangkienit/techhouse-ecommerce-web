@@ -9,6 +9,7 @@ import Order from "../../models/order.model";
 import User from "../../models/user.model";
 import Address from "../../models/address.model";
 import AddressRepo from "../../repositories/address.repository";
+import DiscountCode from "../../models/discount.model";
 
 // Bypass auth + validation layers for integration focus
 jest.mock("../../middlewares/verify.middleware", () => ({
@@ -39,6 +40,7 @@ afterEach(async () => {
     Cart.deleteMany({}),
     Order.deleteMany({}),
     Address.deleteMany({}),
+    DiscountCode.deleteMany({}),
     User.deleteMany({})
   ]);
 });
@@ -302,5 +304,81 @@ describe("Cart guest checkout flow", () => {
     const savedAddress = savedAddresses[0]!;
     expect(savedAddress.isDefault).toBe(true);
     expect(savedAddress.street).toBe("789 Sunset Blvd");
+  });
+
+  it("applies a valid discount code and recalculates totals", async () => {
+    await DiscountCode.create({
+      code: "SAVE5",
+      percentage: 10,
+      usageLimit: 5
+    });
+
+    const addRes = await request(app)
+      .post("/api/v1/cart/items")
+      .send({ productId: productOne._id.toString(), quantity: 1 });
+
+    const guestCartId = addRes.body.data.cartId;
+
+    const discountRes = await request(app)
+      .post("/api/v1/cart/discount/apply")
+      .set("x-cart-id", guestCartId)
+      .send({ code: "SAVE5" });
+
+    expect(discountRes.status).toBe(200);
+    expect(discountRes.body.data.discountCode).toBe("SAVE5");
+    expect(discountRes.body.data.discountRate).toBe(10);
+    expect(discountRes.body.data.discountAmount).toBeGreaterThan(0);
+    expect(discountRes.body.data.total).toBeLessThan(discountRes.body.data.subtotal + discountRes.body.data.tax + discountRes.body.data.shipping);
+  });
+
+  it("rejects discount code that has no remaining uses", async () => {
+    await DiscountCode.create({
+      code: "LIMIT",
+      percentage: 5,
+      usageLimit: 1,
+      usageCount: 1
+    });
+
+    const addRes = await request(app)
+      .post("/api/v1/cart/items")
+      .send({ productId: productTwo._id.toString(), quantity: 1 });
+
+    const guestCartId = addRes.body.data.cartId;
+
+    const discountRes = await request(app)
+      .post("/api/v1/cart/discount/apply")
+      .set("x-cart-id", guestCartId)
+      .send({ code: "LIMIT" });
+
+    expect(discountRes.status).toBe(400);
+    expect(discountRes.body.message).toMatch(/hết lượt/i);
+  });
+
+  it("removes discount code and restores totals", async () => {
+    await DiscountCode.create({
+      code: "DELTA",
+      percentage: 15,
+      usageLimit: 3
+    });
+
+    const addRes = await request(app)
+      .post("/api/v1/cart/items")
+      .send({ productId: productOne._id.toString(), quantity: 1 });
+
+    const guestCartId = addRes.body.data.cartId;
+
+    await request(app)
+      .post("/api/v1/cart/discount/apply")
+      .set("x-cart-id", guestCartId)
+      .send({ code: "DELTA" });
+
+    const removeRes = await request(app)
+      .delete("/api/v1/cart/discount/remove")
+      .set("x-cart-id", guestCartId)
+      .send();
+
+    expect(removeRes.status).toBe(200);
+    expect(removeRes.body.data.discountCode).toBe(null);
+    expect(removeRes.body.data.discountAmount).toBe(0);
   });
 });

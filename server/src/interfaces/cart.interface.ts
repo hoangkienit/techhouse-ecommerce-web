@@ -42,6 +42,9 @@ export interface ICart {
   tax: number;
   shipping: number;
   total: number;
+  discountCode?: string | null;
+  discountRate?: number | null;
+  discountAmount?: number;
   shippingAddress?: IShippingAddress | null;
   contactEmail?: string | null;
   paymentMethod?: IPaymentMethod | null;
