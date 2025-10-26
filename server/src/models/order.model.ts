@@ -24,6 +24,9 @@ const orderSchema = new Schema<IOrder>(
     tax: { type: Number, required: true },
     shipping: { type: Number, required: true },
     total: { type: Number, required: true },
+    discountCode: { type: String, default: null },
+    discountRate: { type: Number, default: 0 },
+    discountAmount: { type: Number, default: 0 },
     shippingAddress: {
       fullName: String,
       line1: String,

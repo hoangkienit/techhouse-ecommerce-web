@@ -12,6 +12,9 @@ export interface IOrder {
   tax: number;
   shipping: number;
   total: number;
+  discountCode?: string | null;
+  discountRate?: number | null;
+  discountAmount?: number;
   shippingAddress?: IShippingAddress | null;
   paymentMethod?: IPaymentMethod | null;
   currency: string;
