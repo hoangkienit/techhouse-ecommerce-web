@@ -50,7 +50,7 @@ describe("POST /api/v1/product/add (Image Upload)", () => {
       .field("product_name", "Test Product")
       .field("product_brand", "Apple")
       .field("product_description", "Test description")
-      .field("product_price", "999")
+      .field("product_price", 999)
       .field("product_category", "laptop")
       .field("product_attributes", JSON.stringify({}))
       .field("product_stock", "10")
@@ -67,7 +67,7 @@ describe("POST /api/v1/product/add (Image Upload)", () => {
       .post("/api/v1/product/add")
       .field("product_name", "Test Product")
       .field("product_description", "Test description")
-      .field("product_price", "999")
+      .field("product_price", 999)
       .field("product_brand", "Acer")
       .field("product_category", "laptop")
       .field("product_stock", 2);
@@ -86,7 +86,7 @@ describe("PATCH /api/v1/product/update/:productId (Update Product)", () => {
       product_description: "Apple MacBook Pro with M5 Chip, 32GB RAM, 1TB SSD",
       product_slug: "macbook-pro-2025",
       product_brand: "Apple",
-      product_price: "2999",
+      product_price: 2999,
       product_imgs: [
         "https://example.com/images/macbook-front.jpg",
         "https://example.com/images/macbook-back.jpg"
@@ -112,13 +112,13 @@ describe("PATCH /api/v1/product/update/:productId (Update Product)", () => {
       .patch(`/api/v1/product/update/${productId}`)
       .send({
         product_name: "Updated MacBook Pro 2026",
-        product_price: "3499",
+        product_price: 3499,
         product_brand: "Vivo"
       });
 
     expect(response.status).toBe(201);
     expect(response.body.data.updatedProduct.product_name).toBe("Updated MacBook Pro 2026");
-    expect(response.body.data.updatedProduct.product_price).toBe("3499");
+    expect(response.body.data.updatedProduct.product_price).toBe(3499);
     expect(response.body.data.updatedProduct.product_brand).toBe("Vivo");
   });
 });
@@ -131,7 +131,7 @@ describe("GET /api/v1/product/list (Get All Products)", () => {
         product_description: "Apple MacBook Pro with M5 Chip, 32GB RAM, 1TB SSD",
         product_slug: "macbook-pro-2025",
         product_brand: "Apple",
-        product_price: "2999",
+        product_price: 2999,
         product_imgs: [
           "https://example.com/images/macbook-front.jpg",
           "https://example.com/images/macbook-back.jpg"
@@ -153,7 +153,7 @@ describe("GET /api/v1/product/list (Get All Products)", () => {
         product_description: "Microsoft Surface Laptop 6 with Intel Core Ultra, 16GB RAM, 512GB SSD",
         product_slug: "surface-laptop-6",
         product_brand: "Microsoft",
-        product_price: "1899",
+        product_price: 1899,
         product_imgs: [
           "https://example.com/images/surface-front.jpg",
           "https://example.com/images/surface-back.jpg"
@@ -175,7 +175,7 @@ describe("GET /api/v1/product/list (Get All Products)", () => {
         product_description: "Apple iPhone 15 Pro, 256GB, Titanium",
         product_slug: "iphone-15-pro",
         product_brand: "Apple",
-        product_price: "1299",
+        product_price: 1299,
         product_imgs: [
           "https://example.com/images/iphone-front.jpg",
           "https://example.com/images/iphone-back.jpg"
@@ -235,7 +235,7 @@ describe("GET /api/v1/product/list (Get All Products)", () => {
       .query({ minPrice: 1200, maxPrice: 2000 });
     expect(response.status).toBe(200);
     expect(response.body.data.products.length).toBe(2);
-    expect(response.body.data.products.every((p: any) => Number(p.product_price) >= 1200 && Number(p.product_price) <= 2000)).toBe(true);
+    expect(response.body.data.products.every((p: any) => p.product_price >= 1200 && p.product_price <= 2000)).toBe(true);
   });
 
   it("should sort by price ascending", async () => {
@@ -273,5 +273,47 @@ describe("GET /api/v1/product/list (Get All Products)", () => {
     expect(response.status).toBe(200);
     expect(response.body.data.products.length).toBe(0);
     expect(response.body.data.total).toBe(0);
+  });
+});
+
+describe("GET /api/v1/product/list/:productId (Get Single Product)", () => {
+  let productId: string;
+
+  beforeEach(async () => {
+    const product = await Product.create({
+      product_name: "MacBook Pro 2025",
+      product_description: "Apple MacBook Pro with M5 Chip, 32GB RAM, 1TB SSD",
+      product_slug: "macbook-pro-2025",
+      product_brand: "Apple",
+      product_price: 2999,
+      product_imgs: [
+        "https://example.com/images/macbook-front.jpg",
+        "https://example.com/images/macbook-back.jpg"
+      ],
+      product_category: "laptop",
+      product_attributes: {
+        cpu: "Apple M5",
+        ram: "32GB",
+        storage: "1TB SSD",
+        screen: "14-inch MiniLED",
+        color: "Space Gray"
+      },
+      product_stock: 50,
+      product_sold_amount: 10,
+      product_status: "active"
+    });
+
+    productId = product._id.toString();
+  });
+
+  it("should return product with metadata successfully", async () => {
+    const response = await request(app)
+      .get(`/api/v1/product/list/${productId}`)
+
+      console.log(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data.product.product_name).toBe("MacBook Pro 2025");
+    expect(response.body.data.product.product_price).toBe(2999);
+    expect(response.body.data.product.product_brand).toBe("Apple");
   });
 });

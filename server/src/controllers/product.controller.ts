@@ -34,7 +34,7 @@ class ProductController {
         const productId = req.params.productId as string;
         const productData = req.body;
 
-        if(!productId) throw new NotFoundError("Missing credentials");
+        if (!productId) throw new NotFoundError("Missing credentials");
 
         const updatedProduct = await ProductService.UpdateProduct(productId, productData);
 
@@ -48,7 +48,7 @@ class ProductController {
 
     static async DeleteProduct(req: Request, res: Response): Promise<void> {
         const { productId } = req.params;
-        if(!productId) throw new NotFoundError("Missing credentials");
+        if (!productId) throw new NotFoundError("Missing credentials");
 
         await ProductService.DeleteProduct(productId);
 
@@ -63,16 +63,15 @@ class ProductController {
 
         const response = await ProductService.AllProducts({
             q: q ? String(q) : undefined,
-            brand: brand ? String(brand): undefined,
-            category: category ? String(category): undefined,
-            minPrice: minPrice ? Number(minPrice): undefined,
-            maxPrice: maxPrice ? Number(maxPrice): undefined,
-            minRating: maxPrice ? Number(minRating): undefined,
-            sort: sort ? String(sort): undefined,
+            brand: brand ? String(brand) : undefined,
+            category: category ? String(category) : undefined,
+            minPrice: minPrice ? Number(minPrice) : undefined,
+            maxPrice: maxPrice ? Number(maxPrice) : undefined,
+            minRating: minRating ? Number(minRating) : undefined,
+            sort: sort ? String(sort) : undefined,
             page: Number(page),
             limit: Number(limit)
         });
-        console.log("Result: ", response);
 
         new OK({
             message: "Lấy danh sách sản phẩm thành công",
@@ -84,6 +83,19 @@ class ProductController {
         }).send(res);
     }
 
+    static async GetSingleProduct(req: Request, res: Response): Promise<void> {
+        const { productId } = req.params;
+        if (!productId) throw new NotFoundError("Missing credentials");
+
+        const response = await ProductService.GetSingleProduct(productId);
+
+        new OK({
+            message: "Lấy sản phẩm thành công",
+            data: {
+                product: response
+            }
+        }).send(res);
+    }
 }
 
 export default ProductController;

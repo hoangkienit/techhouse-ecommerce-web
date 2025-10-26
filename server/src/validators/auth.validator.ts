@@ -57,4 +57,14 @@ export const registerSchema = () =>
         "any.only": "Xác nhận mật khẩu không khớp",
         "any.required": "Vui lòng nhập lại mật khẩu",
       }),
+    address: Joi.object({
+      street: Joi.string().trim().min(3).max(200).required(),
+      city: Joi.string().trim().min(2).max(120).required(),
+      state: Joi.string().trim().allow("", null),
+      postalCode: Joi.string().trim().allow("", null),
+      country: Joi.string().trim().min(2).max(120).required(),
+      label: Joi.string().trim().allow("", null),
+      fullName: Joi.string().trim().allow("", null),
+      phone: Joi.string().trim().allow("", null)
+    }).required()
   }).unknown(true);

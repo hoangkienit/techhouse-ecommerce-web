@@ -1,4 +1,3 @@
-import { x } from "joi";
 import { BadRequestError, NotFoundError } from "../core/error.response";
 import { IAddProduct, IProduct, IProductQueryOptions } from "../interfaces/product.interface";
 import ProductRepo from "../repositories/product.repository";
@@ -64,12 +63,13 @@ class ProductService {
 
         const filter: any = {};
 
-        if (brand) filter.brand = brand;
-        if (category) filter.category = category;
+        if (brand) filter.product_brand = brand;
+        if (category) filter.product_category = category;
+
         if (minPrice != null || maxPrice != null) {
-            filter.price = {};
-            if (minPrice != null) filter.price.$gte = minPrice;
-            if (maxPrice != null) filter.price.$lte = maxPrice;
+            filter.product_price = {};
+            if (minPrice != null) filter.product_price.$gte = Number(minPrice);
+            if (maxPrice != null) filter.product_price.$lte = Number(maxPrice);
         }
         if (minRating != null) filter.rating = { $gte: minRating };
 
@@ -95,11 +95,15 @@ class ProductService {
 
         // Fetch products from the repository
         const result = await ProductRepo.findAll(filter, skip, limit, sortOption);
-        console.log("Filter: ", filter);
-        console.log("Sort: ", sortOption);
-        console.log("Search result: ", result);
 
         return result;
+    }
+
+    static async GetSingleProduct(productId: string) {
+        const product = await ProductRepo.findById(productId);
+        if (!product) throw new NotFoundError("Sản phẩm không tồn tại");
+
+        return product;
     }
 }
 

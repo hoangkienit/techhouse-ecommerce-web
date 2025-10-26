@@ -35,15 +35,27 @@ class UserRepo {
         street: string;
         city: string;
         state?: string;
+        postalCode?: string;
         country: string;
+        label?: string;
+        fullName?: string;
+        phone?: string;
         isDefault?: boolean;
     }) {
+        if (addressData.isDefault) {
+            await Address.updateMany({ userId }, { isDefault: false });
+        }
+
         const address = new Address({
             userId,
             street: addressData.street,
             city: addressData.city,
             state: addressData.state,
+            postalCode: addressData.postalCode,
             country: addressData.country,
+            label: addressData.label ?? null,
+            fullName: addressData.fullName ?? null,
+            phone: addressData.phone ?? null,
             isDefault: addressData.isDefault ?? false
         });
 

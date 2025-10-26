@@ -6,6 +6,9 @@ dotenv.config();
 import AuthRoute from './routes/auth.route';
 import UserRoute from './routes/user.route';
 import ProductRoute from './routes/product.route';
+import ReviewRoute from './routes/review.route';
+import AddressRoute from './routes/address.route';
+import CartRoute from './routes/cart.route';
 
 import connectDb from './config/mongo';
 import helmet from 'helmet';
@@ -18,22 +21,25 @@ const cookieParser = require("cookie-parser");
 import requestLogger from './middlewares/request.middleware';
 import xssClean = require('xss-clean');
 import hpp from 'hpp';
-import { setupSwagger } from './config/swagger';
+import { initializeSocket } from './config/socket';
+// import { setupSwagger } from './config/swagger';
 
 
 const app = express();
-// const server = http.createServer(app);
+const server = http.createServer(app);
+initializeSocket(server);
 app.use(cookieParser());
 
 const port = process.env.PORT as string || 8080;
 
 connectDb();
+app.set('trust proxy', 1);
 app.use(express.json());
 app.use(cors());
 app.use(requestLogger)
 
 //===========SWAGGER===========
-setupSwagger(app);
+// setupSwagger(app);
 
 //===========SECURITY MIDDLEWARE===========
 app.use(helmet()); // Set security HTTP headers
@@ -49,6 +55,10 @@ app.get("/health", (req, res) => res.send("OK"));
 app.use('/api/v1/auth', AuthRoute);
 app.use('/api/v1/user', UserRoute);
 app.use('/api/v1/product', ProductRoute);
+app.use('/api/v1/review', ReviewRoute);
+app.use('/api/v1/address', AddressRoute);
+app.use('/api/v1/cart', CartRoute);
+
 
 app.use(errorHandler);
 
