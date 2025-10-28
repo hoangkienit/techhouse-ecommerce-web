@@ -28,3 +28,22 @@ export const updateInformationSchema = () =>
                 "string.max": "Số điện thoại tối đa là 10 ký tự",
             }),
     });
+
+export const resetPasswordCallbackSchema = () =>
+    Joi.object({
+        token: Joi.string()
+            .required()
+            .messages({
+                "any.required": "Email là bắt buộc",
+                "string.empty": "Email không được để trống",
+            }),
+
+        password: Joi.string()
+            .min(6)
+            .required()
+            .messages({
+                "any.required": "Mật khẩu là bắt buộc",
+                "string.empty": "Mật khẩu không được để trống",
+                "string.min": "Mật khẩu phải có ít nhất 6 ký tự",
+            }),
+    });

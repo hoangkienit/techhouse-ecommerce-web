@@ -16,7 +16,7 @@ class UserController {
         });
 
         new OK({
-            message: "Information updated successfully",
+            message: "Thay đổi thông tin thành công",
             data: { updatedUser },
         }).send(res);
     }
@@ -31,21 +31,35 @@ class UserController {
         await UserService.ChangePassword(userId, oldPassword, newPassword);
 
         new OK({
-            message: "Password changed successfully",
+            message: "Thay đổi mật khẩu thành công",
             data: {}
         }).send(res);
     }
 
     static async ResetPassword(req: Request, res: Response): Promise<void> {
-        const { email, newPassword } = req.body;
+        const { email } = req.body;
 
-        if (!email || !newPassword)
+        if (!email)
             throw new NotFoundError("Missing email or password");
 
-        await UserService.ResetPassword(email, newPassword);
+        await UserService.ResetPassword(email);
 
         new OK({
-            message: "Password reset successfully",
+            message: "Đặt lại mật khẩu thành công",
+            data: {}
+        }).send(res);
+    }
+
+    static async ResetPasswordCallback(req: Request, res: Response): Promise<void> {
+        const { token } = req.query;
+        const { newPassword } = req.body;
+
+        if(!token) throw new NotFoundError("Missing token");
+
+        await UserService.ResetPasswordCallback(token as string, newPassword);
+
+        new OK({
+            message: "Đặt lại mật khẩu thành công",
             data: {}
         }).send(res);
     }

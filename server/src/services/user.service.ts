@@ -1,6 +1,10 @@
 import { NotFoundError, BadRequestError } from "../core/error.response";
 import UserRepo from "../repositories/user.repository";
 import bcrypt from "bcrypt";
+import { generateResetToken, verifyResetToken } from "../utils/tokens.helper";
+import path from 'path';
+import fs from 'fs';
+import { sendEmail } from "../utils/mail.helper";
 
 class UserService {
     static async UpdateInformation(
@@ -22,7 +26,7 @@ class UserService {
         if (!user) throw new NotFoundError("User not found");
 
         const isMatch = await bcrypt.compare(oldPassword, user.password);
-        if (!isMatch) throw new BadRequestError("Old password is incorrect");
+        if (!isMatch) throw new BadRequestError("Mật khẩu cũ không đúng");
 
         user.password = await bcrypt.hash(newPassword, 10);
         await user.save();
@@ -30,11 +34,45 @@ class UserService {
         return true;
     }
 
-    static async ResetPassword(email: string, newPassword: string) {
+    static async ResetPassword(email: string) {
         const user = await UserRepo.findByEmail(email);
         if (!user) throw new NotFoundError("User not found");
 
-        user.password = await bcrypt.hash(newPassword, 10);
+        const userPayload = {
+            userId: user._id.toString(),
+            fullname: user.fullname,
+            email: user.email,
+            role: user.role
+        }
+        const token = generateResetToken(userPayload);
+        user.properties = {
+            resetToken: token
+        }
+        user.markModified("properties");
+        await user.save();
+
+        const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+        const templatePath = path.join(__dirname, '../templates/forgot_password.html');
+
+        const html = fs.readFileSync(templatePath, 'utf8').replace('{{RESET_LINK}}', resetLink);
+
+        await sendEmail(user.email, 'Đặt lại mật khẩu cho tài khoản Techhouse', html);
+
+        return true;
+    }
+
+    static async ResetPasswordCallback(token: string, newPassword: string) {
+        if(!await verifyResetToken(token)) {
+            throw new BadRequestError("Token đã hết hạn hoặc không đúng");
+        }
+
+        const user = await UserRepo.findByToken(token);
+        if(!user) throw new NotFoundError("User not found");
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        user.properties.resetToken = undefined;
+
         await user.save();
 
         return true;

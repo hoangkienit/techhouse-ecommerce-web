@@ -26,10 +26,19 @@ router.post('/change-password', Authenticate, AsyncHandler(UserController.Change
 /**
  * POST /api/v1/user/reset-password
  * @description Đặt lại mật khẩu theo email đã đăng ký
- * @body email: string, newPassword: string
- * @access Authenticated
+ * @body email: string
+ * @access Guess
  */
-router.post('/reset-password', Authenticate, AsyncHandler(UserController.ResetPassword));
+router.post('/reset-password', AsyncHandler(UserController.ResetPassword));
+
+/**
+ * POST /api/v1/user/reset-password-callback
+ * @description Đặt lại mật khẩu theo email đã đăng ký
+ * @body newPassword: string
+ * @query token: string
+ * @access Guess
+ */
+router.post('/reset-password-callback', AsyncHandler(UserController.ResetPasswordCallback));
 
 /**
  * POST /api/v1/user/update-addresses
