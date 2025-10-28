@@ -39,7 +39,7 @@ class CartController {
     const identifiers = CartController.resolveIdentifiers(req);
     const { productId, quantity } = req.body;
 
-    const cart = await CartService.addItem(identifiers, productId, Number(quantity ?? 1));
+    const cart = await CartService.AddItem(identifiers, productId, Number(quantity ?? 1));
 
     new OK({
       message: "Thêm sản phẩm vào giỏ hàng thành công",
