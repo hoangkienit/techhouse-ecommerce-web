@@ -4,8 +4,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from 'bcrypt';
 import { ILoginRequest, ILoginResponse, IRegisterRequest } from "../interfaces/auth.interface";
 import logger from "../config/logger";
-import generateTokenPair from "../utils/tokens.helper";
 import UserRepo from "../repositories/user.repository";
+import { generateTokenPair } from "../utils/tokens.helper";
 
 class AuthService {
     static async Login(

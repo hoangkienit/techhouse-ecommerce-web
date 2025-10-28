@@ -23,3 +23,12 @@ export interface IOrder {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface IOrderQueryOptions {
+  userId?: string;
+  guestId?: string;
+  status?: Array<IOrder["status"]> | IOrder["status"];
+  sort?: "newest" | "oldest";
+  page?: number;
+  limit?: number;
+}

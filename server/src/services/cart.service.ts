@@ -2,7 +2,6 @@ import { nanoid } from "nanoid";
 import { BadRequestError, NotFoundError } from "../core/error.response";
 import ProductRepo from "../repositories/product.repository";
 import CartRepo from "../repositories/cart.repository";
-import OrderRepo from "../repositories/order.repository";
 import { ICartIdentifiers, ICart, IShippingAddress, IPaymentMethod, ICartItem, IShippingSelectionPayload } from "../interfaces/cart.interface";
 import { CartDocument } from "../models/cart.model";
 import { getIO } from "../config/socket";
@@ -10,6 +9,8 @@ import { IOrder } from "../interfaces/order.interface";
 import AddressService from "./address.service";
 import { IAddress } from "../interfaces/address.interface";
 import DiscountService from "./discount.service";
+import OrderService from "./order.service";
+import { generateOrderCode } from "../utils/random..helper";
 
 class CartService {
   private static TAX_RATE = 0.1;
@@ -227,7 +228,7 @@ class CartService {
     if (!cart.paymentMethod) throw new BadRequestError("Payment method required");
 
     const orderPayload: Partial<IOrder> = {
-      orderCode: nanoid(10).toUpperCase(),
+      orderCode: generateOrderCode(),
       items: cart.items,
       subtotal: cart.subtotal,
       discountCode: cart.discountCode ?? null,
@@ -254,7 +255,7 @@ class CartService {
       orderPayload.contactEmail = cart.contactEmail;
     }
 
-    const order = await OrderRepo.create(orderPayload);
+    const order = await OrderService.CreateOrder(orderPayload);
     cart.status = "completed";
     cart.checkoutStep = "placed";
 
@@ -269,10 +270,10 @@ class CartService {
 
     this.emitCartUpdate(cart);
 
+    const orderResponse = (order as any).toObject ? (order as any).toObject() : order;
+
     return {
-      orderCode: order.orderCode,
-      total: order.total,
-      currency: order.currency,
+      order: orderResponse,
       cart: this.formatCartResponse(cart, guestId)
     };
   }

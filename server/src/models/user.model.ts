@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema({
     isBanned: {
         type: Boolean,
         default: false
+    },
+    properties: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {}
     }
 }, {
     timestamps: true
