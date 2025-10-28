@@ -22,7 +22,7 @@ class CartService {
     return this.formatCartResponse(cart, guestId);
   }
 
-  static async addItem(identifiers: ICartIdentifiers, productId: string, quantity: number) {
+  static async AddItem(identifiers: ICartIdentifiers, productId: string, quantity: number) {
     if (quantity <= 0) throw new BadRequestError("Quantity must be greater than zero");
 
     const product = await ProductRepo.findById(productId);
