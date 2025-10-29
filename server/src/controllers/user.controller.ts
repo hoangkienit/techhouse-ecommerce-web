@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import UserService from "../services/user.service";
 import { NotFoundError } from "../core/error.response";
 import { OK } from "../core/success.response";
+import cloudinary from "../config/cloudinary";
+import streamifier from "streamifier";
 
 class UserController {
     static async UpdateInformation(req: Request, res: Response): Promise<void> {
@@ -95,6 +97,23 @@ class UserController {
             data: { updatedUser },
         }).send(res);
     }
+
+static async UpdateAvatar(req: Request, res: Response): Promise<void> {
+        const file = req.file as Express.Multer.File;
+        const userId = req.user?.userId as string;
+
+        const response = await UserService.UpdateAvatar(userId, file);
+
+    new OK({
+      message: "Avatar updated successfully",
+      data: {
+        newUser : response,
+      },
+    }).send(res);
+  }
+
 }
+
+
 
 export default UserController;
