@@ -1,11 +1,15 @@
 
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../core/error.response";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import bcrypt from 'bcrypt';
 import { ILoginRequest, ILoginResponse, IRegisterRequest } from "../interfaces/auth.interface";
 import logger from "../config/logger";
 import UserRepo from "../repositories/user.repository";
 import { generateTokenPair } from "../utils/tokens.helper";
+import { generatePassword } from "../utils/random..helper";
+import { HashPassword, VerifyPassword } from "../utils/crypto.handler";
+import path from 'path';
+import fs from 'fs';
+import { sendEmail } from "../utils/mail.helper";
 
 class AuthService {
     static async Login(
@@ -16,7 +20,7 @@ class AuthService {
             throw new NotFoundError("Email không tồn tại");
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid = await VerifyPassword(password, user.password);
         if (!isPasswordValid) {
             throw new NotFoundError('Sai mật khẩu');
         }
@@ -41,16 +45,13 @@ class AuthService {
     }
 
     static async Register(
-        { fullname, email, password, confirmPassword, address }: IRegisterRequest,
+        { fullname, email, address }: IRegisterRequest,
     ): Promise<boolean> {
         // Check for existing email
-        if(await UserRepo.findByEmail(email)) throw new BadRequestError("Email đã tồn tại");
+        if (await UserRepo.findByEmail(email)) throw new BadRequestError("Email đã tồn tại");
 
-        if (password !== confirmPassword) {
-            throw new BadRequestError('Mật khẩu không khớp');
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const tempPassword = generatePassword();
+        const hashedPassword = await HashPassword(tempPassword);
 
         const newUser = await UserRepo.create({
             fullname: fullname,
@@ -82,6 +83,26 @@ class AuthService {
         if (address.phone) initialAddress.phone = address.phone;
 
         await UserRepo.addAddress(newUser._id.toString(), initialAddress);
+
+        const loginUrl = `${process.env.CLIENT_URL as string}/auth/login`;
+
+        const mailData = {
+            logoUrl: "https://cdn.techhouse.vn/logo.png",
+            fullName: newUser.fullname,
+            userEmail: newUser.email,
+            tempPassword: tempPassword,
+            loginUrl: loginUrl,
+            year: new Date().getFullYear(),
+            supportUrl: "https://techhouse.vn/support",
+            policyUrl: "https://techhouse.vn/privacy",
+        }
+
+
+        await sendEmail(
+            email, 
+            'Mật khẩu tạm thời cho tài khoản Techhouse', 
+            'registration', 
+            mailData);
 
         return true;
     }
