@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Techhouse | Xác nhận đơn hàng</title>
+  <style>
+    @media (max-width:600px){ .container{width:100%!important;} .col{display:block;width:100%!important;} }
+  </style>
+</head>
+<body style="margin:0;padding:0;background:#F3F4F6;">
+  <center style="width:100%;">
+    <table width="100%">
+      <tr>
+        <td align="center" style="padding:32px 12px;">
+          <table class="container" width="600" style="background:#fff;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,0.06);">
+            <tr>
+              <td style="background:#1E40AF;padding:24px;">
+                <table width="100%">
+                  <tr>
+                    <td><img src="<%= logoUrl %>" width="140" alt="Techhouse"/></td>
+                    <td align="right" style="color:#DBEAFE;font:600 14px system-ui;">
+                      Đơn hàng <span style="color:#fff;">#<%= orderCode %></span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:28px 32px;">
+                <h1 style="font:700 22px system-ui;color:#111827;">Cảm ơn bạn đã mua sắm tại Techhouse!</h1>
+                <p style="font:400 15px system-ui;color:#374151;">
+                  Xin chào <%= userName %>, đơn hàng của bạn được xác nhận vào <strong><%= orderDate %></strong>.
+                </p>
+
+                <div style="border:1px solid #E5E7EB;border-radius:12px;padding:16px;margin:16px 0;">
+                  <h2 style="font:700 16px system-ui;color:#111827;">Tóm tắt đơn hàng</h2>
+                  <% orderItems.forEach(item => { %>
+                    <table width="100%" style="margin-bottom:12px;">
+                      <tr>
+                        <td width="64"><img src="<%= item.imageUrl %>" width="64" height="64" style="border-radius:8px;"/></td>
+                        <td style="padding-left:12px;">
+                          <p style="font:600 14px system-ui;color:#111827;margin:0;"><%= item.name %></p>
+                          <p style="font:400 12px system-ui;color:#6B7280;margin:2px 0;">Phân loại: <%= item.variant %> • SL: <%= item.qty %></p>
+                        </td>
+                        <td align="right" style="font:600 14px system-ui;color:#111827;"><%= item.total %></td>
+                      </tr>
+                    </table>
+                  <% }) %>
+
+                  <hr style="border:none;border-top:1px solid #E5E7EB;margin:12px 0;" />
+                  <table width="100%">
+                    <tr><td>Phí vận chuyển</td><td align="right"><%= shippingFee %></td></tr>
+                    <tr><td>Thuế</td><td align="right"><%= tax %></td></tr>
+                    <tr><td><strong>Tổng cộng</strong></td><td align="right" style="color:#1E40AF;font-weight:700;"><%= grandTotal %></td></tr>
+                  </table>
+                </div>
+
+                <div class="col" style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <div style="flex:1;border:1px solid #E5E7EB;border-radius:12px;padding:14px;">
+                    <h3 style="font:700 14px system-ui;color:#111827;">Địa chỉ giao hàng</h3>
+                    <p style="font:400 13px system-ui;color:#374151;margin:0;">
+                      <%= shipName %><br/>
+                      <%= shipAddress %><br/>
+                      <%= shipDistrict %>, <%= shipCity %><br/>
+                      <%= shipPhone %>
+                    </p>
+                  </div>
+
+                  <div style="flex:1;border:1px solid #E5E7EB;border-radius:12px;padding:14px;">
+                    <h3 style="font:700 14px system-ui;color:#111827;">Thanh toán</h3>
+                    <p style="font:400 13px system-ui;color:#374151;margin:0;">
+                      <%= paymentMethod %><br/>
+                      Mã giao dịch: <%= paymentRef %>
+                    </p>
+                  </div>
+                </div>
+
+                <a href="<%= orderDetailUrl %>" style="display:inline-block;margin-top:20px;padding:13px 22px;background:#1E40AF;color:#fff;text-decoration:none;border-radius:10px;font-weight:600;">XEM CHI TIẾT ĐƠN HÀNG</a>
+
+                <p style="font:400 12px system-ui;color:#9CA3AF;margin-top:16px;">
+                  Cần hỗ trợ? <a href="<%= supportUrl %>" style="color:#6B7280;">Liên hệ Techhouse</a>.
+                </p>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="background:#F9FAFB;padding:18px 32px;font:400 12px system-ui;color:#6B7280;">
+                © <%= year %> Techhouse • <a href="<%= policyUrl %>" style="color:#6B7280;">Chính sách & Bảo mật</a>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </center>
+</body>
+</html>

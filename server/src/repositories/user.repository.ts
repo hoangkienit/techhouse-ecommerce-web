@@ -16,6 +16,10 @@ class UserRepo {
         return User.findOne({ phone }).exec();
     }
 
+    static async findByToken(token: string) {
+        return User.findOne({ "properties.resetToken": token }).exec();
+    }
+
     static async create(data: {
         fullname: string;
         email: string;
