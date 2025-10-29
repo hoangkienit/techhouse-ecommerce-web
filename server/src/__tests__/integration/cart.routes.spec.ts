@@ -148,8 +148,10 @@ describe("Cart guest checkout flow", () => {
       .send();
 
     expect(confirmRes.status).toBe(200);
-    expect(confirmRes.body.data.orderCode).toBeDefined();
+    expect(confirmRes.body.data.order).toBeDefined();
+    expect(confirmRes.body.data.order.orderCode).toBeDefined();
     expect(confirmRes.body.data.cart?.status).toBe("completed");
+    expect(confirmRes.body.data.order.total).toBeGreaterThan(0);
 
     const orders = await Order.find({});
     expect(orders).toHaveLength(1);
