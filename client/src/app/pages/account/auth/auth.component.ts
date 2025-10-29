@@ -10,19 +10,22 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class AuthComponent {
   loginForm!: FormGroup;
   signupForm!: FormGroup;
+  isInvalid: boolean = false;
+  registerMsg: any = null;
+  isLoading: boolean = false;
 
   constructor(private fb: FormBuilder, private appServices: AppServices) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
+      fullname: ['', Validators.required],
       password: ['', Validators.required],
     });
 
     this.signupForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required]],
+      fullname: ['', Validators.required],
+      email: ['', [Validators.required]],
+      address: ['', [Validators.required]],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
     });
@@ -43,15 +46,22 @@ export class AuthComponent {
   }
 
   onSignup() {
+    console.log('Signup data:', this.signupForm.value);
     if (this.signupForm.valid) {
-      console.log('Signup data:', this.signupForm.value);
-      // TODO: gọi API signup
+      this.isLoading = true;
+      console.log('Signup form is valid');
       this.appServices.AuthService.RegisterAccount(this.signupForm.value).subscribe({
         next: response => {
+          this.isInvalid = false;
+          this.registerMsg = null;
           console.log('Signup successful:', response);
+          this.isLoading = false;
         },
-        error: error => {
-          console.error('Signup error:', error);
+        error: e => {
+          console.error('Signup error:', e.error.errors);
+          this.isInvalid = true;
+          this.registerMsg = e.error.errors;
+          this.isLoading = false;
         }
       });
     }

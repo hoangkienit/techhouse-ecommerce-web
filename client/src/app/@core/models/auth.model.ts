@@ -1,6 +1,7 @@
 export interface AuthDtos {
-    username: string;
+    fullname: string;
     email: string;
+    address?: string;
     phone?: string;
     password: string;
     confirmPassword: string;

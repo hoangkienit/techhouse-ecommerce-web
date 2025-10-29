@@ -1,10 +1,10 @@
-<div class="auth-container">
+<div class="auth-container" [isLoading]="isLoading">
     <!-- Cột trái: Login -->
     <div class="auth-left">
         <h2 class="text-white">{{ 'auth.login.title' | translate }}</h2>
         <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
-            <input nbInput fullWidth placeholder="{{ 'auth.login.username' | translate }}" formControlName="username" />
-            <input nbInput fullWidth placeholder="{{ 'auth.login.password' | translate }}" type="password"
+            <input nbInput fullWidth placeholder="{{ 'auth.fullname' | translate }}" formControlName="fullname" />
+            <input nbInput fullWidth placeholder="{{ 'auth.password' | translate }}" type="password"
                 formControlName="password" />
             <button nbButton status="primary" fullWidth type="submit">{{ 'auth.login.button-login' | translate
                 }}</button>
@@ -24,11 +24,17 @@
     <div class="auth-right">
         <h2>Đăng ký</h2>
         <form (ngSubmit)="onSignup()" [formGroup]="signupForm">
-            <input nbInput fullWidth placeholder="Username" formControlName="username" />
-            <input nbInput fullWidth placeholder="Email" formControlName="email" />
-            <input nbInput fullWidth placeholder="Phone" formControlName="phone" />
-            <input nbInput fullWidth placeholder="Password" type="password" formControlName="password" />
-            <input nbInput fullWidth placeholder="Confirm Password" type="password" formControlName="confirmPassword" />
+            <input nbInput fullWidth placeholder="{{ 'auth.fullname' | translate }}" formControlName="fullname" />
+            <input nbInput fullWidth placeholder="{{ 'auth.email' | translate }}" formControlName="email" />
+            <input nbInput fullWidth placeholder="{{ 'auth.address' | translate }}" formControlName="address" />
+
+            <input nbInput fullWidth placeholder="{{ 'auth.password' | translate }}" type="password"
+                formControlName="password" />
+            <input nbInput fullWidth placeholder="{{ 'auth.repassword' | translate }}" type="password"
+                formControlName="confirmPassword" />
+            <div *ngIf="isInvalid" class="text-danger">
+                {{registerMsg || ''}}
+            </div>
             <button nbButton status="success" fullWidth type="submit">Đăng ký</button>
         </form>
     </div>
