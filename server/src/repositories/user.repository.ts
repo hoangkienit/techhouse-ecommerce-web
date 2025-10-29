@@ -17,7 +17,7 @@ class UserRepo {
     }
 
     static async findByToken(token: string) {
-        return User.findOne({ properties: { token } }).exec();
+        return User.findOne({ "properties.resetToken": token }).exec();
     }
 
     static async create(data: {

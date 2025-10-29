@@ -48,12 +48,5 @@ router.get('/google', passport.authenticate("google", { scope: ["email", "profil
 router.get('/google/callback', passport.authenticate("google", { session: false }), AsyncHandler(AuthController.GoogleCallback));
 
 // FACEBOOK
-/**
- * GET /api/v1/auth/test
- * @description Endpoint kiểm tra hoạt động của router (development)
- */
-router.get('/test', (req, res) => {
-  res.send('Auth route working!');
-});
 
 export default router;

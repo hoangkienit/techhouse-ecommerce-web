@@ -3,8 +3,12 @@ Content-Type: application/json
 
 {
     "fullname": "Nguyen Hoang Kien",
-    "email": "test@gmail.com",
+    "email": "kiennguyen4321abc@gmail.com",
     "password": "123456",
     "confirmPassword": "123456",
-    "address": []
+    "address": {
+        "street": "Ben Van Don",
+        "city": "Ho Chi Minh",
+        "country": "Vietnam"
+    }
 }
