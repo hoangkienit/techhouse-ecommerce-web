@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { generateResetToken, verifyResetToken } from "../utils/tokens.helper";
 import { sendEmail } from "../utils/mail.helper";
 import { nanoid } from "nanoid";
+import { deleteCloudinaryImage, uploadToCloudinary } from "../utils/upload.helper";
 
 class UserService {
     static async UpdateInformation(

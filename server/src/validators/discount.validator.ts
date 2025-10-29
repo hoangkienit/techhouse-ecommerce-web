@@ -4,7 +4,7 @@ export const discountCreateSchema = () =>
   Joi.object({
     code: Joi.string()
       .uppercase()
-      .regex(/^[A-Z0-9]$/)
+      .regex(/^[A-Z0-9]+$/)
       .min(5)
       .max(10)
       .required()
