@@ -1,6 +1,7 @@
 import { NotFoundError, BadRequestError } from "../core/error.response";
 import UserRepo from "../repositories/user.repository";
 import bcrypt from "bcrypt";
+import User from "../models/user.model";
 
 class UserService {
     static async UpdateInformation(
@@ -56,6 +57,16 @@ class UserService {
 
         return await UserRepo.setBanStatus(userId, status);
     }
+
+    static async UpdateAvatar(userId: string, imageUrl: string) {
+  const user = await User.findById(userId);
+  if (!user) throw new NotFoundError("User not found");
+
+  user.profileImg = imageUrl;
+  await user.save();
+  return user;
+}
+
 }
 
 export default UserService;

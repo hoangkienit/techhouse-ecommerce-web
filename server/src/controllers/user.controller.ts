@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import UserService from "../services/user.service";
 import { NotFoundError } from "../core/error.response";
 import { OK } from "../core/success.response";
+import cloudinary from "../config/cloudinary";
+import streamifier from "streamifier";
 
 class UserController {
     static async UpdateInformation(req: Request, res: Response): Promise<void> {
@@ -81,6 +83,38 @@ class UserController {
             data: { updatedUser },
         }).send(res);
     }
+
+static async UpdateAvatar(req: Request, res: Response): Promise<void> {
+    const userId = req.user?.userId;
+
+    if (!userId) throw new NotFoundError("User not found");
+    if (!req.file) throw new NotFoundError("No image uploaded");
+
+    // ✅ Upload buffer lên Cloudinary bằng stream
+    const uploadStream = (): Promise<{ secure_url: string }> =>
+      new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "avatars" },
+          (error: any, result: any) => {
+            if (error) return reject(error);
+            resolve(result as { secure_url: string });
+          }
+        );
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+
+    const result = await uploadStream();
+
+    const updated = await UserService.UpdateAvatar(userId, result.secure_url);
+
+    new OK({
+      message: "Avatar updated successfully",
+      data: updated,
+    }).send(res);
+  }
+
 }
+
+
 
 export default UserController;
