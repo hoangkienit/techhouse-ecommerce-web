@@ -6,7 +6,7 @@ class DiscountService {
   static async CreateCode(payload: Partial<IDiscountCode>) {
     const code = (payload.code ?? "").toUpperCase();
 
-    if (!/^[A-Z0-9]$/.test(code)) {
+    if (!/^[A-Z0-9]+$/.test(code)) {
       throw new BadRequestError("Mã giảm giá chỉ chứa chữ và số");
     }
 

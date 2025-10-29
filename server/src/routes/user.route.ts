@@ -4,6 +4,7 @@ import { Authenticate, AuthorizeAdmin } from '../middlewares/verify.middleware';
 import { validate } from '../middlewares/validate.middleware';
 import { updateInformationSchema } from '../validators/user.validator';
 import { AsyncHandler } from '../utils/async.handler';
+import UploadMiddleware from "../middlewares/upload.middleware";
 
 const router = express.Router();
 
@@ -57,5 +58,6 @@ router.post('/update-addresses', Authenticate, AsyncHandler(UserController.Updat
  */
 router.patch('/set-status/:userId', Authenticate, AuthorizeAdmin, AsyncHandler(UserController.SetBanStatus));
 
+router.post('/update-avatar', Authenticate, AsyncHandler(UserController.UpdateAvatar));
 
 export default router;
