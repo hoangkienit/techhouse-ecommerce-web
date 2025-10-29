@@ -18,7 +18,7 @@ class UserController {
         });
 
         new OK({
-            message: "Information updated successfully",
+            message: "Thay đổi thông tin thành công",
             data: { updatedUser },
         }).send(res);
     }
@@ -33,21 +33,35 @@ class UserController {
         await UserService.ChangePassword(userId, oldPassword, newPassword);
 
         new OK({
-            message: "Password changed successfully",
+            message: "Thay đổi mật khẩu thành công",
             data: {}
         }).send(res);
     }
 
     static async ResetPassword(req: Request, res: Response): Promise<void> {
-        const { email, newPassword } = req.body;
+        const { email } = req.body;
 
-        if (!email || !newPassword)
+        if (!email)
             throw new NotFoundError("Missing email or password");
 
-        await UserService.ResetPassword(email, newPassword);
+        await UserService.ResetPassword(email);
 
         new OK({
-            message: "Password reset successfully",
+            message: "Đặt lại mật khẩu thành công",
+            data: {}
+        }).send(res);
+    }
+
+    static async ResetPasswordCallback(req: Request, res: Response): Promise<void> {
+        const { token } = req.query;
+        const { newPassword } = req.body;
+
+        if(!token) throw new NotFoundError("Missing token");
+
+        await UserService.ResetPasswordCallback(token as string, newPassword);
+
+        new OK({
+            message: "Đặt lại mật khẩu thành công",
             data: {}
         }).send(res);
     }
@@ -85,31 +99,16 @@ class UserController {
     }
 
 static async UpdateAvatar(req: Request, res: Response): Promise<void> {
-    const userId = req.user?.userId;
+        const file = req.file as Express.Multer.File;
+        const userId = req.user?.userId as string;
 
-    if (!userId) throw new NotFoundError("User not found");
-    if (!req.file) throw new NotFoundError("No image uploaded");
-
-    // ✅ Upload buffer lên Cloudinary bằng stream
-    const uploadStream = (): Promise<{ secure_url: string }> =>
-      new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: "avatars" },
-          (error: any, result: any) => {
-            if (error) return reject(error);
-            resolve(result as { secure_url: string });
-          }
-        );
-        streamifier.createReadStream(req.file.buffer).pipe(stream);
-      });
-
-    const result = await uploadStream();
-
-    const updated = await UserService.UpdateAvatar(userId, result.secure_url);
+        const response = await UserService.UpdateAvatar(userId, file);
 
     new OK({
       message: "Avatar updated successfully",
-      data: updated,
+      data: {
+        newUser : response,
+      },
     }).send(res);
   }
 

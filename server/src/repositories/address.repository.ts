@@ -57,13 +57,17 @@ class AddressRepo {
   }
 
   static async setDefault(userId: string, addressId: string) {
-    const address = await Address.findOne({ _id: addressId, userId });
-    if (!address) return null;
+    const existing = await Address.findOne({ _id: addressId, userId });
+    if (!existing) return null;
 
     await Address.updateMany({ userId }, { isDefault: false });
-    address.isDefault = true;
-    await address.save();
-    return address.toObject();
+    const updated = await Address.findByIdAndUpdate(
+      addressId,
+      { isDefault: true },
+      { new: true }
+    ).lean();
+
+    return updated;
   }
 }
 

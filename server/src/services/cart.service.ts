@@ -2,13 +2,15 @@ import { nanoid } from "nanoid";
 import { BadRequestError, NotFoundError } from "../core/error.response";
 import ProductRepo from "../repositories/product.repository";
 import CartRepo from "../repositories/cart.repository";
-import OrderRepo from "../repositories/order.repository";
 import { ICartIdentifiers, ICart, IShippingAddress, IPaymentMethod, ICartItem, IShippingSelectionPayload } from "../interfaces/cart.interface";
 import { CartDocument } from "../models/cart.model";
 import { getIO } from "../config/socket";
 import { IOrder } from "../interfaces/order.interface";
 import AddressService from "./address.service";
 import { IAddress } from "../interfaces/address.interface";
+import DiscountService from "./discount.service";
+import OrderService from "./order.service";
+import { generateOrderCode } from "../utils/random..helper";
 
 class CartService {
   private static TAX_RATE = 0.1;
@@ -21,7 +23,7 @@ class CartService {
     return this.formatCartResponse(cart, guestId);
   }
 
-  static async addItem(identifiers: ICartIdentifiers, productId: string, quantity: number) {
+  static async AddItem(identifiers: ICartIdentifiers, productId: string, quantity: number) {
     if (quantity <= 0) throw new BadRequestError("Quantity must be greater than zero");
 
     const product = await ProductRepo.findById(productId);
@@ -91,6 +93,50 @@ class CartService {
     const prevLength = cart.items.length;
     cart.items = cart.items.filter((item) => item._id?.toString() !== itemId);
     if (cart.items.length === prevLength) throw new NotFoundError("Cart item not found");
+
+    this.recalculateCart(cart);
+    await CartRepo.save(cart);
+    this.emitCartUpdate(cart);
+
+    return this.formatCartResponse(cart, guestId);
+  }
+
+  static async applyDiscountCode(identifiers: ICartIdentifiers, code: string) {
+    const normalizedCode = code?.toUpperCase();
+    if (!normalizedCode || !/^[A-Z0-9]{5}$/.test(normalizedCode)) {
+      throw new BadRequestError("Mã giảm giá không hợp lệ");
+    }
+
+    const { cart, guestId } = await this.getOrCreateCart(identifiers, false);
+    if (!cart) throw new NotFoundError("Cart not found");
+    if (!cart.items.length) throw new BadRequestError("Cart is empty");
+
+    if (cart.discountCode === normalizedCode) {
+      this.recalculateCart(cart);
+      await CartRepo.save(cart);
+      this.emitCartUpdate(cart);
+      return this.formatCartResponse(cart, guestId);
+    }
+
+    const discount = await DiscountService.ValidateCode(normalizedCode);
+
+    cart.discountCode = discount.code;
+    cart.discountRate = discount.percentage;
+
+    this.recalculateCart(cart);
+    await CartRepo.save(cart);
+    this.emitCartUpdate(cart);
+
+    return this.formatCartResponse(cart, guestId);
+  }
+
+  static async removeDiscountCode(identifiers: ICartIdentifiers) {
+    const { cart, guestId } = await this.getOrCreateCart(identifiers, false);
+    if (!cart) throw new NotFoundError("Cart not found");
+
+    cart.discountCode = null;
+    cart.discountRate = 0;
+    cart.discountAmount = 0;
 
     this.recalculateCart(cart);
     await CartRepo.save(cart);
@@ -182,9 +228,12 @@ class CartService {
     if (!cart.paymentMethod) throw new BadRequestError("Payment method required");
 
     const orderPayload: Partial<IOrder> = {
-      orderCode: nanoid(10).toUpperCase(),
+      orderCode: generateOrderCode(),
       items: cart.items,
       subtotal: cart.subtotal,
+      discountCode: cart.discountCode ?? null,
+      discountRate: cart.discountRate ?? 0,
+      discountAmount: cart.discountAmount ?? 0,
       tax: cart.tax,
       shipping: cart.shipping,
       total: cart.total,
@@ -206,17 +255,25 @@ class CartService {
       orderPayload.contactEmail = cart.contactEmail;
     }
 
-    const order = await OrderRepo.create(orderPayload);
+    const order = await OrderService.CreateOrder(orderPayload);
     cart.status = "completed";
     cart.checkoutStep = "placed";
 
     await CartRepo.save(cart);
+
+    if (cart.discountCode) {
+      const discount = await DiscountService.FindCode(cart.discountCode);
+      if (discount?._id) {
+        await DiscountService.IncrementUsage(discount._id.toString());
+      }
+    }
+
     this.emitCartUpdate(cart);
 
+    const orderResponse = (order as any).toObject ? (order as any).toObject() : order;
+
     return {
-      orderCode: order.orderCode,
-      total: order.total,
-      currency: order.currency,
+      order: orderResponse,
       cart: this.formatCartResponse(cart, guestId)
     };
   }
@@ -245,6 +302,9 @@ class CartService {
         tax: 0,
         shipping: 0,
         total: 0,
+        discountCode: null,
+        discountRate: 0,
+        discountAmount: 0,
         status: "active",
         checkoutStep: "cart"
       };
@@ -309,16 +369,32 @@ class CartService {
       cart.items.reduce((sum, item) => sum + item.lineTotal, 0).toFixed(2)
     );
 
-    cart.tax = Number((cart.subtotal * this.TAX_RATE).toFixed(2));
+    if (cart.discountRate && cart.discountRate > 0) {
+      cart.discountAmount = Number((cart.subtotal * (cart.discountRate / 100)).toFixed(2));
+    } else {
+      cart.discountAmount = 0;
+      cart.discountRate = 0;
+      if (!cart.discountCode) {
+        cart.discountCode = null;
+      }
+    }
+
+    if (cart.discountAmount > cart.subtotal) {
+      cart.discountAmount = cart.subtotal;
+    }
+
+    const effectiveSubtotal = Math.max(cart.subtotal - cart.discountAmount, 0);
+
+    cart.tax = Number((effectiveSubtotal * this.TAX_RATE).toFixed(2));
 
     cart.shipping =
-      cart.subtotal === 0
+      effectiveSubtotal === 0
         ? 0
-        : cart.subtotal >= this.SHIPPING_THRESHOLD
+        : effectiveSubtotal >= this.SHIPPING_THRESHOLD
           ? 0
           : this.SHIPPING_FEE;
 
-    cart.total = Number((cart.subtotal + cart.tax + cart.shipping).toFixed(2));
+    cart.total = Number((effectiveSubtotal + cart.tax + cart.shipping).toFixed(2));
   }
 
   private static formatCartResponse(cart: CartDocument, guestId?: string) {
@@ -328,6 +404,9 @@ class CartService {
       currency: cart.currency,
       items: cart.items,
       subtotal: cart.subtotal,
+      discountCode: cart.discountCode ?? null,
+      discountRate: cart.discountRate ?? 0,
+      discountAmount: cart.discountAmount ?? 0,
       tax: cart.tax,
       shipping: cart.shipping,
       total: cart.total,

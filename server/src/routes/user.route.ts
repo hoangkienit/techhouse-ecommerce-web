@@ -8,21 +8,56 @@ import UploadMiddleware from "../middlewares/upload.middleware";
 
 const router = express.Router();
 
+/**
+ * POST /api/v1/user/update-information
+ * @description Cập nhật tên và số điện thoại người dùng
+ * @body fullname?: string, phone?: string
+ * @access Authenticated
+ */
 router.post('/update-information', Authenticate, validate(updateInformationSchema), AsyncHandler(UserController.UpdateInformation));
 
+/**
+ * POST /api/v1/user/change-password
+ * @description Đổi mật khẩu bằng cách nhập mật khẩu cũ
+ * @body oldPassword: string, newPassword: string
+ * @access Authenticated
+ */
 router.post('/change-password', Authenticate, AsyncHandler(UserController.ChangePassword));
 
-router.post('/reset-password', Authenticate, AsyncHandler(UserController.ResetPassword));
+/**
+ * POST /api/v1/user/reset-password
+ * @description Đặt lại mật khẩu theo email đã đăng ký
+ * @body email: string
+ * @access Guess
+ */
+router.post('/reset-password', AsyncHandler(UserController.ResetPassword));
 
+/**
+ * POST /api/v1/user/reset-password-callback
+ * @description Đặt lại mật khẩu theo email đã đăng ký
+ * @body newPassword: string
+ * @query token: string
+ * @access Guess
+ */
+router.post('/reset-password-callback', AsyncHandler(UserController.ResetPasswordCallback));
+
+/**
+ * POST /api/v1/user/update-addresses
+ * @description Ghi đè danh sách địa chỉ đã lưu của người dùng
+ * @body addresses: IAddress[]
+ * @access Authenticated
+ */
 router.post('/update-addresses', Authenticate, AsyncHandler(UserController.UpdateAddresses));
 
+/**
+ * PATCH /api/v1/user/set-status/:userId
+ * @description Khoá hoặc mở khoá tài khoản người dùng
+ * @param userId: string
+ * @body status: boolean
+ * @access Admin
+ */
 router.patch('/set-status/:userId', Authenticate, AuthorizeAdmin, AsyncHandler(UserController.SetBanStatus));
 
-router.post(
-  "/update-avatar",
-  Authenticate,
-  UploadMiddleware.upload.single("avatar"),
-  AsyncHandler(UserController.UpdateAvatar)
-);
+router.post('/update-avatar', Authenticate, AsyncHandler(UserController.UpdateAvatar));
 
 export default router;

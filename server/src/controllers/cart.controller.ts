@@ -39,7 +39,7 @@ class CartController {
     const identifiers = CartController.resolveIdentifiers(req);
     const { productId, quantity } = req.body;
 
-    const cart = await CartService.addItem(identifiers, productId, Number(quantity ?? 1));
+    const cart = await CartService.AddItem(identifiers, productId, Number(quantity ?? 1));
 
     new OK({
       message: "Thêm sản phẩm vào giỏ hàng thành công",
@@ -47,7 +47,7 @@ class CartController {
     }).send(res);
   }
 
-  static async UpdateItem(req: Request, res: Response) {
+  static async UpdateItem(req: Request, res: Response): Promise<void> {
     const identifiers = CartController.resolveIdentifiers(req);
     const { quantity } = req.body;
     const { itemId } = req.params;
@@ -63,7 +63,7 @@ class CartController {
     }).send(res);
   }
 
-  static async RemoveItem(req: Request, res: Response) {
+  static async RemoveItem(req: Request, res: Response): Promise<void> {
     const identifiers = CartController.resolveIdentifiers(req);
     const { itemId } = req.params;
     if (!itemId) throw new BadRequestError("itemId is required");
@@ -76,7 +76,30 @@ class CartController {
     }).send(res);
   }
 
-  static async SetShipping(req: Request, res: Response) {
+  static async ApplyDiscount(req: Request, res: Response): Promise<void> {
+    const identifiers = CartController.resolveIdentifiers(req);
+    const { code } = req.body;
+
+    const cart = await CartService.applyDiscountCode(identifiers, code);
+
+    new OK({
+      message: "Áp dụng mã giảm giá thành công",
+      data: cart
+    }).send(res);
+  }
+
+  static async RemoveDiscount(req: Request, res: Response): Promise<void> {
+    const identifiers = CartController.resolveIdentifiers(req);
+
+    const cart = await CartService.removeDiscountCode(identifiers);
+
+    new OK({
+      message: "Đã xoá mã giảm giá",
+      data: cart
+    }).send(res);
+  }
+
+  static async SetShipping(req: Request, res: Response): Promise<void> {
     const identifiers = CartController.resolveIdentifiers(req);
     const { shippingAddress, contactEmail, addressId, saveAsNew, setAsDefault } = req.body;
 
@@ -94,7 +117,7 @@ class CartController {
     }).send(res);
   }
 
-  static async SetPayment(req: Request, res: Response) {
+  static async SetPayment(req: Request, res: Response): Promise<void> {
     const identifiers = CartController.resolveIdentifiers(req);
     const { paymentMethod } = req.body;
 
@@ -106,7 +129,7 @@ class CartController {
     }).send(res);
   }
 
-  static async ConfirmCheckout(req: Request, res: Response) {
+  static async ConfirmCheckout(req: Request, res: Response): Promise<void> {
     const identifiers = CartController.resolveIdentifiers(req);
 
     const result = await CartService.confirmCheckout(identifiers);

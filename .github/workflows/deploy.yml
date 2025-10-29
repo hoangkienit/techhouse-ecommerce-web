@@ -39,4 +39,4 @@ jobs:
             docker-compose down || true
             docker pull hoangkienit/techhouse-api:latest
             docker-compose up -d --force-recreate --no-build
-            docker system prune -af
+            docker system prune -f --volumes

@@ -9,6 +9,8 @@ import ProductRoute from './routes/product.route';
 import ReviewRoute from './routes/review.route';
 import AddressRoute from './routes/address.route';
 import CartRoute from './routes/cart.route';
+import DiscountRoute from './routes/discount.route';
+import OrderRoute from './routes/order.route';
 
 import cors from 'cors';
 import errorHandler from './middlewares/error.middleware';
@@ -32,6 +34,8 @@ app.use('/api/v1/product', ProductRoute);
 app.use('/api/v1/review', ReviewRoute);
 app.use('/api/v1/address', AddressRoute);
 app.use('/api/v1/cart', CartRoute);
+app.use('/api/v1/discount', DiscountRoute);
+app.use('/api/v1/order', OrderRoute);
 
 app.use(errorHandler);
 

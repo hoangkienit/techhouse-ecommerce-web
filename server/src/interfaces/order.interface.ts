@@ -12,6 +12,9 @@ export interface IOrder {
   tax: number;
   shipping: number;
   total: number;
+  discountCode?: string | null;
+  discountRate?: number | null;
+  discountAmount?: number;
   shippingAddress?: IShippingAddress | null;
   paymentMethod?: IPaymentMethod | null;
   currency: string;
@@ -19,4 +22,13 @@ export interface IOrder {
   placedAt: Date;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface IOrderQueryOptions {
+  userId?: string;
+  guestId?: string;
+  status?: Array<IOrder["status"]> | IOrder["status"];
+  sort?: "newest" | "oldest";
+  page?: number;
+  limit?: number;
 }
