@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import UserService from "../services/user.service";
 import { NotFoundError } from "../core/error.response";
 import { OK } from "../core/success.response";
-import cloudinary from "../config/cloudinary";
-import streamifier from "streamifier";
 
 class UserController {
     static async UpdateInformation(req: Request, res: Response): Promise<void> {
