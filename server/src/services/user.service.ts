@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { generateResetToken, verifyResetToken } from "../utils/tokens.helper";
 import { sendEmail } from "../utils/mail.helper";
 import { nanoid } from "nanoid";
+import { deleteCloudinaryImage, uploadToCloudinary } from "../utils/upload.helper";
 
 class UserService {
     static async UpdateInformation(
@@ -114,6 +115,23 @@ class UserService {
 
         return await UserRepo.setBanStatus(userId, status);
     }
+
+static async UpdateAvatar(userId: string, file: Express.Multer.File) {
+    const user = await UserRepo.findById(userId);
+    if (!user) throw new NotFoundError("User not found");
+
+    if (user.profileImg) await deleteCloudinaryImage(user.profileImg);
+
+    const url = await uploadToCloudinary(file, 'avatars');
+
+    user.profileImg = url;
+
+    await user.save();
+
+    return user;
+}
+
+
 }
 
 export default UserService;

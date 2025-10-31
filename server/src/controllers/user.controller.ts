@@ -95,6 +95,23 @@ class UserController {
             data: { updatedUser },
         }).send(res);
     }
+
+static async UpdateAvatar(req: Request, res: Response): Promise<void> {
+        const file = req.file as Express.Multer.File;
+        const userId = req.user?.userId as string;
+
+        const response = await UserService.UpdateAvatar(userId, file);
+
+    new OK({
+      message: "Avatar updated successfully",
+      data: {
+        newUser : response,
+      },
+    }).send(res);
+  }
+
 }
+
+
 
 export default UserController;

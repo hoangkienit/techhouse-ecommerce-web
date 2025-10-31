@@ -3,7 +3,7 @@ import { CREATED, OK } from '../core/success.response';
 import AuthService from '../services/auth.service';
 import { BadRequestError, UnauthorizedError } from '../core/error.response';
 import { IUserPayload } from '../interfaces/jwt.interface';
-import generateTokenPair from '../utils/tokens.helper';
+import { generateTokenPair } from '../utils/tokens.helper';
 import saveTokenToCookie from '../utils/cookie.helper';
 
 class AuthController {

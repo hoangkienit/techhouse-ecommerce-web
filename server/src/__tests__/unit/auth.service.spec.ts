@@ -7,9 +7,7 @@ import jwt from "jsonwebtoken";
 import AuthService from "../../services/auth.service";
 import User from "../../models/user.model";
 import {
-  NotFoundError,
   BadRequestError,
-  UnauthorizedError,
 } from "../../core/error.response";
 
 let mongoServer: MongoMemoryServer;
@@ -35,8 +33,6 @@ describe("AuthService - Register", () => {
     const result = await AuthService.Register({
       fullname: "Test User",
       email: "test@example.com",
-      password: "123456",
-      confirmPassword: "123456",
       address: {
         street: "123 Test",
         city: "Hanoi",
@@ -60,8 +56,6 @@ describe("AuthService - Register", () => {
       AuthService.Register({
         fullname: "New User",
         email: "test@example.com",
-        password: "123456",
-        confirmPassword: "123456",
         address: {
           street: "123",
           city: "Hanoi",
