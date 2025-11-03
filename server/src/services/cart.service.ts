@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 import { BadRequestError, NotFoundError } from "../core/error.response";
 import ProductRepo from "../repositories/product.repository";
 import CartRepo from "../repositories/cart.repository";
-import { ICartIdentifiers, ICart, IShippingAddress, IPaymentMethod, ICartItem, IShippingSelectionPayload } from "../interfaces/cart.interface";
+import { ICartIdentifiers, ICart, IShippingAddress, IPaymentMethod, ICartItem, IShippingSelectionPayload, CheckoutStep } from "../interfaces/cart.interface";
 import { CartDocument } from "../models/cart.model";
 import { getIO } from "../config/socket";
 import { IOrder } from "../interfaces/order.interface";
@@ -11,6 +11,7 @@ import { IAddress } from "../interfaces/address.interface";
 import DiscountService from "./discount.service";
 import OrderService from "./order.service";
 import { generateOrderCode } from "../utils/random..helper";
+import UserService from "./user.service";
 
 class CartService {
   private static TAX_RATE = 0.1;
@@ -55,7 +56,7 @@ class CartService {
       cart.items.push(newItem);
     }
 
-    cart.checkoutStep = "cart";
+    this.recordCheckoutStep(cart, "cart");
     this.recalculateCart(cart);
     await CartRepo.save(cart);
     this.emitCartUpdate(cart);
@@ -153,7 +154,7 @@ class CartService {
     if (!cart) throw new NotFoundError("Cart not found");
     if (!cart.items.length) throw new BadRequestError("Cart is empty");
 
-    const { addressId, shippingAddress, contactEmail, saveAsNew, setAsDefault } = payload;
+    const { addressId, shippingAddress, contactEmail, shippingName, saveAsNew, setAsDefault } = payload;
 
     let resolvedShipping: IShippingAddress | null = null;
 
@@ -194,7 +195,10 @@ class CartService {
     if (contactEmail !== undefined) {
       cart.contactEmail = contactEmail;
     }
-    cart.checkoutStep = "shipping";
+    if (shippingName !== undefined) {
+      cart.shippingName = shippingName;
+    }
+    this.recordCheckoutStep(cart, "shipping");
 
     await CartRepo.save(cart);
     this.emitCartUpdate(cart);
@@ -212,7 +216,7 @@ class CartService {
     if (!cart.shippingAddress) throw new BadRequestError("Shipping details required before payment");
 
     cart.paymentMethod = paymentMethod;
-    cart.checkoutStep = "payment";
+    this.recordCheckoutStep(cart, "payment");
 
     await CartRepo.save(cart);
     this.emitCartUpdate(cart);
@@ -249,6 +253,16 @@ class CartService {
 
     if (cart.guestId) {
       orderPayload.guestId = cart.guestId;
+
+      if (cart.contactEmail && cart.shippingName) {
+        const guessUser = await UserService.CreateUser({
+          fullname: cart.shippingName,
+          email: cart.contactEmail
+        });
+
+        cart.user = guessUser._id;
+        orderPayload.user = guessUser._id;
+      }
     }
 
     if (cart.contactEmail !== undefined) {
@@ -257,7 +271,7 @@ class CartService {
 
     const order = await OrderService.CreateOrder(orderPayload);
     cart.status = "completed";
-    cart.checkoutStep = "placed";
+    this.recordCheckoutStep(cart, "placed");
 
     await CartRepo.save(cart);
 
@@ -276,6 +290,21 @@ class CartService {
       order: orderResponse,
       cart: this.formatCartResponse(cart, guestId)
     };
+  }
+
+  private static recordCheckoutStep(cart: CartDocument, step: CheckoutStep) {
+    if (!cart.checkoutTimeline) {
+      cart.checkoutTimeline = [] as any;
+    }
+
+    const lastEntry = cart.checkoutTimeline[cart.checkoutTimeline.length - 1];
+    const now = new Date();
+
+    if (!lastEntry || lastEntry.step !== step) {
+      cart.checkoutTimeline.push({ step, time: now } as any);
+    } else {
+      lastEntry.time = now;
+    }
   }
 
   private static async getOrCreateCart(
@@ -306,7 +335,7 @@ class CartService {
         discountRate: 0,
         discountAmount: 0,
         status: "active",
-        checkoutStep: "cart"
+        checkoutTimeline: [{ step: "cart", time: new Date() }]
       };
 
       if (userId) payload.user = userId;
@@ -413,7 +442,7 @@ class CartService {
       shippingAddress: cart.shippingAddress ?? null,
       contactEmail: cart.contactEmail ?? null,
       paymentMethod: cart.paymentMethod ?? null,
-      checkoutStep: cart.checkoutStep,
+      checkoutTimeline: cart.checkoutTimeline ?? [],
       status: cart.status,
       updatedAt: cart.updatedAt
     };
