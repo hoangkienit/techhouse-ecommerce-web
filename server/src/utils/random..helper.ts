@@ -6,5 +6,5 @@ export const generateOrderCode = () => {
 }
 
 export const generatePassword = (): string => {
-    return nanoid(10).toLowerCase();
+    return nanoid(15).toLowerCase();
 }

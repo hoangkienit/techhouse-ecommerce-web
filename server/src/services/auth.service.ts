@@ -10,6 +10,7 @@ import { HashPassword, VerifyPassword } from "../utils/crypto.handler";
 import path from 'path';
 import fs from 'fs';
 import { sendEmail } from "../utils/mail.helper";
+import { LOGIN_URL, LOGO_URL, PRIVACY_URL, SUPPORT_URL } from "../constants";
 
 class AuthService {
     static async Login(
@@ -84,17 +85,15 @@ class AuthService {
 
         await UserRepo.addAddress(newUser._id.toString(), initialAddress);
 
-        const loginUrl = `${process.env.CLIENT_URL as string}/auth/login`;
-
         const mailData = {
-            logoUrl: process.env.LOGO_URL as string,
+            logoUrl: LOGO_URL,
             fullName: newUser.fullname,
             userEmail: newUser.email,
             tempPassword: tempPassword,
-            loginUrl: loginUrl,
+            loginUrl: LOGIN_URL,
             year: new Date().getFullYear(),
-            supportUrl: "https://techhouse.vn/support",
-            policyUrl: "https://techhouse.vn/privacy",
+            supportUrl: SUPPORT_URL,
+            policyUrl: PRIVACY_URL,
         }
 
 

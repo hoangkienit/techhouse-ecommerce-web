@@ -101,11 +101,12 @@ class CartController {
 
   static async SetShipping(req: Request, res: Response): Promise<void> {
     const identifiers = CartController.resolveIdentifiers(req);
-    const { shippingAddress, contactEmail, addressId, saveAsNew, setAsDefault } = req.body;
+    const { shippingAddress, contactEmail, shippingName, addressId, saveAsNew, setAsDefault } = req.body;
 
     const cart = await CartService.setShippingDetails(identifiers, {
       shippingAddress,
       contactEmail,
+      shippingName,
       addressId,
       saveAsNew,
       setAsDefault

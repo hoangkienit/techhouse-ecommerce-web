@@ -124,7 +124,9 @@ describe("Cart guest checkout flow", () => {
       });
 
     expect(shippingRes.status).toBe(200);
-    expect(shippingRes.body.data.checkoutStep).toBe("shipping");
+    expect(Array.isArray(shippingRes.body.data.checkoutTimeline)).toBe(true);
+    const shippingTimeline = shippingRes.body.data.checkoutTimeline;
+    expect(shippingTimeline[shippingTimeline.length - 1].step).toBe("shipping");
 
     // Provide payment details
     const paymentRes = await request(app)
@@ -139,7 +141,8 @@ describe("Cart guest checkout flow", () => {
       });
 
     expect(paymentRes.status).toBe(200);
-    expect(paymentRes.body.data.checkoutStep).toBe("payment");
+    const paymentTimeline = paymentRes.body.data.checkoutTimeline;
+    expect(paymentTimeline[paymentTimeline.length - 1].step).toBe("payment");
 
     // Confirm checkout
     const confirmRes = await request(app)
