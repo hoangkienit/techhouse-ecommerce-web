@@ -48,7 +48,18 @@ app.use(requestLogger)
 // setupSwagger(app);
 
 //===========SECURITY MIDDLEWARE===========
-app.use(helmet()); // Set security HTTP headers
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      imgSrc: ["'self'", 'data:', 'https://iampesmobile.com'],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      connectSrc: ["'self'", 'https://iampesmobile.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+    },
+  })
+); // Set security HTTP headers
 app.use(mongoSanitize()); // Sanitize data against NoSQL injection
 app.use(xssClean()); // Sanitize data against XSS attacks
 app.use(hpp()); // Protect against HTTP Parameter Pollution
@@ -67,13 +78,14 @@ app.use('/api/v1/cart', CartRoute);
 app.use('/api/v1/order', OrderRoute);
 
 app.get("/test-reset", async (req, res) => {
-  res.render("registration", { // 👈 KHÔNG cần ghi .ejs, KHÔNG có 'emails/'
-    logoUrl: "https://cdn.techhouse.vn/logo.png",
+  res.render("reset-success", { 
+    logoUrl: "https://iampesmobile.com/uploads/techhouse.png",
     requestId: "ABC123",
     fullName: "Nguyen Hoang Kien",
     userEmail: "kien@techhouse.vn",
     tempPassword: "https://techhouse.vn/reset?token=xyz",
     loginUrl: "fedeade",
+    time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
     year: new Date().getFullYear(),
     supportUrl: "https://techhouse.vn/support",
     policyUrl: "https://techhouse.vn/privacy",

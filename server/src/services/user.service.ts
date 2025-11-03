@@ -36,7 +36,7 @@ class UserService {
 
     static async ResetPassword(email: string) {
         const user = await UserRepo.findByEmail(email);
-        if (!user) throw new NotFoundError("User not found");
+        if (!user) throw new NotFoundError(`Không tìm thấy tài khoản với email: ${email}`);
 
         const userPayload = {
             userId: user._id.toString(),
@@ -56,7 +56,7 @@ class UserService {
         const resetLink = `${process.env.CLIENT_URL}/reset?token=${token}`;
 
         const mailData = {
-            logoUrl: "https://cdn.techhouse.vn/logo.png",
+            logoUrl: process.env.LOGO_URL as string,
             requestId: requestId,
             fullName: user.fullname,
             userEmail: user.email,
@@ -86,6 +86,23 @@ class UserService {
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
+
+        const loginUrl = `${process.env.CLIENT_URL as string}/auth/login`;
+        await sendEmail(
+            user.email,
+            "Đặt lại mật khẩu thành công",
+            "reset-success",
+            {
+                logoUrl: process.env.LOGO_URL as string,
+                requestId: user.properties.requestId ? user.properties.requestId : "null-id",
+                fullName: user.fullname,
+                time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+                loginUrl: loginUrl,
+                supportUrl: "https://techhouse.vn/support",
+                policyUrl: "https://techhouse.vn/privacy",
+                year: new Date().getFullYear(),
+            }
+        );
         if (user.properties) {
             user.properties.resetToken = undefined;
             user.properties.requestId = undefined;
@@ -93,8 +110,6 @@ class UserService {
         }
 
         await user.save();
-
-        // TODO: Make send email reset successfully
 
         return true;
     }
@@ -116,20 +131,20 @@ class UserService {
         return await UserRepo.setBanStatus(userId, status);
     }
 
-static async UpdateAvatar(userId: string, file: Express.Multer.File) {
-    const user = await UserRepo.findById(userId);
-    if (!user) throw new NotFoundError("User not found");
+    static async UpdateAvatar(userId: string, file: Express.Multer.File) {
+        const user = await UserRepo.findById(userId);
+        if (!user) throw new NotFoundError("User not found");
 
-    if (user.profileImg) await deleteCloudinaryImage(user.profileImg);
+        if (user.profileImg) await deleteCloudinaryImage(user.profileImg);
 
-    const url = await uploadToCloudinary(file, 'avatars');
+        const url = await uploadToCloudinary(file, 'avatars');
 
-    user.profileImg = url;
+        user.profileImg = url;
 
-    await user.save();
+        await user.save();
 
-    return user;
-}
+        return user;
+    }
 
 
 }
