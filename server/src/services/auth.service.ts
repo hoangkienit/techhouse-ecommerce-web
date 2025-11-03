@@ -87,7 +87,7 @@ class AuthService {
         const loginUrl = `${process.env.CLIENT_URL as string}/auth/login`;
 
         const mailData = {
-            logoUrl: "https://cdn.techhouse.vn/logo.png",
+            logoUrl: process.env.LOGO_URL as string,
             fullName: newUser.fullname,
             userEmail: newUser.email,
             tempPassword: tempPassword,

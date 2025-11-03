@@ -5,8 +5,10 @@ import { validate } from '../middlewares/validate.middleware';
 import { updateInformationSchema } from '../validators/user.validator';
 import { AsyncHandler } from '../utils/async.handler';
 import UploadMiddleware from "../middlewares/upload.middleware";
+import rateLimit from "express-rate-limit";
 
 const router = express.Router();
+const resetPasswordLimiter = rateLimit({ windowMs: 60_000, max: 4 });
 
 /**
  * POST /api/v1/user/update-information
@@ -30,7 +32,7 @@ router.post('/change-password', Authenticate, AsyncHandler(UserController.Change
  * @body email: string
  * @access Guess
  */
-router.post('/reset-password', AsyncHandler(UserController.ResetPassword));
+router.post('/reset-password', resetPasswordLimiter, AsyncHandler(UserController.ResetPassword));
 
 /**
  * POST /api/v1/user/reset-password-callback
@@ -39,7 +41,7 @@ router.post('/reset-password', AsyncHandler(UserController.ResetPassword));
  * @query token: string
  * @access Guess
  */
-router.post('/reset-password-callback', AsyncHandler(UserController.ResetPasswordCallback));
+router.post('/reset-password-callback', resetPasswordLimiter, AsyncHandler(UserController.ResetPasswordCallback));
 
 /**
  * POST /api/v1/user/update-addresses
@@ -58,6 +60,6 @@ router.post('/update-addresses', Authenticate, AsyncHandler(UserController.Updat
  */
 router.patch('/set-status/:userId', Authenticate, AuthorizeAdmin, AsyncHandler(UserController.SetBanStatus));
 
-router.post('/update-avatar', Authenticate, AsyncHandler(UserController.UpdateAvatar));
+router.post('/update-avatar', Authenticate, UploadMiddleware.upload.single('image'), AsyncHandler(UserController.UpdateAvatar));
 
 export default router;

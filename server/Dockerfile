@@ -18,7 +18,8 @@ ENV NODE_OPTIONS=--max-old-space-size=2048
 
 RUN npm run build
 
-COPY src/docs ./dist/docs
+RUN mkdir -p dist/templates && cp -r src/templates/* dist/templates/
+RUN mkdir -p dist/docs && cp -r src/docs/* dist/docs/
 
 # Expose port your app runs on (adjust if needed)
 EXPOSE 5000
