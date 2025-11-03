@@ -50,10 +50,21 @@ const cartSchema = new Schema<ICart>(
       transactionId: String,
       note: String
     },
-    checkoutStep: {
-      type: String,
-      enum: ["cart", "shipping", "payment", "review", "placed"],
-      default: "cart"
+    checkoutTimeline: {
+      type: [
+        new Schema(
+          {
+            step: {
+              type: String,
+              enum: ["cart", "shipping", "payment", "review", "placed"],
+              required: true
+            },
+            time: { type: Date, required: true }
+          },
+          { _id: false }
+        )
+      ],
+      default: () => [{ step: "cart", time: new Date() }]
     },
     status: {
       type: String,

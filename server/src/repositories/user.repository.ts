@@ -1,3 +1,4 @@
+import { IUser } from "../interfaces/user.interface";
 import Address from "../models/address.model";
 import User from "../models/user.model";
 
@@ -20,11 +21,7 @@ class UserRepo {
         return User.findOne({ "properties.resetToken": token }).exec();
     }
 
-    static async create(data: {
-        fullname: string;
-        email: string;
-        password: string;
-    }) {
+    static async create(data: Partial<IUser>) {
         const user = new User({
             fullname: data.fullname,
             email: data.email,

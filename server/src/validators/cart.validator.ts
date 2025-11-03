@@ -112,6 +112,7 @@ export const shippingDetailsSchema = () =>
       .messages({
         "string.email": "Email liên hệ không hợp lệ"
       }),
+    shippingName: Joi.string().optional(),
     addressId: Joi.string().optional(),
     saveAsNew: Joi.boolean().optional(),
     setAsDefault: Joi.boolean().optional(),

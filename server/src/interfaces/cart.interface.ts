@@ -32,6 +32,13 @@ export interface IPaymentMethod {
   note?: string;
 }
 
+export type CheckoutStep = "cart" | "shipping" | "payment" | "review" | "placed";
+
+export interface ICheckoutTimelineEntry {
+  step: CheckoutStep;
+  time: Date;
+}
+
 export interface ICart {
   _id?: Types.ObjectId | string;
   user?: Types.ObjectId | string;
@@ -47,8 +54,9 @@ export interface ICart {
   discountAmount?: number;
   shippingAddress?: IShippingAddress | null;
   contactEmail?: string | null;
+  shippingName?: string | null;
   paymentMethod?: IPaymentMethod | null;
-  checkoutStep?: "cart" | "shipping" | "payment" | "review" | "placed";
+  checkoutTimeline: ICheckoutTimelineEntry[];
   status: "active" | "completed";
   createdAt?: Date;
   updatedAt?: Date;
@@ -63,6 +71,7 @@ export interface IShippingSelectionPayload {
   shippingAddress?: IShippingAddress;
   addressId?: string;
   contactEmail?: string;
+  shippingName?: string;
   saveAsNew?: boolean;
   setAsDefault?: boolean;
 }

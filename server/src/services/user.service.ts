@@ -1,12 +1,45 @@
 import { NotFoundError, BadRequestError } from "../core/error.response";
 import UserRepo from "../repositories/user.repository";
-import bcrypt from "bcrypt";
 import { generateResetToken, verifyResetToken } from "../utils/tokens.helper";
 import { sendEmail } from "../utils/mail.helper";
 import { nanoid } from "nanoid";
 import { deleteCloudinaryImage, uploadToCloudinary } from "../utils/upload.helper";
+import { IUser } from "../interfaces/user.interface";
+import { LOGIN_URL, LOGO_URL, PRIVACY_URL, SUPPORT_URL } from "../constants";
+import { generatePassword } from "../utils/random..helper";
+import { HashPassword, VerifyPassword } from "../utils/crypto.handler";
 
 class UserService {
+
+    static async CreateUser(user: Partial<IUser>) {
+
+        const tempPassword = generatePassword();
+        const hashedPassword = await HashPassword(tempPassword);
+
+        user.password = hashedPassword;
+
+        const newUser = await UserRepo.create(user);
+
+        const mailData = {
+            logoUrl: LOGO_URL,
+            fullName: newUser.fullname,
+            userEmail: newUser.email,
+            tempPassword: tempPassword,
+            loginUrl: LOGIN_URL,
+            year: new Date().getFullYear(),
+            supportUrl: SUPPORT_URL,
+            policyUrl: PRIVACY_URL,
+        }
+
+
+        await sendEmail(
+            newUser.email,
+            'Mật khẩu tạm thời cho tài khoản Techhouse',
+            'registration',
+            mailData);
+
+        return newUser;
+    }
     static async UpdateInformation(
         userId: string,
         data: { fullname?: string; phone?: string }
@@ -25,10 +58,10 @@ class UserService {
         const user = await UserRepo.findById(userId);
         if (!user) throw new NotFoundError("User not found");
 
-        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        const isMatch = await VerifyPassword(oldPassword, user.password);
         if (!isMatch) throw new BadRequestError("Mật khẩu cũ không đúng");
 
-        user.password = await bcrypt.hash(newPassword, 10);
+        user.password = await HashPassword(newPassword);
         await user.save();
 
         return true;
@@ -45,7 +78,7 @@ class UserService {
             role: user.role
         }
         const token = generateResetToken(userPayload);
-        const requestId = nanoid(10);
+        const requestId = nanoid(15);
         user.properties = {
             resetToken: token,
             requestId: requestId
@@ -56,15 +89,15 @@ class UserService {
         const resetLink = `${process.env.CLIENT_URL}/reset?token=${token}`;
 
         const mailData = {
-            logoUrl: process.env.LOGO_URL as string,
+            logoUrl: LOGO_URL,
             requestId: requestId,
             fullName: user.fullname,
             userEmail: user.email,
             resetLink: resetLink,
             tokenTtlHours: 1,
             year: new Date().getFullYear(),
-            supportUrl: "https://techhouse.vn/support",
-            policyUrl: "https://techhouse.vn/privacy"
+            supportUrl: SUPPORT_URL,
+            policyUrl: PRIVACY_URL
         }
 
         await sendEmail(
@@ -84,7 +117,7 @@ class UserService {
         const user = await UserRepo.findByToken(token);
         if (!user) throw new NotFoundError("User not found");
 
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const hashedPassword = await HashPassword(newPassword);
         user.password = hashedPassword;
 
         const loginUrl = `${process.env.CLIENT_URL as string}/auth/login`;
@@ -93,13 +126,13 @@ class UserService {
             "Đặt lại mật khẩu thành công",
             "reset-success",
             {
-                logoUrl: process.env.LOGO_URL as string,
+                logoUrl: LOGO_URL,
                 requestId: user.properties.requestId ? user.properties.requestId : "null-id",
                 fullName: user.fullname,
                 time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
                 loginUrl: loginUrl,
-                supportUrl: "https://techhouse.vn/support",
-                policyUrl: "https://techhouse.vn/privacy",
+                supportUrl: SUPPORT_URL,
+                policyUrl: PRIVACY_URL,
                 year: new Date().getFullYear(),
             }
         );
