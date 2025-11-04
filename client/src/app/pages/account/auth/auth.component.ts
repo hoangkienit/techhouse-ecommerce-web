@@ -1,6 +1,8 @@
 import { AppServices } from './../../../@core/services/AppServices.service';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NotificationStatus } from 'src/app/@core/enums/status.enum';
+import { AuthDtos } from 'src/app/@core/models/auth.model';
 
 @Component({
   selector: 'app-auth',
@@ -10,60 +12,91 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class AuthComponent {
   loginForm!: FormGroup;
   signupForm!: FormGroup;
-  isInvalid: boolean = false;
+  isInvalidRegister: boolean = false;
+  isInvalidLogin: boolean = false;
   registerMsg: any = null;
+  loginMsg: any = null;
   isLoading: boolean = false;
 
   constructor(private fb: FormBuilder, private appServices: AppServices) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      fullname: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', Validators.required],
     });
 
     this.signupForm = this.fb.group({
       fullname: ['', Validators.required],
       email: ['', [Validators.required]],
-      address: ['', [Validators.required]],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
+      country: ['', [Validators.required]],
+      city: ['', [Validators.required]],
+      street: ['', [Validators.required]],
     });
   }
 
   onLogin() {
     if (this.loginForm.valid) {
-      // TODO: gọi API login
+      this.isLoading = true;
       this.appServices.AuthService.Login(this.loginForm.value).subscribe({
         next: response => {
           console.log('Login successful:', response);
+          this.appServices.NotificationService.createNotification(
+            this.appServices.TranslateService.instant('auth.success-login'),
+            NotificationStatus.SUCSSESS
+          );
+          this.isInvalidLogin = false;
+          this.loginMsg = null;
+          this.isLoading = false;
+          this.loginForm.reset();
+          // this.appServices.AuthService.StoreToken(response.token);
+          // this.appServices.AuthService.StoreUserInfo(response.user);
+          // this.appServices.NavigationService.navigateToHome();
         },
-        error: error => {
-          console.error('Login error:', error);
+        error: e => {
+          this.isInvalidLogin = true;
+          this.loginMsg = e.error.errors;
+          this.isLoading = false;
         }
       });
+    }
+    else {
+      this.isInvalidLogin = true;
+      this.loginMsg = this.appServices.TranslateService.instant('auth.validate-err-login');
     }
   }
 
   onSignup() {
-    console.log('Signup data:', this.signupForm.value);
     if (this.signupForm.valid) {
       this.isLoading = true;
-      console.log('Signup form is valid');
-      this.appServices.AuthService.RegisterAccount(this.signupForm.value).subscribe({
+      const formValues = this.signupForm.value;
+      const registerData: AuthDtos = {
+        fullname: formValues.fullname,
+        email: formValues.email,
+        address: {
+          country: formValues.country,
+          city: formValues.city,
+          street: formValues.street
+        }
+      }
+      this.appServices.AuthService.RegisterAccount(registerData).subscribe({
         next: response => {
-          this.isInvalid = false;
+          this.isInvalidRegister = false;
           this.registerMsg = null;
-          console.log('Signup successful:', response);
+          const successMsg = this.appServices.TranslateService.instant('auth.success-register');
+          this.appServices.NotificationService.createNotification(successMsg, NotificationStatus.SUCSSESS);
+          this.signupForm.reset();
           this.isLoading = false;
         },
         error: e => {
-          console.error('Signup error:', e.error.errors);
-          this.isInvalid = true;
+          this.isInvalidRegister = true;
           this.registerMsg = e.error.errors;
           this.isLoading = false;
         }
       });
+    } else {
+      this.isInvalidRegister = true;
+      this.registerMsg = this.appServices.TranslateService.instant('auth.validate-err-register');
     }
   }
 }

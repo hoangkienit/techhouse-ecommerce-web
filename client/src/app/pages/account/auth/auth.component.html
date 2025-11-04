@@ -1,12 +1,15 @@
 <div class="auth-container" [isLoading]="isLoading">
     <!-- Cột trái: Login -->
     <div class="auth-left">
-        <h2 class="text-white">{{ 'auth.login.title' | translate }}</h2>
+        <h2 class="text-white">{{ 'auth.title' | translate }}</h2>
         <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
-            <input nbInput fullWidth placeholder="{{ 'auth.fullname' | translate }}" formControlName="fullname" />
+            <input nbInput fullWidth placeholder="{{ 'auth.email' | translate }}" formControlName="email" />
             <input nbInput fullWidth placeholder="{{ 'auth.password' | translate }}" type="password"
                 formControlName="password" />
-            <button nbButton status="primary" fullWidth type="submit">{{ 'auth.login.button-login' | translate
+            <div *ngIf="isInvalidLogin" class="text-white text-center w-100 badge bg-danger fw-bold pt-2 pb-2">
+                {{loginMsg || ''}}
+            </div>
+            <button nbButton status="primary" fullWidth type="submit">{{ 'auth.button-login' | translate
                 }}</button>
         </form>
 
@@ -26,13 +29,25 @@
         <form (ngSubmit)="onSignup()" [formGroup]="signupForm">
             <input nbInput fullWidth placeholder="{{ 'auth.fullname' | translate }}" formControlName="fullname" />
             <input nbInput fullWidth placeholder="{{ 'auth.email' | translate }}" formControlName="email" />
-            <input nbInput fullWidth placeholder="{{ 'auth.address' | translate }}" formControlName="address" />
-
-            <input nbInput fullWidth placeholder="{{ 'auth.password' | translate }}" type="password"
-                formControlName="password" />
-            <input nbInput fullWidth placeholder="{{ 'auth.repassword' | translate }}" type="password"
-                formControlName="confirmPassword" />
-            <div *ngIf="isInvalid" class="text-danger">
+            <div class="form-group">
+                <label for="address" class="fw-bold text-muted w-100 pb-2">
+                    {{ 'auth.address' | translate }}
+                </label>
+                <div class="d-flex w-100 justify-content-between gap-2">
+                    <div class="w-30">
+                        <input nbInput fullWidth placeholder="{{ 'auth.province' | translate }}"
+                            formControlName="country" />
+                    </div>
+                    <div class="w-30">
+                        <input nbInput fullWidth placeholder="{{ 'auth.city' | translate }}" formControlName="city" />
+                    </div>
+                    <div class="w-30">
+                        <input nbInput fullWidth placeholder="{{ 'auth.street' | translate }}"
+                            formControlName="street" />
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="isInvalidRegister" class="text-danger text-center w-100">
                 {{registerMsg || ''}}
             </div>
             <button nbButton status="success" fullWidth type="submit">Đăng ký</button>

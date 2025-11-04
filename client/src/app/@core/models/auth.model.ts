@@ -1,10 +1,10 @@
 export interface AuthDtos {
     fullname: string;
     email: string;
-    address?: string;
+    address?: AddressDto;
     phone?: string;
-    password: string;
-    confirmPassword: string;
+    password?: string;
+    confirmPassword?: string;
     token?: string;
     newPassword?: string;
     oldPassword?: string;
@@ -14,4 +14,10 @@ export interface AuthDtos {
     refreshToken?: string;
     code?: string;
     redirectUrl?: string;
+}
+
+export interface AddressDto {
+    country: string;
+    city: string;
+    street: string;
 }

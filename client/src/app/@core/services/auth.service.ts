@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { apiUrl } from '../constants/api.constant';
+import { apiUrl, apiUrl_test } from '../constants/api.constant';
 import { HttpClient } from '@angular/common/http';
 import { AuthDtos } from '../models/auth.model';
 
@@ -7,7 +7,8 @@ import { AuthDtos } from '../models/auth.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = apiUrl + 'auth';
+  // private baseUrl = apiUrl + 'auth';
+  private baseUrl = apiUrl_test + 'auth';
 
   constructor(private http: HttpClient) { }
 
