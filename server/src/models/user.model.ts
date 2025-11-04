@@ -21,12 +21,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "https://iampesmobile.com/uploads/user-avatar-taskify.jpg"
     },
-     role: {
+    role: {
         type: String,
         enum: ['user', 'admin', 'manager'],
         default: 'user'
-     },
-     socialProvider: {
+    },
+    socialProvider: {
         type: String,
         enum: ["google", "facebook", "github", "apple"],
         default: null
@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema({
     isBanned: {
         type: Boolean,
         default: false
+    },
+    loyalty_points: {
+        type: Number,
+        default: 0,
     },
     properties: {
         type: mongoose.Schema.Types.Mixed,

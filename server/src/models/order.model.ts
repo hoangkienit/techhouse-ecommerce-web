@@ -20,13 +20,23 @@ const orderSchema = new Schema<IOrder>(
         lineTotal: { type: Number, required: true }
       }
     ],
+
+    // Price
     subtotal: { type: Number, required: true },
     tax: { type: Number, required: true },
     shipping: { type: Number, required: true },
     total: { type: Number, required: true },
+
+    // Discount
     discountCode: { type: String, default: null },
     discountRate: { type: Number, default: 0 },
     discountAmount: { type: Number, default: 0 },
+
+    // Loyalty points
+    points_used: { type: Number, default: 0 },
+    points_earned: { type: Number, default: 0 },
+
+    // Address
     shippingAddress: {
       fullName: String,
       line1: String,
@@ -47,7 +57,7 @@ const orderSchema = new Schema<IOrder>(
       transactionId: String,
       note: String
     },
-    currency: { type: String, default: "USD" },
+    currency: { type: String, default: "VND" },
     status: {
       type: String,
       enum: ["created", "paid", "fulfilled", "cancelled"],

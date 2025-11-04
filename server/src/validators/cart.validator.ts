@@ -158,7 +158,8 @@ export const paymentMethodSchema = () =>
 
 export const confirmCheckoutSchema = () =>
   Joi.object({
-    cartId: Joi.string().optional()
+    cartId: Joi.string().optional(),
+    points: Joi.number().integer().min(0).max(100000).optional()
   });
 
 export const applyDiscountSchema = () =>

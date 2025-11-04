@@ -1,9 +1,12 @@
 import { IOrder, IOrderQueryOptions } from "../interfaces/order.interface";
 import OrderRepo from "../repositories/order.repository";
+import { ClientSession } from "mongoose";
+import LoyaltyService from "./loyalty.service";
+import { BadRequestError } from "../core/error.response";
 
 class OrderService {
-  static async CreateOrder(data: Partial<IOrder>) {
-    return await OrderRepo.create(data);
+  static async CreateOrder(data: Partial<IOrder>, options?: { session?: ClientSession }) {
+    return await OrderRepo.create(data, options);
   }
 
   static async GetOrders(options: IOrderQueryOptions) {
@@ -66,6 +69,15 @@ class OrderService {
     }
 
     return order;
+  }
+
+  static async DeleteOrder(orderId: string) {
+    if(!await OrderRepo.findById(orderId)) throw new BadRequestError("Order not found");
+    await LoyaltyService.DeleteByOrder(orderId);
+
+    await OrderRepo.delete(orderId);
+
+    return true;
   }
 }
 

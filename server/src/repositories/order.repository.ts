@@ -1,10 +1,13 @@
 import Order from "../models/order.model";
 import { IOrder } from "../interfaces/order.interface";
-import { SortOrder } from "mongoose";
+import { ClientSession, SortOrder } from "mongoose";
 
 class OrderRepo {
-  static async create(data: Partial<IOrder>) {
+  static async create(data: Partial<IOrder>, options?: { session?: ClientSession }) {
     const order = new Order(data);
+    if (options?.session) {
+      order.$session(options.session);
+    }
     return order.save();
   }
 

@@ -25,7 +25,6 @@ import hpp from 'hpp';
 import { initializeSocket } from './config/socket';
 import path from 'path';
 // import { setupSwagger } from './config/swagger';
-import ejs from 'ejs';
 
 
 const app = express();

@@ -2,43 +2,36 @@ import { NotFoundError, BadRequestError } from "../core/error.response";
 import UserRepo from "../repositories/user.repository";
 import { generateResetToken, verifyResetToken } from "../utils/tokens.helper";
 import { sendEmail } from "../utils/mail.helper";
-import { nanoid } from "nanoid";
 import { deleteCloudinaryImage, uploadToCloudinary } from "../utils/upload.helper";
 import { IUser } from "../interfaces/user.interface";
 import { LOGIN_URL, LOGO_URL, PRIVACY_URL, SUPPORT_URL } from "../constants";
-import { generatePassword } from "../utils/random..helper";
+import { generatePassword, generateRandomID } from "../utils/random.helper";
 import { HashPassword, VerifyPassword } from "../utils/crypto.handler";
+import { ClientSession } from "mongoose";
+import NotificationService from "./notification.service";
 
 class UserService {
 
-    static async CreateUser(user: Partial<IUser>) {
+    static async CreateUser(user: Partial<IUser>, options?: { session?: ClientSession; skipEmail?: boolean }) {
 
         const tempPassword = generatePassword();
         const hashedPassword = await HashPassword(tempPassword);
 
         user.password = hashedPassword;
 
-        const newUser = await UserRepo.create(user);
+        const newUser = await UserRepo.create(user, options?.session);
 
-        const mailData = {
-            logoUrl: LOGO_URL,
-            fullName: newUser.fullname,
-            userEmail: newUser.email,
-            tempPassword: tempPassword,
-            loginUrl: LOGIN_URL,
-            year: new Date().getFullYear(),
-            supportUrl: SUPPORT_URL,
-            policyUrl: PRIVACY_URL,
+        const registrationPayload = {
+            fullname: newUser.fullname,
+            email: newUser.email,
+            tempPassword
+        };
+
+        if (!options?.skipEmail) {
+            await NotificationService.SendRegistrationEmail(registrationPayload);
         }
 
-
-        await sendEmail(
-            newUser.email,
-            'Mật khẩu tạm thời cho tài khoản Techhouse',
-            'registration',
-            mailData);
-
-        return newUser;
+        return { user: newUser, tempPassword };
     }
     static async UpdateInformation(
         userId: string,
@@ -78,7 +71,7 @@ class UserService {
             role: user.role
         }
         const token = generateResetToken(userPayload);
-        const requestId = nanoid(15);
+        const requestId = generateRandomID(15);
         user.properties = {
             resetToken: token,
             requestId: requestId
@@ -88,23 +81,14 @@ class UserService {
 
         const resetLink = `${process.env.CLIENT_URL}/reset?token=${token}`;
 
-        const mailData = {
-            logoUrl: LOGO_URL,
+        const payload = {
             requestId: requestId,
-            fullName: user.fullname,
-            userEmail: user.email,
+            fullname: user.fullname,
+            email: user.email,
             resetLink: resetLink,
-            tokenTtlHours: 1,
-            year: new Date().getFullYear(),
-            supportUrl: SUPPORT_URL,
-            policyUrl: PRIVACY_URL
         }
 
-        await sendEmail(
-            user.email,
-            'Đặt lại mật khẩu cho tài khoản Techhouse',
-            'reset-password',
-            mailData);
+        await NotificationService.SendResetPasswordEmail(payload);
 
         return true;
     }
@@ -119,23 +103,14 @@ class UserService {
 
         const hashedPassword = await HashPassword(newPassword);
         user.password = hashedPassword;
+        const payload = {
+            requestId: user.properties.requestId ? user.properties.requestId : "null-id",
+            fullname: user.fullname,
+            email: user.email
+        }
 
-        const loginUrl = `${process.env.CLIENT_URL as string}/auth/login`;
-        await sendEmail(
-            user.email,
-            "Đặt lại mật khẩu thành công",
-            "reset-success",
-            {
-                logoUrl: LOGO_URL,
-                requestId: user.properties.requestId ? user.properties.requestId : "null-id",
-                fullName: user.fullname,
-                time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
-                loginUrl: loginUrl,
-                supportUrl: SUPPORT_URL,
-                policyUrl: PRIVACY_URL,
-                year: new Date().getFullYear(),
-            }
-        );
+        await NotificationService.SendResetPasswordSuccessEmail(payload);
+
         if (user.properties) {
             user.properties.resetToken = undefined;
             user.properties.requestId = undefined;
@@ -179,6 +154,9 @@ class UserService {
         return user;
     }
 
+    static async GetUserLoyaltyPoints(userId: string) {
+        return await UserRepo.getUserLoyaltyPoints(userId);
+    }
 
 }
 
