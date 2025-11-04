@@ -5,12 +5,13 @@ import { ILoginRequest, ILoginResponse, IRegisterRequest } from "../interfaces/a
 import logger from "../config/logger";
 import UserRepo from "../repositories/user.repository";
 import { generateTokenPair } from "../utils/tokens.helper";
-import { generatePassword } from "../utils/random..helper";
+import { generatePassword } from "../utils/random.helper";
 import { HashPassword, VerifyPassword } from "../utils/crypto.handler";
 import path from 'path';
 import fs from 'fs';
 import { sendEmail } from "../utils/mail.helper";
 import { LOGIN_URL, LOGO_URL, PRIVACY_URL, SUPPORT_URL } from "../constants";
+import NotificationService from "./notification.service";
 
 class AuthService {
     static async Login(
@@ -85,23 +86,13 @@ class AuthService {
 
         await UserRepo.addAddress(newUser._id.toString(), initialAddress);
 
-        const mailData = {
-            logoUrl: LOGO_URL,
-            fullName: newUser.fullname,
-            userEmail: newUser.email,
-            tempPassword: tempPassword,
-            loginUrl: LOGIN_URL,
-            year: new Date().getFullYear(),
-            supportUrl: SUPPORT_URL,
-            policyUrl: PRIVACY_URL,
+        const payload = {
+            fullname: newUser.fullname,
+            email: newUser.email,
+            tempPassword: tempPassword
         }
 
-
-        await sendEmail(
-            email, 
-            'Mật khẩu tạm thời cho tài khoản Techhouse', 
-            'registration', 
-            mailData);
+        await NotificationService.SendRegistrationEmail(payload);
 
         return true;
     }

@@ -15,6 +15,8 @@ export interface IOrder {
   discountCode?: string | null;
   discountRate?: number | null;
   discountAmount?: number;
+  points_used: number;
+  points_earned: number;
   shippingAddress?: IShippingAddress | null;
   paymentMethod?: IPaymentMethod | null;
   currency: string;

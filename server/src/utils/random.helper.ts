@@ -8,3 +8,7 @@ export const generateOrderCode = () => {
 export const generatePassword = (): string => {
     return nanoid(15).toLowerCase();
 }
+
+export const generateRandomID = (num: number): string => {
+  return nanoid(num).toUpperCase();
+}
