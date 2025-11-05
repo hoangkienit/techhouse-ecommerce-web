@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>Techhouse | Tài khoản của bạn đã được tạo</title>
+  <style>
+    @media (max-width:600px){ .container{width:100%!important;} }
+  </style>
+</head>
+<body style="margin:0;padding:0;background:#F3F4F6;">
+  <center style="width:100%;">
+    <table width="100%">
+      <tr>
+        <td align="center" style="padding:32px 12px;">
+          <table class="container" width="600" style="background:#fff;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,0.06);">
+            <!-- Header -->
+            <tr>
+              <td style="background:#1E40AF;padding:24px;text-align:center;border-radius:14px 14px 0 0;">
+                <img src="<%= logoUrl %>" width="140" alt="Techhouse" />
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding:28px 32px;">
+                <h1 style="font:700 22px system-ui;color:#111827;margin:0 0 12px;">
+                  Xin chào <%= fullName %> 👋
+                </h1>
+
+                <p style="font:400 15px system-ui;color:#374151;line-height:1.6;">
+                  Cảm ơn bạn đã tin tưởng và mua hàng tại <strong>Techhouse</strong>.<br/>
+                  Chúng tôi đã tự động tạo một tài khoản cho bạn để dễ dàng theo dõi đơn hàng, lưu địa chỉ và tận hưởng ưu đãi thành viên.
+                </p>
+
+                <div style="margin-top:20px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:16px;">
+                  <p style="font:500 14px system-ui;color:#374151;margin:0 0 6px;">Thông tin đăng nhập của bạn:</p>
+                  <p style="font:600 14px monospace;color:#1F2937;margin:0;">Email: <%= userEmail %></p>
+                  <p style="font:600 14px monospace;color:#1F2937;margin:4px 0 0;">Mật khẩu tạm thời: <%= tempPassword %></p>
+                </div>
+
+                <a href="<%= loginUrl %>" style="display:inline-block;margin-top:22px;padding:13px 20px;background:#1E40AF;color:#fff;text-decoration:none;border-radius:10px;font-weight:600;">
+                  ĐĂNG NHẬP NGAY
+                </a>
+
+                <p style="font:400 13px system-ui;color:#6B7280;margin-top:16px;line-height:1.5;">
+                  Sau khi đăng nhập lần đầu, bạn nên <strong>đổi mật khẩu</strong> để bảo mật tài khoản.<br/>
+                  Bạn có thể theo dõi đơn hàng và lịch sử mua sắm trong trang cá nhân.
+                </p>
+
+                <hr style="border:none;border-top:1px solid #E5E7EB;margin:24px 0;" />
+
+                <p style="font:400 12px system-ui;color:#9CA3AF;">
+                  Cần hỗ trợ? Hãy truy cập <a href="<%= supportUrl %>" style="color:#6B7280;text-decoration:underline;">Trung tâm hỗ trợ</a> của chúng tôi.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background:#F9FAFB;padding:18px 32px;font:400 12px system-ui;color:#6B7280;border-radius:0 0 14px 14px;text-align:center;">
+                © <%= year %> Techhouse. Tất cả các quyền được bảo lưu.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </center>
+</body>
+</html>

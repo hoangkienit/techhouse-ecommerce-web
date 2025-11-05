@@ -38,7 +38,7 @@ class CartController {
   static async AddItem(req: Request, res: Response) {
     const identifiers = CartController.resolveIdentifiers(req);
     const { productId, quantity } = req.body;
-
+    
     const cart = await CartService.AddItem(identifiers, productId, Number(quantity ?? 1));
 
     new OK({
