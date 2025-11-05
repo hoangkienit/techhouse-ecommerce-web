@@ -13,7 +13,6 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   RegisterAccount(params: AuthDtos) {
-    console.log(params);
     return this.http.post<AuthDtos>(`${this.baseUrl}/register`, params);
   }
 

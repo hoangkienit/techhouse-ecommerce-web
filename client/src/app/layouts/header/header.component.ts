@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NbPosition, NbThemeService } from '@nebular/theme';
 import { TranslateService } from '@ngx-translate/core';
-import { User } from 'src/app/@core/models/auth.model';
 import { AppServices } from 'src/app/@core/services/AppServices.service';
 
 @Component({
