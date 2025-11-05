@@ -17,7 +17,7 @@ export class AuthService {
   }
 
   Login(params: AuthDtos) {
-    return this.http.post<any>(`${this.baseUrl}/login/`, params);
+    return this.http.post<any>(`${this.baseUrl}/login`, params);
   }
 
   LoginGoogle() {
