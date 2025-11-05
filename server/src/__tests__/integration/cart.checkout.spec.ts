@@ -1,11 +1,13 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
+import { MongoMemoryReplSet } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import CartService from "../../services/cart.service";
 import Product from "../../models/product.model";
 import User from "../../models/user.model";
 import Cart from "../../models/cart.model";
 import Order from "../../models/order.model";
 import Loyalty from "../../models/loyalty.model";
+import app from './../../app';
+import request from "supertest";
+import Address from "../../models/address.model";
 
 jest.mock("../../config/socket", () => ({
   getIO: () => ({
@@ -15,126 +17,186 @@ jest.mock("../../config/socket", () => ({
   })
 }));
 
+jest.mock("../../middlewares/verify.middleware", () => ({
+  Authenticate: (req: any, res: any, next: any) => next(),
+  AuthorizeAdmin: (req: any, res: any, next: any) => next(),
+}));
+
+jest.mock("../../middlewares/optional-auth.middleware", () => ({
+  OptionalAuthenticate: (req: any, res: any, next: any) => {
+    req.user = { ...(req.user ?? {}), userId: "69049c7e373fefa7aa7f5ae6" };
+    return next();
+  }
+}));
+
+jest.mock("../../middlewares/validate.middleware", () => ({
+  validate: () => (req: any, res: any, next: any) => next()
+}));
+
 jest.setTimeout(30000);
 
-describe("CartService.confirmCheckout", () => {
-  let mongoServer: MongoMemoryServer | null = null;
+let mongoServer: MongoMemoryReplSet;
 
-  beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create({
-      instance: { ip: "127.0.0.1" }
-    });
-    await mongoose.connect(mongoServer.getUri());
-  });
+beforeAll(async () => {
+  mongoServer = await MongoMemoryReplSet.create({replSet: { count: 1 }});
+  await mongoose.connect(mongoServer.getUri());
+  process.env.JWT_ACCESS_SECRET = "test_access_secret";
+});
 
-  afterAll(async () => {
-    await mongoose.disconnect();
-    if (mongoServer) {
-      await mongoServer.stop();
-    }
-  });
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
 
-  afterEach(async () => {
-    if (mongoose.connection.readyState !== 1) {
-      return;
-    }
-    await Promise.all([
-      Cart.deleteMany({}),
-      Order.deleteMany({}),
-      Product.deleteMany({}),
-      User.deleteMany({}),
-      Loyalty.deleteMany({})
-    ]);
-  });
+afterEach(async () => {
+  await Promise.all([
+    Product.deleteMany({}),
+    Cart.deleteMany({}),
+    Order.deleteMany({}),
+    User.deleteMany({}),
+    Loyalty.deleteMany({}),
+    Address.deleteMany({})
+  ]);
+});
 
-  const createProduct = async (price: number) => {
-    return Product.create({
-      product_name: "Gaming Laptop",
-      product_description: "High-end gaming laptop",
-      product_slug: "gaming-laptop",
-      product_brand: "Techhouse",
-      product_price: price,
-      product_imgs: ["https://example.com/image.jpg"],
-      product_category: "laptop",
-      product_attributes: {
-        cpu: "Intel i9",
-        ram: "32GB",
-        storage: "1TB SSD"
+describe('Authenticated user checkout flow', () => {
+  let productOne: any;
+  let productTwo: any;
+  let user: any;
+  let address: any;
+
+  beforeEach(async () => {
+    [productOne, productTwo] = await Product.insertMany([
+      {
+        product_name: "MacBook Pro 2025",
+        product_description: "Laptop",
+        product_slug: "macbook-pro-2025",
+        product_brand: "Apple",
+        product_price: 70000,
+        product_imgs: ["http://img/mac.jpg"],
+        product_category: "laptop",
+        product_attributes: {},
+        product_stock: 10
       },
-      product_stock: 10
-    });
-  };
-
-  const withCartReadyForCheckout = async (userId: string, productPrice: number, quantity: number) => {
-    const product = await createProduct(productPrice);
-
-    await CartService.AddItem({ userId }, product._id.toString(), quantity);
-
-    await CartService.setShippingDetails(
-      { userId },
       {
-        shippingAddress: {
-          fullName: "John Doe",
-          line1: "123 Main St",
-          city: "Tech City",
-          country: "VN",
-          phone: "0123456789"
-        },
-        contactEmail: "john@example.com",
-        shippingName: "John Doe"
+        product_name: "Surface Laptop 6",
+        product_description: "Laptop",
+        product_slug: "surface-laptop-6",
+        product_brand: "Microsoft",
+        product_price: 20000,
+        product_imgs: ["http://img/surface.jpg"],
+        product_category: "laptop",
+        product_attributes: {},
+        product_stock: 12
       }
-    );
+    ]);
 
-    await CartService.setPaymentMethod(
-      { userId },
-      {
-        type: "cod",
-        note: "Pay on delivery"
-      }
-    );
-  };
-
-  it("awards loyalty points for authenticated user without redemption", async () => {
-    const user = await User.create({
-      fullname: "No Points User",
-      email: "nopoints@example.com",
+    user = await User.create({
+      _id: new mongoose.Types.ObjectId("69049c7e373fefa7aa7f5ae6"),
+      fullname: "Nguyen Hoang Kien",
+      email: "kiennguyen4321abc@gmail.com",
       password: "secret",
-      loyalty_points: 0
+      loyalty_points: 400,
+      addresses: [new mongoose.Types.ObjectId("69049c7e373fefa7aa7f5ae9")]
     });
 
-    const userId = user._id.toString();
-
-    await withCartReadyForCheckout(userId, 100, 2);
-
-    const result = await CartService.confirmCheckout({ userId }, 0);
-
-    expect(result.order.total).toBeCloseTo(240);
-    expect(result.order.points_used).toBe(0);
-    expect(result.order.points_earned).toBe(24);
-
-    const updatedUser = await User.findById(userId).lean();
-    expect(updatedUser?.loyalty_points).toBe(24);
+    address = await Address.create({
+      _id: new mongoose.Types.ObjectId("69049c7e373fefa7aa7f5ae9"),
+      userId: new mongoose.Types.ObjectId("69049c7e373fefa7aa7f5ae6"),
+      street: "Ben Van Don",
+      city: "TPHCM",
+      country: "Vietnam"
+    });
   });
 
-  it("redeems loyalty points and updates totals correctly", async () => {
-    const user = await User.create({
-      fullname: "Loyal User",
-      email: "loyal@example.com",
-      password: "secret",
-      loyalty_points: 10
-    });
+  it('allow authenticated user add, update and checkout', async () => {
+    // adds first product
+    const addFirst = await request(app)
+      .post("/api/v1/cart/items")
+      .send({ productId: productOne._id.toString(), quantity: 1 });
 
-    const userId = user._id.toString();
+    expect(addFirst.status).toBe(200);
+    expect(addFirst.body.data.items).toHaveLength(1);
+    const userId = addFirst.body.data.userId;
+    expect(userId).toBeTruthy();
 
-    await withCartReadyForCheckout(userId, 2000, 1);
+    // Add second product under same guest cart
+    const addSecond = await request(app)
+      .post("/api/v1/cart/items")
+      .send({ productId: productTwo._id.toString(), quantity: 2 });
 
-    const result = await CartService.confirmCheckout({ userId }, 1);
+    expect(addSecond.status).toBe(200);
+    expect(addSecond.body.data.items.length).toBe(2);
+    const surfaceItem = addSecond.body.data.items.find((item: any) => item.product_name === "Surface Laptop 6");
+    expect(surfaceItem.quantity).toBe(2);
 
-    expect(result.order.total).toBeCloseTo(1200);
-    expect(result.order.points_used).toBe(1);
-    expect(result.order.points_earned).toBe(120);
+    // Update quantity of the first item
+    const firstItemId = addSecond.body.data.items.find((item: any) => item.product_name === "MacBook Pro 2025")._id;
+    const updateRes = await request(app)
+      .patch(`/api/v1/cart/items/${firstItemId}`)
+      .send({ quantity: 2 });
 
-    const updatedUser = await User.findById(userId).lean();
-    expect(updatedUser?.loyalty_points).toBe(129);
+    expect(updateRes.status).toBe(200);
+    const updatedItem = updateRes.body.data.items.find((item: any) => item.product_name === "MacBook Pro 2025");
+    expect(updatedItem.quantity).toBe(2);
+
+
+    const subtotal = updateRes.body.data.subtotal;
+    expect(subtotal).toBe(180000);
+
+    // Send shipping details with new address 
+    const shippingRes = await request(app)
+      .post("/api/v1/cart/checkout/shipping")
+      .send({
+        shippingAddress: {
+          line1: "19 Nguyen Huu Tho",
+          city: "TPHCM",
+          country: "Vietnam"
+        },
+        saveAsNew: true
+      });
+
+    expect(shippingRes.status).toBe(200);
+    expect(Array.isArray(shippingRes.body.data.checkoutTimeline)).toBe(true);
+    const shippingTimeline = shippingRes.body.data.checkoutTimeline;
+    expect(shippingTimeline[shippingTimeline.length - 1].step).toBe("shipping");
+
+    // Provide payment details
+    const paymentRes = await request(app)
+      .post("/api/v1/cart/checkout/payment")
+      .send({
+        paymentMethod: {
+          type: "bank_transfer"
+        }
+      });
+
+    expect(paymentRes.status).toBe(200);
+    const paymentTimeline = paymentRes.body.data.checkoutTimeline;
+    expect(paymentTimeline[paymentTimeline.length - 1].step).toBe("payment");
+
+    const paymentType = paymentRes.body.data.paymentMethod.type;
+    expect(paymentType).toBe("bank_transfer");
+
+    // Confirm checkout
+    const confirmRes = await request(app)
+      .post("/api/v1/cart/checkout/confirm")
+      .send({
+        points: 190
+      });
+      console.log(confirmRes.body.data);
+    expect(confirmRes.status).toBe(200);
+    
+    const cartTotal = confirmRes.body.data.cart.total;
+    expect(cartTotal).toBe(8000);
+
+    const orders = await Order.find({});
+    expect(orders).toHaveLength(1);
+    const persistedOrder = orders[0];
+    expect(persistedOrder?.items).toHaveLength(2);
+    expect(persistedOrder?.total).toBe(8000);
+    expect(persistedOrder?.points_earned).toBe(8);
+    expect(persistedOrder?.points_used).toBe(190);
+
   });
 });
+

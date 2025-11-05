@@ -1,7 +1,2 @@
-POST  https://hoangkien.cloud/api/v1/auth/login
+GET  http://localhost:5000/api/v1/user/
 Content-Type: application/json
-
-{
-    "email": "kien@gmail.com",
-    "password": "fsfsefes"
-}

@@ -12,6 +12,8 @@ class AddressService {
       throw new BadRequestError("Địa chỉ không hợp lệ");
     }
 
+    console.log("payload: ", payload);
+
     return AddressRepo.createForUser(userId, payload);
   }
 

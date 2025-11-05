@@ -162,6 +162,7 @@ class CartService {
 
     let resolvedShipping: IShippingAddress | null = null;
 
+    // For authenticated user
     if (addressId) {
       if (!identifiers.userId) throw new BadRequestError("addressId chỉ áp dụng cho người dùng đã đăng nhập");
       const address = await AddressService.GetAddressForUser(identifiers.userId, addressId);
@@ -172,10 +173,13 @@ class CartService {
       }
     }
 
+    // For guest user and authenticated user with new address
     if (!resolvedShipping && shippingAddress) {
+      // Validate shipping address from client
       this.assertShippingFields(shippingAddress);
       resolvedShipping = { ...shippingAddress };
 
+      // Save new address for authenticated user
       if (identifiers.userId && saveAsNew) {
         await AddressService.CreateAddress(identifiers.userId, {
           street: shippingAddress.line1!,
@@ -323,6 +327,7 @@ class CartService {
           }
 
           const maxRedeemableByTotal = Math.floor(cart.total / 1000);
+
           if (requestedPoints > maxRedeemableByTotal) {
             throw new BadRequestError("Điểm loyalty vượt quá tổng đơn hàng");
           }
@@ -334,7 +339,7 @@ class CartService {
           cart.total = adjustedTotal;
           orderPayload.total = adjustedTotal;
 
-          const earnedPoints = Math.floor(adjustedTotal * 0.1);
+          const earnedPoints = Math.floor(adjustedTotal * 0.001); // Because 1.000 VND is 1 point
 
           loyaltyUser.loyalty_points = availablePoints - redeemedPoints + earnedPoints;
           await loyaltyUser.save({ session });
@@ -386,16 +391,19 @@ class CartService {
     }
 
     if (guestUserEmailData) {
-      await NotificationService.SendRegistrationEmail(guestUserEmailData);
+      await NotificationService.SendCreatedGuessAccountEmail(guestUserEmailData);
     }
 
-    if (orderResult) {
-      // TODO: send order success email to user
+    const normalizedOrder =
+      orderResult && typeof orderResult.toObject === "function" ? orderResult.toObject() : orderResult;
+
+    if (normalizedOrder) {
+      await this.sendOrderSuccessNotification(normalizedOrder, cart);
     }
 
     this.emitCartUpdate(cart);
 
-    const orderResponse = orderResult && orderResult.toObject ? orderResult.toObject() : orderResult;
+    const orderResponse = normalizedOrder;
 
     return {
       order: orderResponse,
@@ -436,7 +444,7 @@ class CartService {
       if (!userId && !guestId) guestId = nanoid(12);
 
       const payload: Partial<ICart> = {
-        currency: "USD",
+        currency: "VND",
         items: [],
         subtotal: 0,
         tax: 0,
@@ -574,6 +582,134 @@ class CartService {
     } catch {
 
     }
+  }
+
+  private static async sendOrderSuccessNotification(order: any, cart: CartDocument) {
+    const recipient = await this.resolveOrderRecipient(order);
+    if (!recipient?.email) {
+      return;
+    }
+
+    const shippingAddress = order?.shippingAddress ?? cart?.shippingAddress ?? {};
+    const currency = order?.currency ?? cart?.currency ?? "VND";
+    const displayName =
+      shippingAddress?.fullName ??
+      cart?.shippingName ??
+      recipient.fullname ??
+      "Quý khách";
+
+    const emailPayload = {
+      email: recipient.email,
+      orderCode: order.orderCode,
+      fullName: displayName,
+      orderDate: this.formatOrderDate(order?.placedAt),
+      orderItems: this.mapOrderItemsForEmail(order?.items ?? [], currency),
+      shippingFee: this.formatCurrency(order?.shipping ?? 0, currency),
+      tax: this.formatCurrency(order?.tax ?? 0, currency),
+      grandTotal: this.formatCurrency(order?.total ?? 0, currency),
+      shipName: displayName,
+      shipLine1: this.composeAddressLine([shippingAddress?.line1, shippingAddress?.line2]),
+      shipCity: this.composeAddressLine([shippingAddress?.city, shippingAddress?.state, shippingAddress?.postalCode]),
+      shipCountry: shippingAddress?.country ?? "Việt Nam",
+      shipPhone: shippingAddress?.phone ?? "—",
+      paymentMethod: this.describePaymentMethod(order?.paymentMethod),
+      paymentRef: this.resolvePaymentReference(order?.paymentMethod)
+    };
+
+    await NotificationService.SendOrderSuccessEmail(emailPayload);
+  }
+
+  private static async resolveOrderRecipient(order: any): Promise<{ email: string; fullname?: string | null } | null> {
+    if (order?.contactEmail) {
+      const fullName =
+        order?.shippingAddress?.fullName ??
+        (typeof order?.shippingName === "string" ? order.shippingName : null);
+      return { email: order.contactEmail, fullname: fullName };
+    }
+
+    const userId =
+      typeof order?.user === "string"
+        ? order.user
+        : order?.user?._id
+          ? order.user._id.toString()
+          : order?.user
+            ? order.user.toString()
+            : null;
+
+    if (!userId) {
+      return null;
+    }
+
+    const user = await UserRepo.findById(userId);
+    if (!user) {
+      return null;
+    }
+
+    return {
+      email: user.email,
+      fullname: user.fullname ?? null
+    };
+  }
+
+  private static mapOrderItemsForEmail(items: ICartItem[], currency: string) {
+    if (!Array.isArray(items)) {
+      return [];
+    }
+
+    return items.map((item) => ({
+      name: item.product_name,
+      variant: item.product_brand ?? null,
+      qty: item.quantity,
+      total: this.formatCurrency(item.lineTotal ?? 0, currency),
+      imageUrl: item.product_img ?? null
+    }));
+  }
+
+  private static composeAddressLine(parts: Array<string | null | undefined>) {
+    return parts.filter((part) => typeof part === "string" && part.trim().length).join(", ") || "—";
+  }
+
+  private static describePaymentMethod(paymentMethod: IPaymentMethod | null | undefined) {
+    if (!paymentMethod) {
+      return "Không rõ phương thức";
+    }
+
+    const providerLabel = paymentMethod.provider ? ` - ${paymentMethod.provider}` : "";
+
+    if (paymentMethod.type === "card") {
+      return `Thẻ${providerLabel}`.trim();
+    } else if (paymentMethod.type === "paypal") {
+      return `PayPal${providerLabel}`.trim();
+    } else if (paymentMethod.type === "bank_transfer") {
+      return `Chuyển khoản ngân hàng${providerLabel}`.trim();
+    } else if (paymentMethod.type === "cod") {
+      return "Thanh toán khi nhận hàng (COD)";
+    }
+
+    return "Không rõ phương thức";
+  }
+
+  private static resolvePaymentReference(paymentMethod: IPaymentMethod | null | undefined) {
+    return paymentMethod?.transactionId ?? paymentMethod?.note ?? "—";
+  }
+
+  private static formatCurrency(amount: number, currency: string) {
+    try {
+      return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency
+      }).format(Number(amount ?? 0));
+    } catch {
+      return `${Number(amount ?? 0).toFixed(0)} ${currency}`;
+    }
+  }
+
+  private static formatOrderDate(date: Date | string | null | undefined) {
+    const value = date ? new Date(date) : new Date();
+    if (Number.isNaN(value.getTime())) {
+      return new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+    }
+    return value.toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
   }
 }
 
