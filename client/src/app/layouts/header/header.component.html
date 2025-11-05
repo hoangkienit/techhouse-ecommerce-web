@@ -9,11 +9,11 @@
         <!-- Bên phải -->
         <div class="right-section">
             <!-- Language Menu -->
-            <nb-select placeholder="Language" [(selected)]="currentLang" (selectedChange)="switchLang($event)">
+            <!-- <nb-select placeholder="Language" [(selected)]="currentLang" (selectedChange)="switchLang($event)">
                 <nb-option *ngFor="let lang of languages" [value]="lang.data">
                     {{ lang.title }}
                 </nb-option>
-            </nb-select>
+            </nb-select> -->
 
             <!-- Toggle Theme -->
             <button nbButton ghost size="small" (click)="toggleTheme()" nbTooltip="Toggle Theme">

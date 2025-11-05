@@ -55,6 +55,8 @@
         input[nbInput] {
             border-radius: 10px;
             border: 1px solid #ddd;
+            background: rgba(255, 255, 255, 0.15);
+            color: #333;
 
             &:focus {
                 border-color: #667eea;

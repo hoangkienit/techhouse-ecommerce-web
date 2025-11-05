@@ -1,3 +1,4 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -29,7 +30,7 @@ import { ProfileComponent } from './pages/account/profile/profile.component';
 import { UsersComponent } from './pages/admin/users/users.component';
 import { DiscountsComponent } from './pages/admin/discounts/discounts.component';
 import { AuthComponent } from './pages/account/auth/auth.component';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -54,7 +55,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DiscountComponent,
     ProfileComponent,
     UsersComponent,
-    DiscountsComponent
+    DiscountsComponent,
   ],
   imports: [
     BrowserModule,
@@ -81,6 +82,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     NbStepperModule,
     NbTabsetModule,
     NbListModule,
+    MatSnackBarModule,
     NbDialogModule.forRoot(),
     NbToastrModule.forRoot(),
     TranslateModule.forRoot({

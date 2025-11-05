@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NbPosition, NbThemeService } from '@nebular/theme';
 import { TranslateService } from '@ngx-translate/core';
+import { AppServices } from 'src/app/@core/services/AppServices.service';
 
 @Component({
   selector: 'app-header',
@@ -11,31 +12,27 @@ export class HeaderComponent {
   isLoading: boolean = false;
   position: NbPosition = NbPosition.BOTTOM_END;
   currentTheme = 'default';
+
+  userFullDetails = this._appservices.GlobalStateService.currentUser;
+
   user = {
-    name: 'Duy Quang',
-    avatar: 'assets/avatar.png',
+    name: "Guest",
+    avatar: '',
   };
 
-  // Menu ngôn ngữ
-  languages = [
-    { title: '🇻🇳 Tiếng Việt', data: 'vi' },
-    { title: '🇺🇸 English', data: 'en' },
-  ];
-
-  currentLang = 'vi';
-
-  constructor(private themeService: NbThemeService, private translate: TranslateService) { }
+  constructor(private themeService: NbThemeService, private translate: TranslateService, private _appservices: AppServices) { }
 
   ngOnInit() {
+    this._appservices.GlobalStateService.currentUser$.subscribe(user => {
+      this.user = {
+        name: user?.fullname || 'Guest',
+        avatar: user?.profileImg || ''
+      };
+    });
   }
 
   toggleTheme() {
     this.currentTheme = this.currentTheme === 'dark' ? 'default' : 'dark';
     this.themeService.changeTheme(this.currentTheme);
-  }
-
-  switchLang(langCode: string) {
-    this.currentLang = langCode;
-    this.translate.use(langCode);
   }
 }
