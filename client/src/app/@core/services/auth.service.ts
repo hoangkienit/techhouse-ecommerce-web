@@ -7,8 +7,8 @@ import { AuthDtos } from '../models/auth.model';
   providedIn: 'root'
 })
 export class AuthService {
-  // private baseUrl = apiUrl + 'auth';
-  private baseUrl = apiUrl_test + 'auth';
+  private baseUrl = apiUrl + 'auth';
+  // private baseUrl = apiUrl_test + 'auth';
 
   constructor(private http: HttpClient) { }
 
@@ -18,7 +18,11 @@ export class AuthService {
   }
 
   Login(params: AuthDtos) {
-    return this.http.post<AuthDtos>(`${this.baseUrl}/login`, params);
+    return this.http.post<any>(`${this.baseUrl}/login/`, params);
+  }
+
+  LoginGoogle() {
+    return this.http.get<{}>(`${this.baseUrl}/google`);
   }
 
   Logout() {

@@ -31,7 +31,8 @@
         "success-register": "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.",
         "success-login": "Đăng Nhập thành công!",
         "validate-err-register": "Hãy điền đầy đủ thông tin đăng ký.",
-        "validate-err-login": "Hãy điền đầy đủ thông tin đăng nhập."
+        "validate-err-login": "Hãy điền đầy đủ thông tin đăng nhập.",
+        "google-login": "Google"
     },
     "errors": {},
     "sideBar": {

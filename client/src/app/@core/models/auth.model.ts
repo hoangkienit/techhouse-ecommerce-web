@@ -5,19 +5,29 @@ export interface AuthDtos {
     phone?: string;
     password?: string;
     confirmPassword?: string;
-    token?: string;
     newPassword?: string;
     oldPassword?: string;
-    provider?: string;
-    providerToken?: string;
     rememberMe?: boolean;
-    refreshToken?: string;
-    code?: string;
-    redirectUrl?: string;
 }
 
 export interface AddressDto {
     country: string;
     city: string;
     street: string;
+}
+
+export interface User {
+    fullname: string;
+    email: string;
+    phone?: string;
+    password?: string;
+    profileImg?: string;
+    role: string;
+    socialProvider?: string | null;
+    socialId?: string | null;
+    addresses?: string[];
+    isBanned: boolean;
+    createdAt: string;
+    updatedAt: string;
+    properties?: Record<string, any>;
 }

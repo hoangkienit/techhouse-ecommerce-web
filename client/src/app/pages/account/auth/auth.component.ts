@@ -1,8 +1,9 @@
 import { AppServices } from './../../../@core/services/AppServices.service';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { apiUrl } from 'src/app/@core/constants/api.constant';
 import { NotificationStatus } from 'src/app/@core/enums/status.enum';
-import { AuthDtos } from 'src/app/@core/models/auth.model';
+import { AuthDtos, User } from 'src/app/@core/models/auth.model';
 
 @Component({
   selector: 'app-auth',
@@ -40,7 +41,7 @@ export class AuthComponent {
       this.isLoading = true;
       this.appServices.AuthService.Login(this.loginForm.value).subscribe({
         next: response => {
-          console.log('Login successful:', response);
+          this.appServices.GlobalStateService.setUser(response.data.user._doc);
           this.appServices.NotificationService.createNotification(
             this.appServices.TranslateService.instant('auth.success-login'),
             NotificationStatus.SUCSSESS
@@ -48,6 +49,7 @@ export class AuthComponent {
           this.isInvalidLogin = false;
           this.loginMsg = null;
           this.isLoading = false;
+
           this.loginForm.reset();
           // this.appServices.AuthService.StoreToken(response.token);
           // this.appServices.AuthService.StoreUserInfo(response.user);
@@ -55,7 +57,7 @@ export class AuthComponent {
         },
         error: e => {
           this.isInvalidLogin = true;
-          this.loginMsg = e.error.errors;
+          this.loginMsg = e.error?.errors;
           this.isLoading = false;
         }
       });
@@ -98,5 +100,20 @@ export class AuthComponent {
       this.isInvalidRegister = true;
       this.registerMsg = this.appServices.TranslateService.instant('auth.validate-err-register');
     }
+  }
+
+  googleLogin() {
+    this.appServices.AuthService.LoginGoogle().subscribe(
+      {
+        next: res => {
+          console.log(res);
+        },
+        error: e => {
+          console.log(e)
+        }
+      }
+    )
+
+    // window.location.href = apiUrl + 'auth/google/';
   }
 }

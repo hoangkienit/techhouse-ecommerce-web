@@ -14,8 +14,8 @@
         </form>
 
         <div class="social-login">
-            <button nbButton status="danger" fullWidth>
-                <nb-icon icon="google-outline"></nb-icon> Google
+            <button nbButton status="danger" (click)="googleLogin()" fullWidth>
+                <nb-icon icon="google-outline"></nb-icon> {{ 'auth.google-login' | translate}}
             </button>
             <button nbButton status="info" fullWidth>
                 <nb-icon icon="facebook-outline"></nb-icon> Facebook
