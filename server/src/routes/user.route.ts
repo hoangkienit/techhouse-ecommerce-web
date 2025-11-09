@@ -11,6 +11,15 @@ const router = express.Router();
 const resetPasswordLimiter = rateLimit({ windowMs: 60_000, max: 4 });
 
 /**
+ * POST /api/v1/user/list
+ * @description Cập nhật tên và số điện thoại người dùng
+ * @query skip: number
+ * @query page: number
+ * @access Admin
+ */
+router.get('/list',  AsyncHandler(UserController.GetUserList));
+
+/**
  * POST /api/v1/user/update-information
  * @description Cập nhật tên và số điện thoại người dùng
  * @body fullname?: string, phone?: string
@@ -60,6 +69,18 @@ router.post('/update-addresses', Authenticate, AsyncHandler(UserController.Updat
  */
 router.patch('/set-status/:userId', Authenticate, AuthorizeAdmin, AsyncHandler(UserController.SetBanStatus));
 
+/**
+ * PATCH /api/v1/user/update-avatar
+ * @description Đổi ảnh đại diện của người dùng
+ * @access Authenticated
+ */
 router.post('/update-avatar', Authenticate, UploadMiddleware.upload.single('image'), AsyncHandler(UserController.UpdateAvatar));
+
+/**
+ * GET /api/v1/user/loyalty-points
+ * @description Lấy điểm loyalty của người dùng
+ * @access Authenticated
+ */
+router.post('/loyalty-points', Authenticate, AsyncHandler(UserController.GetUserLoyaltyPoints));
 
 export default router;

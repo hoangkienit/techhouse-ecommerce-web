@@ -16,6 +16,7 @@ import UserService from "./user.service";
 import NotificationService from "./notification.service";
 import UserRepo from "../repositories/user.repository";
 import LoyaltyService from "./loyalty.service";
+import ProductService from "./product.service";
 
 class CartService {
   private static TAX_RATE = 0.1;
@@ -384,6 +385,15 @@ class CartService {
           if (discount?._id) {
             await DiscountService.IncrementUsage(discount._id.toString(), session);
           }
+        }
+
+        // Increase product solde amount
+        if (cart.items.length > 0) {
+          await Promise.all(
+            cart.items.map(i =>
+              ProductService.SoldAmountIncrement(i._id as string, i.quantity, session)
+            )
+          );
         }
       });
     } finally {

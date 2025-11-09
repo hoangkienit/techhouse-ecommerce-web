@@ -4,6 +4,19 @@ import { NotFoundError } from "../core/error.response";
 import { OK } from "../core/success.response";
 
 class UserController {
+    static async GetUserList(req: Request, res: Response): Promise<void> {
+        const { q, page, limit } = req.query;
+        const response = await UserService.GetUserList({
+            q: q ? String(q) : undefined,
+            page: Number(page),
+            limit: Number(limit)
+        });
+
+        new OK({
+            message: "Lấy danh sách người dùng",
+            data: response
+        }).send(res);
+    }
     static async UpdateInformation(req: Request, res: Response): Promise<void> {
         const userId = req.user?.userId;
         const { fullname, phone } = req.body;
