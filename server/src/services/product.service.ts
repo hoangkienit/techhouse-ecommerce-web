@@ -1,3 +1,4 @@
+import { ClientSession } from "mongoose";
 import { BadRequestError, NotFoundError } from "../core/error.response";
 import { IAddProduct, IProduct, IProductQueryOptions } from "../interfaces/product.interface";
 import ProductRepo from "../repositories/product.repository";
@@ -104,6 +105,10 @@ class ProductService {
         if (!product) throw new NotFoundError("Sản phẩm không tồn tại");
 
         return product;
+    }
+
+    static async SoldAmountIncrement(productId: string, amount: number, session?: ClientSession) {
+        return await ProductRepo.incrementSoldAmount(productId, amount, session);
     }
 }
 

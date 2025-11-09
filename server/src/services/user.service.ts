@@ -3,7 +3,7 @@ import UserRepo from "../repositories/user.repository";
 import { generateResetToken, verifyResetToken } from "../utils/tokens.helper";
 import { sendEmail } from "../utils/mail.helper";
 import { deleteCloudinaryImage, uploadToCloudinary } from "../utils/upload.helper";
-import { IUser } from "../interfaces/user.interface";
+import { IUser, IUserQueryOptions } from "../interfaces/user.interface";
 import { LOGIN_URL, LOGO_URL, PRIVACY_URL, SUPPORT_URL } from "../constants";
 import { generatePassword, generateRandomID } from "../utils/random.helper";
 import { HashPassword, VerifyPassword } from "../utils/crypto.handler";
@@ -156,6 +156,31 @@ class UserService {
 
     static async GetUserLoyaltyPoints(userId: string) {
         return await UserRepo.getUserLoyaltyPoints(userId);
+    }
+
+    static async GetUserList(options: IUserQueryOptions) {
+        const { q, page, limit } = options;
+
+        const filter: any = {};
+
+        if (q) {
+            filter.$or = [
+                { fullname: new RegExp(q, "i") },
+                { email: new RegExp(q, "i") },
+            ];
+        }
+
+        const skip = (page - 1) * limit;
+
+        let {users, total } = await UserRepo.findAll(filter, skip, limit);
+        if(users.length > 0){
+            users = users.map((u) => ({...u, password: ""}));
+        }
+
+        return {
+            users,
+            total
+        }
     }
 
 }

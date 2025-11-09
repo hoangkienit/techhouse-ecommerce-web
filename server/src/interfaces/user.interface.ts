@@ -1,4 +1,3 @@
-// src/interfaces/user.interface.ts
 
 import { Types } from "mongoose";
 import { IAddress } from "./address.interface";
@@ -17,4 +16,11 @@ export interface IUser {
   isBanned: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+  loyalty_points?: number;
+}
+
+export interface IUserQueryOptions {
+  q?: string | undefined;
+  page: number;
+  limit: number;
 }

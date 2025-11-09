@@ -1,3 +1,4 @@
+import { ClientSession } from "mongoose";
 import { IProduct } from "../interfaces/product.interface";
 import Product from "../models/product.model";
 
@@ -40,6 +41,17 @@ class ProductRepo {
 
         return { products, total };
     }
+
+    static async incrementSoldAmount(productId: string, amount: number, session?: ClientSession) {
+        const product = await Product.findByIdAndUpdate(
+            productId,
+            { $inc: { product_sold_amount: amount } },
+            { new: true, session: session ? session : null }
+        ).lean();
+
+        return product;
+    }
+
 }
 
 export default ProductRepo;

@@ -87,6 +87,15 @@ class UserRepo {
 
     }
 
+    static async findAll(filter = {}, skip = 0, limit = 10) {
+        const [users, total] = await Promise.all([
+            User.find(filter).skip(skip).limit(limit).lean(),
+            User.countDocuments(filter)
+        ]);
+
+        return { users, total };
+    }
+
 }
 
 export default UserRepo;
