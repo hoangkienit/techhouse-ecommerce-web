@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import mongoose from "mongoose";
 import { BadRequestError, NotFoundError } from "../core/error.response";
 import ProductRepo from "../repositories/product.repository";
 import CartRepo from "../repositories/cart.repository";
@@ -10,8 +11,12 @@ import AddressService from "./address.service";
 import { IAddress } from "../interfaces/address.interface";
 import DiscountService from "./discount.service";
 import OrderService from "./order.service";
-import { generateOrderCode } from "../utils/random..helper";
+import { generateOrderCode } from "../utils/random.helper";
 import UserService from "./user.service";
+import NotificationService from "./notification.service";
+import UserRepo from "../repositories/user.repository";
+import LoyaltyService from "./loyalty.service";
+import ProductService from "./product.service";
 
 class CartService {
   private static TAX_RATE = 0.1;
@@ -158,6 +163,7 @@ class CartService {
 
     let resolvedShipping: IShippingAddress | null = null;
 
+    // For authenticated user
     if (addressId) {
       if (!identifiers.userId) throw new BadRequestError("addressId chỉ áp dụng cho người dùng đã đăng nhập");
       const address = await AddressService.GetAddressForUser(identifiers.userId, addressId);
@@ -168,10 +174,13 @@ class CartService {
       }
     }
 
+    // For guest user and authenticated user with new address
     if (!resolvedShipping && shippingAddress) {
+      // Validate shipping address from client
       this.assertShippingFields(shippingAddress);
       resolvedShipping = { ...shippingAddress };
 
+      // Save new address for authenticated user
       if (identifiers.userId && saveAsNew) {
         await AddressService.CreateAddress(identifiers.userId, {
           street: shippingAddress.line1!,
@@ -224,7 +233,7 @@ class CartService {
     return this.formatCartResponse(cart, guestId);
   }
 
-  static async confirmCheckout(identifiers: ICartIdentifiers) {
+  static async confirmCheckout(identifiers: ICartIdentifiers, points: number = 0) {
     const { cart, guestId } = await this.getOrCreateCart(identifiers, false);
     if (!cart) throw new NotFoundError("Cart not found");
     if (!cart.items.length) throw new BadRequestError("Cart is empty");
@@ -247,44 +256,164 @@ class CartService {
       placedAt: new Date()
     };
 
+    orderPayload.points_used = 0;
+    orderPayload.points_earned = 0;
+
     if (cart.user) {
       orderPayload.user = cart.user;
     }
 
     if (cart.guestId) {
       orderPayload.guestId = cart.guestId;
-
-      if (cart.contactEmail && cart.shippingName) {
-        const guessUser = await UserService.CreateUser({
-          fullname: cart.shippingName,
-          email: cart.contactEmail
-        });
-
-        cart.user = guessUser._id;
-        orderPayload.user = guessUser._id;
-      }
     }
 
     if (cart.contactEmail !== undefined) {
       orderPayload.contactEmail = cart.contactEmail;
     }
 
-    const order = await OrderService.CreateOrder(orderPayload);
-    cart.status = "completed";
-    this.recordCheckoutStep(cart, "placed");
+    const requestedPoints = Number.isFinite(points) ? Math.floor(points) : 0;
+    if (requestedPoints < 0) {
+      throw new BadRequestError("Invalid loyalty points value");
+    }
 
-    await CartRepo.save(cart);
+    const session = await mongoose.startSession();
+    let orderResult: any = null;
+    let guestUserEmailData: { fullname: string; email: string; tempPassword: string } | null = null;
 
-    if (cart.discountCode) {
-      const discount = await DiscountService.FindCode(cart.discountCode);
-      if (discount?._id) {
-        await DiscountService.IncrementUsage(discount._id.toString());
-      }
+    try {
+      await session.withTransaction(async () => {
+        cart.$session(session);
+
+        let loyaltyUser: any = null;
+
+        if (!cart.user && cart.guestId && cart.contactEmail && cart.shippingName) {
+          const { user: guestUser, tempPassword } = await UserService.CreateUser(
+            {
+              fullname: cart.shippingName,
+              email: cart.contactEmail
+            },
+            {
+              session,
+              skipEmail: true
+            }
+          );
+
+          cart.user = guestUser._id;
+          orderPayload.user = guestUser._id;
+          loyaltyUser = guestUser;
+          guestUserEmailData = {
+            fullname: guestUser.fullname,
+            email: guestUser.email,
+            tempPassword
+          };
+        } else if (cart.user) {
+          orderPayload.user = cart.user;
+
+          loyaltyUser = await UserRepo.findById(cart.user.toString());
+          if (!loyaltyUser) throw new NotFoundError("User not found with cart");
+        }
+
+        if (!loyaltyUser && requestedPoints > 0) {
+          throw new BadRequestError("Only signed-in users can redeem loyalty points");
+        }
+
+        if (loyaltyUser) {
+          if (typeof loyaltyUser.$session === "function") {
+            loyaltyUser.$session(session);
+          }
+
+          const availablePoints = Number(loyaltyUser.loyalty_points ?? 0);
+          if (requestedPoints > availablePoints) {
+            throw new BadRequestError("Not enough loyalty points");
+          }
+
+          const maxRedeemableByTotal = Math.floor(cart.total / 1000);
+
+          if (requestedPoints > maxRedeemableByTotal) {
+            throw new BadRequestError("Điểm loyalty vượt quá tổng đơn hàng");
+          }
+
+          const redeemedPoints = requestedPoints;
+          const discountFromPoints = redeemedPoints * 1000;
+          const adjustedTotal = Number(Math.max(cart.total - discountFromPoints, 0).toFixed(2));
+
+          cart.total = adjustedTotal;
+          orderPayload.total = adjustedTotal;
+
+          const earnedPoints = Math.floor(adjustedTotal * 0.001); // Because 1.000 VND is 1 point
+
+          loyaltyUser.loyalty_points = availablePoints - redeemedPoints + earnedPoints;
+          await loyaltyUser.save({ session });
+
+          orderPayload.points_used = redeemedPoints;
+          orderPayload.points_earned = earnedPoints;
+        } else {
+          cart.total = Number(cart.total.toFixed(2));
+          orderPayload.total = cart.total;
+        }
+
+        const order = await OrderService.CreateOrder(orderPayload, { session });
+        orderResult = order;
+
+        cart.status = "completed";
+        this.recordCheckoutStep(cart, "placed");
+
+        if (cart.user) {
+          if (order.points_earned > 0) {
+            await LoyaltyService.CreateLoyaltyTransaction({
+              userId: cart.user.toString(),
+              type: "earn",
+              points: order.points_earned,
+              orderId: order._id.toString()
+            });
+          }
+
+          if (order.points_used > 0) {
+            await LoyaltyService.CreateLoyaltyTransaction({
+              userId: cart.user.toString(),
+              type: "spend",
+              points: order.points_used,
+              orderId: order._id.toString()
+            });
+          }
+        }
+
+        await CartRepo.save(cart, { session });
+
+        if (cart.discountCode) {
+          const discount = await DiscountService.FindCode(cart.discountCode, session);
+          if (discount?._id) {
+            await DiscountService.IncrementUsage(discount._id.toString(), session);
+          }
+        }
+
+        // Increase product solde amount
+        if (cart.items.length > 0) {
+          await Promise.all(
+            cart.items.map(i =>
+              ProductService.SoldAmountIncrement(i._id as string, i.quantity, session)
+            )
+          );
+        }
+      });
+    } finally {
+      await session.endSession();
+    }
+
+    if (guestUserEmailData) {
+      await NotificationService.SendCreatedGuessAccountEmail(guestUserEmailData);
+    }
+
+    const normalizedOrder =
+      orderResult && typeof orderResult.toObject === "function" ? orderResult.toObject() : orderResult;
+
+    if (normalizedOrder) {
+      await this.sendOrderSuccessNotification(normalizedOrder, cart);
     }
 
     this.emitCartUpdate(cart);
 
-    const orderResponse = (order as any).toObject ? (order as any).toObject() : order;
+    const orderResponse = normalizedOrder;
 
     return {
       order: orderResponse,
@@ -325,7 +454,7 @@ class CartService {
       if (!userId && !guestId) guestId = nanoid(12);
 
       const payload: Partial<ICart> = {
-        currency: "USD",
+        currency: "VND",
         items: [],
         subtotal: 0,
         tax: 0,
@@ -463,6 +592,134 @@ class CartService {
     } catch {
 
     }
+  }
+
+  private static async sendOrderSuccessNotification(order: any, cart: CartDocument) {
+    const recipient = await this.resolveOrderRecipient(order);
+    if (!recipient?.email) {
+      return;
+    }
+
+    const shippingAddress = order?.shippingAddress ?? cart?.shippingAddress ?? {};
+    const currency = order?.currency ?? cart?.currency ?? "VND";
+    const displayName =
+      shippingAddress?.fullName ??
+      cart?.shippingName ??
+      recipient.fullname ??
+      "Quý khách";
+
+    const emailPayload = {
+      email: recipient.email,
+      orderCode: order.orderCode,
+      fullName: displayName,
+      orderDate: this.formatOrderDate(order?.placedAt),
+      orderItems: this.mapOrderItemsForEmail(order?.items ?? [], currency),
+      shippingFee: this.formatCurrency(order?.shipping ?? 0, currency),
+      tax: this.formatCurrency(order?.tax ?? 0, currency),
+      grandTotal: this.formatCurrency(order?.total ?? 0, currency),
+      shipName: displayName,
+      shipLine1: this.composeAddressLine([shippingAddress?.line1, shippingAddress?.line2]),
+      shipCity: this.composeAddressLine([shippingAddress?.city, shippingAddress?.state, shippingAddress?.postalCode]),
+      shipCountry: shippingAddress?.country ?? "Việt Nam",
+      shipPhone: shippingAddress?.phone ?? "—",
+      paymentMethod: this.describePaymentMethod(order?.paymentMethod),
+      paymentRef: this.resolvePaymentReference(order?.paymentMethod)
+    };
+
+    await NotificationService.SendOrderSuccessEmail(emailPayload);
+  }
+
+  private static async resolveOrderRecipient(order: any): Promise<{ email: string; fullname?: string | null } | null> {
+    if (order?.contactEmail) {
+      const fullName =
+        order?.shippingAddress?.fullName ??
+        (typeof order?.shippingName === "string" ? order.shippingName : null);
+      return { email: order.contactEmail, fullname: fullName };
+    }
+
+    const userId =
+      typeof order?.user === "string"
+        ? order.user
+        : order?.user?._id
+          ? order.user._id.toString()
+          : order?.user
+            ? order.user.toString()
+            : null;
+
+    if (!userId) {
+      return null;
+    }
+
+    const user = await UserRepo.findById(userId);
+    if (!user) {
+      return null;
+    }
+
+    return {
+      email: user.email,
+      fullname: user.fullname ?? null
+    };
+  }
+
+  private static mapOrderItemsForEmail(items: ICartItem[], currency: string) {
+    if (!Array.isArray(items)) {
+      return [];
+    }
+
+    return items.map((item) => ({
+      name: item.product_name,
+      variant: item.product_brand ?? null,
+      qty: item.quantity,
+      total: this.formatCurrency(item.lineTotal ?? 0, currency),
+      imageUrl: item.product_img ?? null
+    }));
+  }
+
+  private static composeAddressLine(parts: Array<string | null | undefined>) {
+    return parts.filter((part) => typeof part === "string" && part.trim().length).join(", ") || "—";
+  }
+
+  private static describePaymentMethod(paymentMethod: IPaymentMethod | null | undefined) {
+    if (!paymentMethod) {
+      return "Không rõ phương thức";
+    }
+
+    const providerLabel = paymentMethod.provider ? ` - ${paymentMethod.provider}` : "";
+
+    if (paymentMethod.type === "card") {
+      return `Thẻ${providerLabel}`.trim();
+    } else if (paymentMethod.type === "paypal") {
+      return `PayPal${providerLabel}`.trim();
+    } else if (paymentMethod.type === "bank_transfer") {
+      return `Chuyển khoản ngân hàng${providerLabel}`.trim();
+    } else if (paymentMethod.type === "cod") {
+      return "Thanh toán khi nhận hàng (COD)";
+    }
+
+    return "Không rõ phương thức";
+  }
+
+  private static resolvePaymentReference(paymentMethod: IPaymentMethod | null | undefined) {
+    return paymentMethod?.transactionId ?? paymentMethod?.note ?? "—";
+  }
+
+  private static formatCurrency(amount: number, currency: string) {
+    try {
+      return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency
+      }).format(Number(amount ?? 0));
+    } catch {
+      return `${Number(amount ?? 0).toFixed(0)} ${currency}`;
+    }
+  }
+
+  private static formatOrderDate(date: Date | string | null | undefined) {
+    const value = date ? new Date(date) : new Date();
+    if (Number.isNaN(value.getTime())) {
+      return new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+    }
+    return value.toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
   }
 }
 

@@ -54,3 +54,54 @@
   -ms-user-select: none;
   /* IE/Edge */
 }
+
+/* Vị trí chung cho tất cả snackbar */
+.mat-snack-bar-container {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  padding: 12px 20px !important;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 240px;
+  max-width: 360px;
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Hiệu ứng trượt nhẹ từ dưới lên */
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Các biến thể màu */
+.snackbar-success {
+  background-color: #43a047 !important;
+  /* xanh lá dịu hơn */
+  color: #fff !important;
+}
+
+.snackbar-error {
+  background-color: #e53935 !important;
+  /* đỏ rực rỡ, dễ thấy */
+  color: #fff !important;
+}
+
+.snackbar-info {
+  background-color: #1e88e5 !important;
+  /* xanh dương nhẹ */
+  color: #fff !important;
+}

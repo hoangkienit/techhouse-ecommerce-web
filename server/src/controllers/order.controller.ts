@@ -75,6 +75,18 @@ class OrderController {
       data: { order }
     }).send(res);
   }
+
+  static async DeleteOrder(req: Request, res: Response) {
+    const orderId = req.params.orderId;
+    if (!orderId) throw new NotFoundError("Không tìm thấy đơn hàng");
+
+    await OrderService.DeleteOrder(orderId);
+
+    new OK({
+      message: "Xoá đơn hàng thành công",
+      data: {}
+    }).send(res);
+  }
 }
 
 export default OrderController;

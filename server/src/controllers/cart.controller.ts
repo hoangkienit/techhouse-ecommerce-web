@@ -38,7 +38,7 @@ class CartController {
   static async AddItem(req: Request, res: Response) {
     const identifiers = CartController.resolveIdentifiers(req);
     const { productId, quantity } = req.body;
-
+    
     const cart = await CartService.AddItem(identifiers, productId, Number(quantity ?? 1));
 
     new OK({
@@ -132,8 +132,8 @@ class CartController {
 
   static async ConfirmCheckout(req: Request, res: Response): Promise<void> {
     const identifiers = CartController.resolveIdentifiers(req);
-
-    const result = await CartService.confirmCheckout(identifiers);
+    const points = req.body.points as number;
+    const result = await CartService.confirmCheckout(identifiers, points ? points : 0);
 
     new OK({
       message: "Đặt hàng thành công",

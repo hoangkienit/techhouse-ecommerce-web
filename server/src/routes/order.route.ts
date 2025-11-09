@@ -1,5 +1,5 @@
 import express from "express";
-import { Authenticate } from "../middlewares/verify.middleware";
+import { Authenticate, AuthorizeAdmin } from "../middlewares/verify.middleware";
 import { AsyncHandler } from "../utils/async.handler";
 import OrderController from "../controllers/order.controller";
 
@@ -26,5 +26,14 @@ router.get("/:orderId", Authenticate, AsyncHandler(OrderController.GetOrderDetai
  * @access Authenticated
  */
 router.get("/", Authenticate, AsyncHandler(OrderController.GetOrders));
+
+/**
+ * DELETE /api/v1/order
+ * @description Xoá đơn hàng của người dùng theo orderId
+ * @param orderId: string
+
+ * @access Admin
+ */
+router.delete("/:orderId", Authenticate, AuthorizeAdmin, AsyncHandler(OrderController.DeleteOrder));
 
 export default router;

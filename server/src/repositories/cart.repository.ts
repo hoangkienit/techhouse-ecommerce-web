@@ -1,10 +1,11 @@
 import Cart, { CartDocument } from "../models/cart.model";
 import { ICart } from "../interfaces/cart.interface";
+import { SaveOptions } from "mongoose";
 
 class CartRepo {
-  static async create(data: Partial<ICart>) {
+  static async create(data: Partial<ICart>, options: SaveOptions = {}) {
     const cart = new Cart(data);
-    return cart.save();
+    return cart.save(options);
   }
 
   static async findActiveByUser(userId: string): Promise<CartDocument | null> {
@@ -19,8 +20,8 @@ class CartRepo {
     return Cart.findById(cartId);
   }
 
-  static async save(cart: CartDocument) {
-    return cart.save();
+  static async save(cart: CartDocument, options: SaveOptions = {}) {
+    return cart.save(options);
   }
 }
 

@@ -1,8 +1,7 @@
 import { IUser } from "../interfaces/user.interface";
 import Address from "../models/address.model";
 import User from "../models/user.model";
-
-
+import { ClientSession } from "mongoose";
 
 class UserRepo {
     static async findByEmail(email: string) {
@@ -21,13 +20,17 @@ class UserRepo {
         return User.findOne({ "properties.resetToken": token }).exec();
     }
 
-    static async create(data: Partial<IUser>) {
+    static async create(data: Partial<IUser>, session?: ClientSession) {
         const user = new User({
             fullname: data.fullname,
             email: data.email,
             password: data.password,
             addresses: []
         });
+
+        if (session) {
+            user.$session(session);
+        }
 
         return await user.save();
     }
@@ -72,6 +75,27 @@ class UserRepo {
     static async setBanStatus(userId: string, status: boolean) {
         return User.findByIdAndUpdate(userId, { isBanned: status }, { new: true }).exec();
     }
+
+    static async getUserLoyaltyPoints(userId: string, session?: ClientSession) {
+        const user = await User.findById(userId, { loyalty_points: 1, _id: 0 });
+
+        if (session && user) {
+            user.$session(session);
+        }
+
+        return user;
+
+    }
+
+    static async findAll(filter = {}, skip = 0, limit = 10) {
+        const [users, total] = await Promise.all([
+            User.find(filter).skip(skip).limit(limit).lean(),
+            User.countDocuments(filter)
+        ]);
+
+        return { users, total };
+    }
+
 }
 
 export default UserRepo;

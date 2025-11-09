@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { apiUrl } from '../constants/api.constant';
+import { apiUrl, apiUrl_test } from '../constants/api.constant';
 import { HttpClient } from '@angular/common/http';
 import { AuthDtos } from '../models/auth.model';
 
@@ -8,16 +8,20 @@ import { AuthDtos } from '../models/auth.model';
 })
 export class AuthService {
   private baseUrl = apiUrl + 'auth';
+  // private baseUrl = apiUrl_test + 'auth';
 
   constructor(private http: HttpClient) { }
 
   RegisterAccount(params: AuthDtos) {
-    console.log(params);
     return this.http.post<AuthDtos>(`${this.baseUrl}/register`, params);
   }
 
   Login(params: AuthDtos) {
-    return this.http.post<AuthDtos>(`${this.baseUrl}/login`, params);
+    return this.http.post<any>(`${this.baseUrl}/login`, params);
+  }
+
+  LoginGoogle() {
+    return this.http.get<{}>(`${this.baseUrl}/google`);
   }
 
   Logout() {

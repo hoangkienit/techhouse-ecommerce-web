@@ -83,7 +83,12 @@ router.delete(
 /**
  * POST /api/v1/cart/checkout/shipping
  * @description Lưu thông tin giao hàng cho giỏ hàng hiện tại
- * @body addressId?: string, shippingAddress?: object, contactEmail?: string, saveAsNew?: boolean, setAsDefault?: boolean
+ * @body addressId?: string, 
+ * @body shippingAddress?: object, 
+ * @body contactEmail?: string, 
+ * @body shippingName?: string, 
+ * @body saveAsNew?: boolean, 
+ * @body setAsDefault?: boolean
  */
 router.post(
   "/checkout/shipping",
@@ -108,6 +113,7 @@ router.post(
  * POST /api/v1/cart/checkout/confirm
  * @description Xác nhận đặt hàng, tạo order mới
  * @body cartId?: string
+ * @body points?: number
  */
 router.post(
   "/checkout/confirm",

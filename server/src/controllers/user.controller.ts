@@ -4,6 +4,19 @@ import { NotFoundError } from "../core/error.response";
 import { OK } from "../core/success.response";
 
 class UserController {
+    static async GetUserList(req: Request, res: Response): Promise<void> {
+        const { q, page, limit } = req.query;
+        const response = await UserService.GetUserList({
+            q: q ? String(q) : undefined,
+            page: Number(page),
+            limit: Number(limit)
+        });
+
+        new OK({
+            message: "Lấy danh sách người dùng",
+            data: response
+        }).send(res);
+    }
     static async UpdateInformation(req: Request, res: Response): Promise<void> {
         const userId = req.user?.userId;
         const { fullname, phone } = req.body;
@@ -12,7 +25,7 @@ class UserController {
 
         const updatedUser = await UserService.UpdateInformation(userId, {
             fullname,
-            phone,      
+            phone,
         });
 
         new OK({
@@ -54,7 +67,7 @@ class UserController {
         const { token } = req.query;
         const { newPassword } = req.body;
 
-        if(!token) throw new NotFoundError("Missing token");
+        if (!token) throw new NotFoundError("Missing token");
 
         await UserService.ResetPasswordCallback(token as string, newPassword);
 
@@ -78,7 +91,7 @@ class UserController {
             message: "Addresses updated successfully",
             data: { updatedUser },
         }).send(res);
-        
+
     }
 
     static async SetBanStatus(req: Request, res: Response): Promise<void> {
@@ -96,19 +109,33 @@ class UserController {
         }).send(res);
     }
 
-static async UpdateAvatar(req: Request, res: Response): Promise<void> {
+    static async UpdateAvatar(req: Request, res: Response): Promise<void> {
         const file = req.file as Express.Multer.File;
         const userId = req.user?.userId as string;
 
         const response = await UserService.UpdateAvatar(userId, file);
 
-    new OK({
-      message: "Avatar updated successfully",
-      data: {
-        newUser : response,
-      },
-    }).send(res);
-  }
+        new OK({
+            message: "Avatar updated successfully",
+            data: {
+                newUser: response,
+            },
+        }).send(res);
+    }
+
+    static async GetUserLoyaltyPoints(req: Request, res: Response): Promise<void> {
+        const userId = req.user?.userId;
+        if (!userId) throw new NotFoundError("User not found");
+
+        const points = await UserService.GetUserLoyaltyPoints(userId);
+
+        new OK({
+            message: "Lấy điểm tích luỹ thành công",
+            data: {
+                points: points
+            }
+        }).send(res);
+    }
 
 }
 
