@@ -1,9 +1,13 @@
 export interface Product {
-    id: string;
-    name: string;
-    price: number;
-    image: string;
-    category: string;
-    isNew?: boolean;
-    sold?: number; // dùng để tính "bán chạy"
+    product_name: string;
+    product_description: string;
+    product_slug: string;
+    product_brand: string;
+    product_price: number;
+    product_imgs: string[];
+    product_category: 'laptop' | 'phone' | 'tablet' | 'computer';
+    product_attributes: any;
+    product_stock: number;
+    product_sold_amount: number;
+    product_status: 'active' | 'inactive';
 }

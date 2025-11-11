@@ -30,13 +30,13 @@
                         </nb-card-header>
                         <nb-card-body>
                             <div class="products-grid">
-                                <nb-card class="product-card" *ngFor="let p of newProducts">
+                                <!-- <nb-card class="product-card" *ngFor="let p of newProducts">
                                     <img class="product-img" [src]="p.image" [alt]="p.name" />
                                     <nb-card-body>
                                         <div class="name">{{ p.name }}</div>
                                         <div class="price">{{ formatPrice(p.price) }}</div>
                                     </nb-card-body>
-                                </nb-card>
+                                </nb-card> -->
                             </div>
                         </nb-card-body>
                     </nb-card>
@@ -51,18 +51,17 @@
                         </nb-card-header>
                         <nb-card-body>
                             <div class="products-row">
-                                <nb-card class="product-card" *ngFor="let p of bestSellers">
+                                <!-- <nb-card class="product-card" *ngFor="let p of bestSellers">
                                     <img class="product-img" [src]="p.image" [alt]="p.name" />
                                     <nb-card-body>
                                         <div class="name">{{ p.name }}</div>
                                         <div class="price">{{ formatPrice(p.price) }}</div>
                                     </nb-card-body>
-                                </nb-card>
+                                </nb-card> -->
                             </div>
                         </nb-card-body>
                     </nb-card>
                 </section>
-
             </div>
         </div>
     </nb-layout-column>

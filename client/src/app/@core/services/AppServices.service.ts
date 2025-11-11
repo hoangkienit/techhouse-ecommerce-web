@@ -1,3 +1,4 @@
+import { ModalService } from './Modal.service';
 import { GlobalStateService } from './GlobalStateService.service';
 import { Injectable } from '@angular/core';
 import { TranslationService } from './translate.service';
@@ -16,6 +17,7 @@ export class AppServices {
         public AuthService: AuthService,
         public ProductService: ProductService,
         public NotificationService: NotificationService,
-        public GlobalStateService: GlobalStateService
+        public GlobalStateService: GlobalStateService,
+        public ModalService: ModalService
     ) { }
 }
