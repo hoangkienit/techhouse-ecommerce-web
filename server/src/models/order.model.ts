@@ -60,8 +60,8 @@ const orderSchema = new Schema<IOrder>(
     currency: { type: String, default: "VND" },
     status: {
       type: String,
-      enum: ["created", "paid", "fulfilled", "cancelled"],
-      default: "created"
+       enum: ["pending", "confirmed", "paid", "fulfilled", "cancelled"],
+      default: "pending"
     },
     placedAt: { type: Date, required: true }
   },

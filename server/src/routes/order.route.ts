@@ -1,7 +1,9 @@
 import express from "express";
 import { Authenticate, AuthorizeAdmin } from "../middlewares/verify.middleware";
+import { validate } from "../middlewares/validate.middleware";
 import { AsyncHandler } from "../utils/async.handler";
 import OrderController from "../controllers/order.controller";
+import { updateOrderStatusSchema } from "../validators/order.validator";
 
 const router = express.Router();
 
@@ -28,10 +30,22 @@ router.get("/:orderId", Authenticate, AsyncHandler(OrderController.GetOrderDetai
 router.get("/", Authenticate, AsyncHandler(OrderController.GetOrders));
 
 /**
- * DELETE /api/v1/order
- * @description Xoá đơn hàng của người dùng theo orderId
- * @param orderId: string
+ * PATCH /api/v1/order/:orderId/status
+ * @description Cập nhật trạng thái đơn hàng
+ * @body status: "pending" | "confirmed" | "paid" | "fulfilled" | "cancelled"
+ * @access Admin
+ */
+router.patch(
+  "/:orderId/status",
+  Authenticate,
+  AuthorizeAdmin,
+  validate(updateOrderStatusSchema),
+  AsyncHandler(OrderController.UpdateOrderStatus)
+);
 
+/**
+ * DELETE /api/v1/order/:orderId
+ * @description Xoá đơn hàng của người dùng theo orderId
  * @access Admin
  */
 router.delete("/:orderId", Authenticate, AuthorizeAdmin, AsyncHandler(OrderController.DeleteOrder));
