@@ -1,0 +1,25 @@
+<nb-card>
+    <nb-card-body>
+        <div class="product-view">
+            <div class="image-section">
+                <img *ngIf="product?.image; else noImage" [src]="product.image" alt="{{ product.name }}" />
+                <ng-template #noImage>
+                    <div class="no-image">Không có hình ảnh</div>
+                </ng-template>
+            </div>
+
+            <div class="info-section">
+                <h3>{{ product?.name }}</h3>
+                <p><strong>Mã SP:</strong> {{ product?.code || '—' }}</p>
+                <p><strong>Giá:</strong> {{ formattedPrice }}</p>
+                <p><strong>Mô tả:</strong></p>
+                <p class="desc">{{ product?.description || 'Chưa có mô tả' }}</p>
+                <p><strong>Trạng thái:</strong>
+                    <span [class.available]="product?.status === 'available'">
+                        {{ product?.status === 'available' ? 'Còn hàng' : 'Hết hàng' }}
+                    </span>
+                </p>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

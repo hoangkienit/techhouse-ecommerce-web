@@ -1,0 +1,40 @@
+<nb-card>
+    <nb-card-header>
+        Chỉnh sửa sản phẩm
+    </nb-card-header>
+
+    <nb-card-body>
+        <form [formGroup]="form" class="edit-product-form">
+            <div class="mb-3">
+                <label class="form-label">Tên sản phẩm</label>
+                <input nbInput fullWidth formControlName="name" placeholder="Nhập tên sản phẩm" />
+                <small class="text-danger" *ngIf="form.controls['name'].invalid && form.controls['name'].touched">
+                    Tên sản phẩm là bắt buộc
+                </small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Thương hiệu</label>
+                <input nbInput fullWidth formControlName="brand" placeholder="Nhập thương hiệu" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Giá</label>
+                <input nbInput fullWidth type="number" formControlName="price" placeholder="Nhập giá sản phẩm" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Trạng thái</label>
+                <nb-select fullWidth formControlName="status">
+                    <nb-option *ngFor="let s of statusOptions" [value]="s.value">{{ s.label }}</nb-option>
+                </nb-select>
+            </div>
+        </form>
+    </nb-card-body>
+
+    <nb-card-footer class="text-end">
+        <button nbButton status="success" [disabled]="form.invalid" (click)="product.close(save())">
+            Lưu
+        </button>
+    </nb-card-footer>
+</nb-card>
