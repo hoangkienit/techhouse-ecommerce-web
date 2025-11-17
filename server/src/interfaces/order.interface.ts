@@ -1,6 +1,8 @@
 import { Types } from "mongoose";
 import { ICartItem, IShippingAddress, IPaymentMethod } from "./cart.interface";
 
+export type OrderStatus = "pending" | "confirmed" | "paid" | "fulfilled" | "cancelled";
+
 export interface IOrder {
   _id?: Types.ObjectId | string;
   orderCode: string;
@@ -20,7 +22,7 @@ export interface IOrder {
   shippingAddress?: IShippingAddress | null;
   paymentMethod?: IPaymentMethod | null;
   currency: string;
-  status: "created" | "paid" | "fulfilled" | "cancelled";
+  status: OrderStatus;
   placedAt: Date;
   createdAt?: Date;
   updatedAt?: Date;
