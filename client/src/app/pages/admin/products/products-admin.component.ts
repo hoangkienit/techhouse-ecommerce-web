@@ -4,6 +4,7 @@ import { AppServices } from 'src/app/@core/services/AppServices.service';
 import { ViewProductComponent } from './view-product/view-product.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { ProductCategory, ProductStatus } from 'src/app/@core/enums/products/product.enum';
+import { AddProductComponent } from './add-product/add-product.component';
 
 @Component({
   selector: 'app-products',
@@ -139,5 +140,7 @@ export class ProductsAdminComponent {
         console.log('Request completed');
       }
     });
+
+    this._appService.ModalService.createModal('Thêm sản phẩm mới', AddProductComponent, {});
   }
 }

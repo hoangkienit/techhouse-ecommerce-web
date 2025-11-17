@@ -45,57 +45,57 @@ export class AppComponent implements OnInit, OnDestroy {
     ]).subscribe((trans: any) => {
       this.menuItems = [
         {
-          title: this.appServices.TranslateService.instant('sideBar.home'),
+          title: this.appServices.TranslateService.trans('sideBar.home'),
           icon: 'home-outline',
           link: '/home'
         },
         {
-          title: this.appServices.TranslateService.instant('sideBar.catalog'),
+          title: this.appServices.TranslateService.trans('sideBar.catalog'),
           icon: 'shopping-bag-outline',
           children: [
-            { title: this.appServices.TranslateService.instant('sideBar.products'), icon: 'cube-outline', link: '/catalog/products' },
-            { title: this.appServices.TranslateService.instant('sideBar.categories'), icon: 'grid-outline', link: '/catalog/categories' },
-            { title: this.appServices.TranslateService.instant('sideBar.brands'), icon: 'pricetags-outline', link: '/catalog/brands' },
+            { title: this.appServices.TranslateService.trans('sideBar.products'), icon: 'cube-outline', link: '/catalog/products' },
+            { title: this.appServices.TranslateService.trans('sideBar.categories'), icon: 'grid-outline', link: '/catalog/categories' },
+            { title: this.appServices.TranslateService.trans('sideBar.brands'), icon: 'pricetags-outline', link: '/catalog/brands' },
           ],
         },
         {
-          title: this.appServices.TranslateService.instant('sideBar.cart'),
+          title: this.appServices.TranslateService.trans('sideBar.cart'),
           icon: 'shopping-cart-outline',
           link: '/cart'
         },
         {
-          title: this.appServices.TranslateService.instant('sideBar.orders'),
+          title: this.appServices.TranslateService.trans('sideBar.orders'),
           icon: 'list-outline',
           link: '/orders'
         },
         {
-          title: this.appServices.TranslateService.instant('sideBar.loyalty'),
+          title: this.appServices.TranslateService.trans('sideBar.loyalty'),
           icon: 'award-outline',
           link: '/loyalty'
         },
         {
-          title: this.appServices.TranslateService.instant('sideBar.discount'),
+          title: this.appServices.TranslateService.trans('sideBar.discount'),
           icon: 'percent-outline',
           link: '/discount'
         },
         {
-          title: this.appServices.TranslateService.instant('sideBar.account'),
+          title: this.appServices.TranslateService.trans('sideBar.account'),
           icon: 'person-outline',
           children: [
-            { title: this.appServices.TranslateService.instant('sideBar.auth'), icon: 'person-add-outline', link: '/account/auth' },
-            { title: this.appServices.TranslateService.instant('sideBar.profile'), icon: 'person-done-outline', link: '/account/profile' },
-            { title: this.appServices.TranslateService.instant('sideBar.logout'), icon: 'log-out-outline', link: '/account/logout' },
+            { title: this.appServices.TranslateService.trans('sideBar.auth'), icon: 'person-add-outline', link: '/account/auth' },
+            { title: this.appServices.TranslateService.trans('sideBar.profile'), icon: 'person-done-outline', link: '/account/profile' },
+            { title: this.appServices.TranslateService.trans('sideBar.logout'), icon: 'log-out-outline', link: '/account/logout' },
           ],
         },
         {
-          title: this.appServices.TranslateService.instant('sideBar.admin'),
+          title: this.appServices.TranslateService.trans('sideBar.admin'),
           icon: 'settings-2-outline',
           children: [
-            { title: this.appServices.TranslateService.instant('sideBar.dashboard'), icon: 'pie-chart-outline', link: '/admin/dashboard' },
-            { title: this.appServices.TranslateService.instant('sideBar.users'), icon: 'people-outline', link: '/admin/users' },
-            { title: this.appServices.TranslateService.instant('sideBar.products'), icon: 'cube-outline', link: '/admin/products' },
-            { title: this.appServices.TranslateService.instant('sideBar.orders'), icon: 'clipboard-outline', link: '/admin/orders' },
-            { title: this.appServices.TranslateService.instant('sideBar.discount'), icon: 'pricetags-outline', link: '/admin/discounts' },
+            { title: this.appServices.TranslateService.trans('sideBar.dashboard'), icon: 'pie-chart-outline', link: '/admin/dashboard' },
+            { title: this.appServices.TranslateService.trans('sideBar.users'), icon: 'people-outline', link: '/admin/users' },
+            { title: this.appServices.TranslateService.trans('sideBar.products'), icon: 'cube-outline', link: '/admin/products' },
+            { title: this.appServices.TranslateService.trans('sideBar.orders'), icon: 'clipboard-outline', link: '/admin/orders' },
+            { title: this.appServices.TranslateService.trans('sideBar.discount'), icon: 'pricetags-outline', link: '/admin/discounts' },
           ],
         },
       ];

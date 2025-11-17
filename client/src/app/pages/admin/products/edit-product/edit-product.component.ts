@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProductStatus } from 'src/app/@core/enums/products/product.enum';
+import { EnumService } from 'src/app/@core/services/array-services/enum.service';
 
 @Component({
   selector: 'app-edit-product',
@@ -10,10 +12,7 @@ export class EditProductComponent implements OnInit {
   @Input() product: any; // nhận dữ liệu từ modal service
   form!: FormGroup;
 
-  statusOptions = [
-    { label: 'Còn hàng', value: 'available' },
-    { label: 'Hết hàng', value: 'unavailable' },
-  ];
+  statusOptions = EnumService.ParseEnumToArray(ProductStatus);
 
   constructor(private fb: FormBuilder) { }
 

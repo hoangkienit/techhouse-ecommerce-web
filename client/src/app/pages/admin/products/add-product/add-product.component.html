@@ -1,1 +1,76 @@
-<p>add-product works!</p>
+<nb-card style="min-width: 500px !important;">
+    <nb-card-body>
+        <form [formGroup]="form" class="edit-product-form">
+            <div class="mb-3">
+                <label class="form-label">Tên sản phẩm</label>
+                <input nbInput fullWidth formControlName="name" placeholder="Nhập tên sản phẩm" />
+                <small class="text-danger" *ngIf="form.controls['name'].invalid && form.controls['name'].touched">
+                    Tên sản phẩm là bắt buộc
+                </small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Thương hiệu</label>
+                <input nbInput fullWidth formControlName="brand" placeholder="Nhập thương hiệu" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Giá</label>
+                <input nbInput fullWidth type="number" formControlName="price" placeholder="Nhập giá sản phẩm" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Trạng thái</label>
+                <nb-select fullWidth formControlName="status">
+                    <nb-option *ngFor="let s of statusOptions" [value]="s.value">{{ s.label }}</nb-option>
+                </nb-select>
+            </div>
+
+            <!-- Mô tả chi tiết -->
+            <div class="mb-3">
+                <label class="form-label">Mô tả chi tiết</label>
+                <textarea nbInput fullWidth formControlName="description" placeholder="Nhập mô tả chi tiết"></textarea>
+            </div>
+
+            <!-- Loại sản phẩm -->
+            <div class="mb-3">
+                <label class="form-label">Loại sản phẩm</label>
+                <nb-select fullWidth formControlName="category">
+                    <!-- <nb-option *ngFor="let c of categoryOptions" [value]="c.value">{{ c.label }}</nb-option> -->
+                </nb-select>
+            </div>
+
+            <!-- Tồn kho -->
+            <div class="mb-3">
+                <label class="form-label">Tồn kho</label>
+                <input nbInput fullWidth type="number" formControlName="stock" placeholder="Nhập số lượng tồn kho" />
+            </div>
+
+            <!-- Hình ảnh -->
+            <div class="mb-3">
+                <label class="form-label">Hình ảnh sản phẩm (3-4 tấm)</label>
+                <input type="file" multiple (change)="onFileChange($event)" accept="image/*" />
+                <div class="preview-images">
+                    <!-- <img *ngFor="let img of previewImages" [src]="img" class="preview-thumb" /> -->
+                </div>
+            </div>
+
+            <!-- Thuộc tính sản phẩm -->
+            <div class="mb-3">
+                <label class="form-label">Thông số kỹ thuật</label>
+                <input nbInput fullWidth formControlName="cpu" placeholder="CPU" />
+                <input nbInput fullWidth formControlName="ram" placeholder="RAM" />
+                <input nbInput fullWidth formControlName="storage" placeholder="Storage" />
+                <input nbInput fullWidth formControlName="screen" placeholder="Màn hình" />
+                <input nbInput fullWidth formControlName="color" placeholder="Màu sắc" />
+            </div>
+        </form>
+
+    </nb-card-body>
+
+    <nb-card-footer class="text-end">
+        <button nbButton status="success" [disabled]="form.invalid" (click)="product.close(add())">
+            Lưu
+        </button>
+    </nb-card-footer>
+</nb-card>
