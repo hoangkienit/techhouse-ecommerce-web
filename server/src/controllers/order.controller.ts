@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import OrderService from "../services/order.service";
 import { OK } from "../core/success.response";
 import { IOrderQueryOptions, IOrder } from "../interfaces/order.interface";
-import { NotFoundError, UnauthorizedError } from "../core/error.response";
+import { BadRequestError, NotFoundError, UnauthorizedError } from "../core/error.response";
 
 class OrderController {
   static async GetOrders(req: Request, res: Response) {
@@ -85,6 +85,19 @@ class OrderController {
     new OK({
       message: "Xoá đơn hàng thành công",
       data: {}
+    }).send(res);
+  }
+
+  static async UpdateOrderStatus(req: Request, res: Response) {
+    const orderId = req.params.orderId;
+    if (!orderId) throw new BadRequestError("orderId is required");
+
+    const { status } = req.body as { status: IOrder["status"] };
+    const order = await OrderService.UpdateOrderStatus(orderId, status);
+
+    new OK({
+      message: "Cập nhật trạng thái đơn hàng thành công",
+      data: { order }
     }).send(res);
   }
 }

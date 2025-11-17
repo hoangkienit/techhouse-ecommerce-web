@@ -79,6 +79,12 @@ class OrderService {
 
     return true;
   }
+
+  static async UpdateOrderStatus(orderId: string, status: IOrder["status"]) {
+    const order = await OrderRepo.update(orderId, { status });
+    if (!order) throw new BadRequestError("Order not found");
+    return order;
+  }
 }
 
 export default OrderService;

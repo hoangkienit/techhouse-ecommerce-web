@@ -32,7 +32,7 @@ const server = http.createServer(app);
 initializeSocket(server);
 app.use(cookieParser());
 
-
+const allowedOrigins = process.env.CORS_ORIGINS?.split(',').map(o => o.trim()) || [];
 const port = process.env.PORT as string || 8080;
 
 connectDb();
@@ -40,13 +40,23 @@ app.set('trust proxy', 1);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "templates"));
 app.use(express.json());
-app.use(cors());
 app.use(requestLogger)
 
 //===========SWAGGER===========
 // setupSwagger(app);
 
 //===========SECURITY MIDDLEWARE===========
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log('Blocked by CORS:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -75,21 +85,6 @@ app.use('/api/v1/review', ReviewRoute);
 app.use('/api/v1/address', AddressRoute);
 app.use('/api/v1/cart', CartRoute);
 app.use('/api/v1/order', OrderRoute);
-
-app.get("/test-reset", async (req, res) => {
-  res.render("reset-success", { 
-    logoUrl: "https://iampesmobile.com/uploads/techhouse.png",
-    requestId: "ABC123",
-    fullName: "Nguyen Hoang Kien",
-    userEmail: "kien@techhouse.vn",
-    tempPassword: "https://techhouse.vn/reset?token=xyz",
-    loginUrl: "fedeade",
-    time: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
-    year: new Date().getFullYear(),
-    supportUrl: "https://techhouse.vn/support",
-    policyUrl: "https://techhouse.vn/privacy",
-  });
-});
 
 
 app.use(errorHandler);
