@@ -1,3 +1,5 @@
+import { ProductCategory, ProductStatus } from "../enums/products/product.enum";
+
 export interface Product {
     product_name: string;
     product_description: string;
@@ -5,9 +7,9 @@ export interface Product {
     product_brand: string;
     product_price: number;
     product_imgs: string[];
-    product_category: 'laptop' | 'phone' | 'tablet' | 'computer';
+    product_category: ProductCategory;
     product_attributes: any;
     product_stock: number;
     product_sold_amount: number;
-    product_status: 'active' | 'inactive';
+    product_status: ProductStatus;
 }
