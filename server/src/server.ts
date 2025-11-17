@@ -33,6 +33,11 @@ initializeSocket(server);
 app.use(cookieParser());
 
 const allowedOrigins = process.env.CORS_ORIGINS?.split(',').map(o => o.trim()) || [];
+const cspConnectSrc = process.env.CSP_CONNECT_SRC
+  ?.split(',')
+  .map(o => o.trim())
+  .filter(Boolean) || [];
+
 const port = process.env.PORT as string || 8080;
 
 connectDb();
@@ -64,7 +69,7 @@ app.use(
       imgSrc: ["'self'", 'data:', 'https://iampesmobile.com'],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      connectSrc: ["'self'", 'https://iampesmobile.com'],
+      connectSrc: ["'self'", ...cspConnectSrc],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
     },
   })
