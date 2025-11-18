@@ -17,7 +17,7 @@ export class TranslationService {
     this.translate.use(lang);
   }
 
-  instant(key: string, params?: any): string {
+  trans(key: string, params?: any): string {
     return this.translate.instant(key, params);
   }
 

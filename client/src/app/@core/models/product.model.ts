@@ -1,9 +1,28 @@
+import { ProductCategory, ProductStatus } from "../enums/products/product.enum";
+
 export interface Product {
-    id: string;
-    name: string;
-    price: number;
-    image: string;
-    category: string;
-    isNew?: boolean;
-    sold?: number; // dùng để tính "bán chạy"
+    product_name: string;               // Tên sản phẩm
+    product_description: string;        // Mô tả chi tiết sản phẩm
+    product_slug: string;               // Slug dùng cho URL
+    product_brand: string;              // Thương hiệu
+    product_price: number;              // Giá
+    product_imgs: string[];             // Mảng hình sản phẩm (3-4 tấm)
+    product_category: ProductCategory;  // Loại sản phẩm
+    product_attributes: {               // Các thông số kỹ thuật
+        cpu?: string;
+        ram?: string;
+        storage?: string;
+        screen?: string;
+        color?: string;
+        battery?: string;
+        [key: string]: any;             // Cho phép thêm bất kỳ thuộc tính nào khác
+    };
+    product_stock: number;              // Số lượng tồn kho
+    product_sold_amount: number;        // Số lượng đã bán
+    product_status: ProductStatus;      // Trạng thái: active/inactive
+    short_description?: string;         // Mô tả ngắn, hiển thị trên list
+    weight?: string;                    // Trọng lượng sản phẩm
+    dimensions?: string;                // Kích thước sản phẩm
+    warranty?: string;                  // Thời gian bảo hành
+    tags?: string[];                    // Các tag liên quan sản phẩm
 }
