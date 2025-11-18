@@ -52,7 +52,7 @@ export const Authenticate = async (req: Request, res: Response, next: NextFuncti
                 // Set new access token cookie
                 res.cookie('accessToken', newAccessToken, {
                     httpOnly: true,
-                    sameSite: 'lax',
+                    sameSite: 'none',
                     secure: process.env.NODE_ENV === 'production',
                 });
 

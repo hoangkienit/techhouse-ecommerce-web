@@ -34,13 +34,13 @@ class AuthController {
         res.clearCookie("accessToken", {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax'
+            sameSite: 'none'
         });
 
         res.clearCookie("refreshToken", {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax'
+            sameSite: 'none'
         });
 
         new CREATED({
@@ -61,7 +61,7 @@ class AuthController {
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            sameSite: 'none',
         });
 
         new OK({
