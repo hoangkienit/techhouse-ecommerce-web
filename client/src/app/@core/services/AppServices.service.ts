@@ -1,8 +1,10 @@
+import { Product } from './../models/product.model';
+import { AuthService } from './apis/auth.service';
+import { ModalService } from './Modal.service';
 import { GlobalStateService } from './GlobalStateService.service';
 import { Injectable } from '@angular/core';
 import { TranslationService } from './translate.service';
-import { AuthService } from './auth.service';
-import { ProductService } from './product.service';
+import { ProductService } from './apis/product.service';
 import { NotificationService } from './notification.service';
 
 @Injectable({
@@ -12,10 +14,14 @@ import { NotificationService } from './notification.service';
 export class AppServices {
 
     constructor(
+        //app helper services
         public TranslateService: TranslationService,
+        public NotificationService: NotificationService,
+        public GlobalStateService: GlobalStateService,
+        public ModalService: ModalService,
+
+        //APIS
         public AuthService: AuthService,
         public ProductService: ProductService,
-        public NotificationService: NotificationService,
-        public GlobalStateService: GlobalStateService
     ) { }
 }

@@ -13,6 +13,7 @@ import { UsersComponent } from './pages/admin/users/users.component';
 import { AuthComponent } from './pages/account/auth/auth.component';
 import { ProfileComponent } from './pages/account/profile/profile.component';
 import { DiscountsComponent } from './pages/admin/discounts/discounts.component';
+import { ProductsAdminComponent } from './pages/admin/products/products-admin.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -33,7 +34,7 @@ const routes: Routes = [
 
   { path: 'admin/dashboard', component: DashboardComponent },
   { path: 'admin/users', component: UsersComponent },
-  { path: 'admin/products', component: ProductsComponent },
+  { path: 'admin/products', component: ProductsAdminComponent },
   { path: 'admin/orders', component: OrdersComponent },
   { path: 'admin/discounts', component: DiscountsComponent },
 

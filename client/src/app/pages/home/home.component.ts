@@ -22,19 +22,19 @@ export class HomeComponent implements OnInit {
   }
 
   loadData() {
-    this.AppServices.ProductService.getNewProducts().subscribe(products => {
-      this.newProducts = products;
-      this.isLoading = false;
-    });
+    // this.AppServices.ProductService.getNewProducts().subscribe(products => {
+    //   this.newProducts = products;
+    //   this.isLoading = false;
+    // });
 
-    this.AppServices.ProductService.getBestSellers().subscribe(products => {
-      this.bestSellers = products;
-      this.isLoading = false;
-    });
-    this.AppServices.ProductService.getMainCategories().subscribe(cats => {
-      this.categories = cats;
-      this.isLoading = false;
-    });
+    // this.AppServices.ProductService.getBestSellers().subscribe(products => {
+    //   this.bestSellers = products;
+    //   this.isLoading = false;
+    // });
+    // this.AppServices.ProductService.getMainCategories().subscribe(cats => {
+    //   this.categories = cats;
+    //   this.isLoading = false;
+    // });
   }
 
   formatPrice(v: number) {

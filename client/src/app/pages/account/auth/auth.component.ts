@@ -1,9 +1,8 @@
 import { AppServices } from './../../../@core/services/AppServices.service';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { apiUrl } from 'src/app/@core/constants/api.constant';
 import { NotificationStatus } from 'src/app/@core/enums/status.enum';
-import { AuthDtos, User } from 'src/app/@core/models/auth.model';
+import { AuthDtos } from 'src/app/@core/models/auth.model';
 
 @Component({
   selector: 'app-auth',
@@ -43,7 +42,7 @@ export class AuthComponent {
         next: response => {
           this.appServices.GlobalStateService.setUser(response.data.user._doc);
           this.appServices.NotificationService.createNotification(
-            this.appServices.TranslateService.instant('auth.success-login'),
+            this.appServices.TranslateService.trans('auth.success-login'),
             NotificationStatus.SUCSSESS
           );
           this.isInvalidLogin = false;
@@ -56,15 +55,18 @@ export class AuthComponent {
           // this.appServices.NavigationService.navigateToHome();
         },
         error: e => {
-          this.isInvalidLogin = true;
-          this.loginMsg = e.error?.errors;
+          this.loginMsg = e.error?.errors || null;
+
+          if (this.loginMsg)
+            this.isInvalidLogin = true;
+
           this.isLoading = false;
         }
       });
     }
     else {
       this.isInvalidLogin = true;
-      this.loginMsg = this.appServices.TranslateService.instant('auth.validate-err-login');
+      this.loginMsg = this.appServices.TranslateService.trans('auth.validate-err-login');
     }
   }
 
@@ -85,20 +87,23 @@ export class AuthComponent {
         next: response => {
           this.isInvalidRegister = false;
           this.registerMsg = null;
-          const successMsg = this.appServices.TranslateService.instant('auth.success-register');
+          const successMsg = this.appServices.TranslateService.trans('auth.success-register');
           this.appServices.NotificationService.createNotification(successMsg, NotificationStatus.SUCSSESS);
           this.signupForm.reset();
           this.isLoading = false;
         },
         error: e => {
-          this.isInvalidRegister = true;
           this.registerMsg = e.error.errors;
+
+          if (this.registerMsg)
+            this.isInvalidRegister = true;
+
           this.isLoading = false;
         }
       });
     } else {
       this.isInvalidRegister = true;
-      this.registerMsg = this.appServices.TranslateService.instant('auth.validate-err-register');
+      this.registerMsg = this.appServices.TranslateService.trans('auth.validate-err-register');
     }
   }
 
