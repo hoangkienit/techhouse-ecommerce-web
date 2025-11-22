@@ -1,0 +1,21 @@
+{
+  "name": "techhouse-ecommerce-web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoangkienit/techhouse-ecommerce-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/hoangkienit/techhouse-ecommerce-web/issues"
+  },
+  "homepage": "https://github.com/hoangkienit/techhouse-ecommerce-web#readme"
+}

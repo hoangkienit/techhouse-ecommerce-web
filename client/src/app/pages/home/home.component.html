@@ -1,6 +1,6 @@
 <nb-layout>
     <nb-layout-column class="p-0">
-        <div class=" home-wrapper">
+        <div class="home-wrapper">
 
             <!-- Sidebar danh mục -->
             <aside class="categories-sidebar">
@@ -30,13 +30,19 @@
                         </nb-card-header>
                         <nb-card-body>
                             <div class="products-grid">
-                                <!-- <nb-card class="product-card" *ngFor="let p of newProducts">
-                                    <img class="product-img" [src]="p.image" [alt]="p.name" />
-                                    <nb-card-body>
-                                        <div class="name">{{ p.name }}</div>
-                                        <div class="price">{{ formatPrice(p.price) }}</div>
+
+                                <nb-card class="product-card" *ngFor="let p of newProducts">
+                                    <nb-card-body class="p-0">
+                                        <div class="img-wrapper">
+                                            <img class="product-img" [src]="p.product_imgs[0]" [alt]="p.product_name" />
+                                        </div>
+                                        <div class="info-wrapper p-2">
+                                            <div class="name">{{ p.product_name }}</div>
+                                            <div class="price">{{ formatPrice(p.product_price) }}</div>
+                                        </div>
                                     </nb-card-body>
-                                </nb-card> -->
+                                </nb-card>
+
                             </div>
                         </nb-card-body>
                     </nb-card>
@@ -51,17 +57,104 @@
                         </nb-card-header>
                         <nb-card-body>
                             <div class="products-row">
-                                <!-- <nb-card class="product-card" *ngFor="let p of bestSellers">
-                                    <img class="product-img" [src]="p.image" [alt]="p.name" />
-                                    <nb-card-body>
-                                        <div class="name">{{ p.name }}</div>
-                                        <div class="price">{{ formatPrice(p.price) }}</div>
+
+                                <nb-card class="product-card" *ngFor="let p of bestSellers">
+                                    <nb-card-body class="p-0">
+                                        <div class="img-wrapper">
+                                            <img class="product-img" [src]="p.product_imgs[0]" [alt]="p.product_name" />
+                                        </div>
+                                        <div class="info-wrapper p-2">
+                                            <div class="name">{{ p.product_name }}</div>
+                                            <div class="price">{{ formatPrice(p.product_price) }}</div>
+                                        </div>
                                     </nb-card-body>
-                                </nb-card> -->
+                                </nb-card>
+
                             </div>
                         </nb-card-body>
                     </nb-card>
                 </section>
+
+                <!-- 3 Section theo 3 danh mục -->
+                <section class="panel category-section">
+
+                    <!-- Laptop -->
+                    <nb-card class="mb-3">
+                        <nb-card-header class="p-3">
+                            <div class="panel-title">Laptop</div>
+                            <div class="panel-action"><a nbButton size="tiny" ghost>Xem tất cả</a></div>
+                        </nb-card-header>
+                        <nb-card-body>
+                            <div class="products-grid">
+
+                                <nb-card class="product-card" *ngFor="let p of laptopProducts">
+                                    <nb-card-body class="p-0">
+                                        <div class="img-wrapper">
+                                            <img class="product-img" [src]="p.product_imgs[0]" />
+                                        </div>
+                                        <div class="info-wrapper p-2">
+                                            <div class="name">{{ p.product_name }}</div>
+                                            <div class="price">{{ formatPrice(p.product_price) }}</div>
+                                        </div>
+                                    </nb-card-body>
+                                </nb-card>
+
+                            </div>
+                        </nb-card-body>
+                    </nb-card>
+
+                    <!-- Màn hình -->
+                    <nb-card class="mb-3">
+                        <nb-card-header class="p-3">
+                            <div class="panel-title">Màn hình</div>
+                            <div class="panel-action"><a nbButton size="tiny" ghost>Xem tất cả</a></div>
+                        </nb-card-header>
+                        <nb-card-body>
+                            <div class="products-grid">
+
+                                <nb-card class="product-card" *ngFor="let p of monitorProducts">
+                                    <nb-card-body class="p-0">
+                                        <div class="img-wrapper">
+                                            <img class="product-img" [src]="p.product_imgs[0]" />
+                                        </div>
+                                        <div class="info-wrapper p-2">
+                                            <div class="name">{{ p.product_name }}</div>
+                                            <div class="price">{{ formatPrice(p.product_price) }}</div>
+                                        </div>
+                                    </nb-card-body>
+                                </nb-card>
+
+                            </div>
+                        </nb-card-body>
+                    </nb-card>
+
+                    <!-- Ổ cứng -->
+                    <nb-card class="mb-3">
+                        <nb-card-header class="p-3">
+                            <div class="panel-title">Ổ cứng</div>
+                            <div class="panel-action"><a nbButton size="tiny" ghost>Xem tất cả</a></div>
+                        </nb-card-header>
+                        <nb-card-body>
+                            <div class="products-grid">
+
+                                <nb-card class="product-card" *ngFor="let p of storageProducts">
+                                    <nb-card-body class="p-0">
+                                        <div class="img-wrapper">
+                                            <img class="product-img" [src]="p.product_imgs[0]" />
+                                        </div>
+                                        <div class="info-wrapper p-2">
+                                            <div class="name">{{ p.product_name }}</div>
+                                            <div class="price">{{ formatPrice(p.product_price) }}</div>
+                                        </div>
+                                    </nb-card-body>
+                                </nb-card>
+
+                            </div>
+                        </nb-card-body>
+                    </nb-card>
+
+                </section>
+
             </div>
         </div>
     </nb-layout-column>

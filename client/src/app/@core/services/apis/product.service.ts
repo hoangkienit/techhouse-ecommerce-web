@@ -32,4 +32,8 @@ export class ProductService {
   //   const cats = Array.from(new Set(this.products.map(p => p.category)));
   //   return of(cats);
   // }
+
+      getProductsByCategory(slug: string): Observable<Product[]> {
+      return this.http.get<Product[]>(`${this.baseUrl}/category/${slug}`);
+    }
 }
