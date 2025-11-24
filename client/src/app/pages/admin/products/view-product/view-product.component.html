@@ -13,7 +13,7 @@
                 <p><strong>Mã SP:</strong> {{ product?.code || '—' }}</p>
                 <p><strong>Giá:</strong> {{ formattedPrice }}</p>
                 <p><strong>Mô tả:</strong></p>
-                <p class="desc">{{ product?.description || 'Chưa có mô tả' }}</p>
+                <p class="desc">{{ product?.product_description || 'Chưa có mô tả' }}</p>
                 <p><strong>Trạng thái:</strong>
                     <span [class.available]="product?.status === 'available'">
                         {{ product?.status === 'available' ? 'Còn hàng' : 'Hết hàng' }}
