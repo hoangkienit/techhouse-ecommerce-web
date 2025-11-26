@@ -1,0 +1,25 @@
+<div class="edit-wrapper">
+    <nb-card>
+        <nb-card-header>
+            <h3>Chỉnh sửa hồ sơ</h3>
+        </nb-card-header>
+
+        <nb-card-body>
+            <form [formGroup]="editForm" (ngSubmit)="onSave()">
+                
+                <input nbInput fullWidth placeholder="Họ và tên" formControlName="fullname">
+
+                <input nbInput fullWidth placeholder="Email" formControlName="email">
+
+                <label class="mt-3 fw-bold">Địa chỉ</label>
+                <div class="address-group">
+                    <input nbInput placeholder="Quốc gia" formControlName="country">
+                    <input nbInput placeholder="Thành phố" formControlName="city">
+                    <input nbInput placeholder="Đường" formControlName="street">
+                </div>
+
+                <button nbButton status="success" fullWidth type="submit">Lưu thay đổi</button>
+            </form>
+        </nb-card-body>
+    </nb-card>
+</div>

@@ -40,7 +40,6 @@ const routes: Routes = [
   },
 
   { path: 'account/profile', component: ProfileComponent },
-
   { path: 'admin/dashboard', component: DashboardComponent },
   { path: 'admin/users', component: UsersComponent },
   { path: 'admin/products', component: ProductsAdminComponent },
