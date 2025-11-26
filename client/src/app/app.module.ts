@@ -35,6 +35,7 @@ import { BaseModalComponentComponent } from './@core/services-components/base-mo
 import { ViewProductComponent } from './pages/admin/products/view-product/view-product.component';
 import { EditProductComponent } from './pages/admin/products/edit-product/edit-product.component';
 import { AddProductComponent } from './pages/admin/products/add-product/add-product.component';
+import { NgxTagComponent } from './@core/services-components/ngx-tag/ngx-tag.component';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -64,7 +65,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     BaseModalComponentComponent,
     ViewProductComponent,
     EditProductComponent,
-    AddProductComponent
+    AddProductComponent,
+    NgxTagComponent
   ],
   imports: [
     BrowserModule,
