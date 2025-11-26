@@ -1,3 +1,4 @@
+import { StatusServiceTag } from './../../../../@core/services-components/ngx-tag/ngx-tag.component';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductCategory, ProductStatus } from 'src/app/@core/enums/products/product.enum';
@@ -13,7 +14,7 @@ import { EnumService } from 'src/app/@core/services/array-services/enum.service'
 export class AddProductComponent {
   @Input() product: any;
   form!: FormGroup;
-
+  statusTagService = StatusServiceTag;
   statusOptions = EnumService.ParseEnumToArray(ProductStatus);
   productCategories = EnumService.ParseEnumToArray(ProductCategory);
 
@@ -23,8 +24,11 @@ export class AddProductComponent {
     this.form = this.fb.group({
       name: [this.product?.name || '', Validators.required],
       brand: [this.product?.brand || '', Validators.required],
-      price: [this.product?.price || 0, [Validators.required, Validators.min(0)]],
+      price: [this.product?.price || 0],
       status: [this.product?.status || 'available', Validators.required],
+      description: [this.product?.description || 'available', Validators.required],
+      category: [this.product?.category || 'available', Validators.required],
+      stock: [this.product?.stock || 0, [Validators.required, Validators.min(0)]]
     });
   }
 
@@ -40,6 +44,8 @@ export class AddProductComponent {
           this._appServices.NotificationService.createNotification('Thêm sản phẩm thất bại!', NotificationStatus.ERROR, 3000);
         }
       });
+    } else {
+      this.form.markAllAsTouched();
     }
   }
 
@@ -52,3 +58,45 @@ export class AddProductComponent {
     });
   }
 }
+
+
+//  product_name: {
+//         type: String,
+//         required: true
+//     },
+//     product_description: {
+//         type: String,
+//         required: true
+//     },
+//     product_slug: {
+//         type: String,
+//         default: ""
+//     },
+//     product_brand: {
+//         type: String,
+//         required: true,
+//         index: true
+//     },
+//     product_price: {
+//         type: Number,
+//         required: true,
+//         index: true
+//     },
+//     product_imgs: [{ type: String, required: true }],
+//     product_category: {
+//         type: String,
+//         enum: ["laptop", "phone", "tablet", "computer"],
+//         required: true,
+//         index: true
+//     },
+//     product_attributes: {
+//         type: mongoose.Schema.Types.Mixed,
+//         required: true
+//     },
+//     product_stock: { type: Number, default: 0 },
+//     product_sold_amount: { type: Number, default: 0 },
+//     product_status: {
+//       type: String,
+//       enum: ["active", "inactive"],
+//       default: "active",
+//     },
