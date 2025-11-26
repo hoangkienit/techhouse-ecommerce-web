@@ -18,7 +18,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private appServices: AppServices
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({

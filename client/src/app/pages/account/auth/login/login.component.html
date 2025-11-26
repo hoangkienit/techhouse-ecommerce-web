@@ -1,28 +1,14 @@
-
 <div class="auth-container">
     <div class="auth-left">
         <h2 class="text-white">{{ 'auth.title' | translate }}</h2>
 
         <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
-            <input
-                nbInput
-                fullWidth
-                placeholder="{{ 'auth.email' | translate }}"
-                formControlName="email"
-            />
+            <input nbInput fullWidth placeholder="{{ 'auth.email' | translate }}" formControlName="email" />
 
-            <input
-                nbInput
-                fullWidth
-                placeholder="{{ 'auth.password' | translate }}"
-                type="password"
-                formControlName="password"
-            />
+            <input nbInput fullWidth placeholder="{{ 'auth.password' | translate }}" type="password"
+                formControlName="password" />
 
-            <div
-                *ngIf="isInvalidLogin"
-                class="text-white text-center w-100 badge bg-danger fw-bold pt-2 pb-2"
-            >
+            <div *ngIf="isInvalidLogin" class="text-white text-center w-100 badge bg-danger fw-bold pt-2 pb-2">
                 {{ loginMsg || '' }}
             </div>
 
