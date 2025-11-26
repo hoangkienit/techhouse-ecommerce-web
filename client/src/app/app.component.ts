@@ -82,7 +82,8 @@ export class AppComponent implements OnInit, OnDestroy {
           title: this.appServices.TranslateService.trans('sideBar.account'),
           icon: 'person-outline',
           children: [
-            { title: this.appServices.TranslateService.trans('sideBar.auth'), icon: 'person-add-outline', link: '/account/auth' },
+            { title: this.appServices.TranslateService.trans('sideBar.register'), icon: 'person-add-outline', link: '/account/auth/register' },
+            { title: this.appServices.TranslateService.trans('sideBar.login'), icon: 'person-outline', link: '/account/auth/login' },
             { title: this.appServices.TranslateService.trans('sideBar.profile'), icon: 'person-done-outline', link: '/account/profile' },
             { title: this.appServices.TranslateService.trans('sideBar.logout'), icon: 'log-out-outline', link: '/account/logout' },
           ],

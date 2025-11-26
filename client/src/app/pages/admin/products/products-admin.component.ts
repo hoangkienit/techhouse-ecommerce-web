@@ -129,17 +129,17 @@ export class ProductsAdminComponent {
       product_sold_amount: 0,
       product_status: ProductStatus.Active
     };
-    this._appService.ProductService.addProduct(sampleProduct).subscribe({
-      next: (response) => {
-        console.log('Product added successfully:', response);
-      },
-      error: (err) => {
-        console.error('Error adding product:', err);
-      },
-      complete: () => {
-        console.log('Request completed');
-      }
-    });
+    // this._appService.ProductService.addProduct(sampleProduct).subscribe({
+    //   next: (response) => {
+    //     console.log('Product added successfully:', response);
+    //   },
+    //   error: (err) => {
+    //     console.error('Error adding product:', err);
+    //   },
+    //   complete: () => {
+    //     console.log('Request completed');
+    //   }
+    // });
 
     this._appService.ModalService.createModal('Thêm sản phẩm mới', AddProductComponent, {});
   }
