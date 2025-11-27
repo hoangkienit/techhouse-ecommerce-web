@@ -10,7 +10,8 @@ import { LoyaltyComponent } from './pages/loyalty/loyalty.component';
 import { DiscountComponent } from './pages/discount/discount.component';
 import { HomeComponent } from './pages/home/home.component';
 import { UsersComponent } from './pages/admin/users/users.component';
-import { ProfileComponent } from './pages/account/profile/profile.component';
+import { ViewProfileComponent } from './pages/account/profile/profile.component';
+import { EditProfileComponent } from './pages/account/profile/edit-profile.component';
 import { DiscountsComponent } from './pages/admin/discounts/discounts.component';
 import { ProductsAdminComponent } from './pages/admin/products/products-admin.component';
 import { LoginComponent } from 'src/app/pages/account/auth/login/login.component';
@@ -39,7 +40,8 @@ const routes: Routes = [
     ]
   },
 
-  { path: 'account/profile', component: ProfileComponent },
+  { path: 'account/profile', component: ViewProfileComponent },
+  { path: 'account/edit-profile', component: EditProfileComponent },
   { path: 'admin/dashboard', component: DashboardComponent },
   { path: 'admin/users', component: UsersComponent },
   { path: 'admin/products', component: ProductsAdminComponent },

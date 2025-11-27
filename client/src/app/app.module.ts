@@ -25,7 +25,8 @@ import { CartComponent } from './pages/cart/cart.component';
 import { OrdersComponent } from './pages/orders/orders.component';
 import { LoyaltyComponent } from './pages/loyalty/loyalty.component';
 import { DiscountComponent } from './pages/discount/discount.component';
-import { ProfileComponent } from './pages/account/profile/profile.component';
+import { ViewProfileComponent } from './pages/account/profile/profile.component';
+import { EditProfileComponent } from './pages/account/profile/edit-profile.component';
 import { UsersComponent } from './pages/admin/users/users.component';
 import { ProductsAdminComponent } from './pages/admin/products/products-admin.component';
 import { DiscountsComponent } from './pages/admin/discounts/discounts.component';
@@ -58,7 +59,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     OrdersComponent,
     LoyaltyComponent,
     DiscountComponent,
-    ProfileComponent,
+    ViewProfileComponent,
+    EditProfileComponent,
     UsersComponent,
     DiscountsComponent,
     ProductsAdminComponent,

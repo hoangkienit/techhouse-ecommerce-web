@@ -1,37 +1,11 @@
-<p>profile works!</p>
-<div class="profile-wrapper" *ngIf="user">
-    <nb-card>
-        <nb-card-header>
-            <h3>Hồ sơ cá nhân</h3>
-        </nb-card-header>
-
-        <nb-card-body>
-            <div class="profile-info">
-                <div class="avatar">
-                    <nb-user [name]="user.fullname" size="large"></nb-user>
-                </div>
-
-                <div class="info-list">
-                    <div class="info-item">
-                        <label>Họ và tên:</label>
-                        <span>{{ user.fullname }}</span>
-                    </div>
-
-                    <div class="info-item">
-                        <label>Email:</label>
-                        <span>{{ user.email }}</span>
-                    </div>
-
-                    <div class="info-item">
-                        <label>Địa chỉ:</label>
-                        <span>{{ user.address?.street }}, {{ user.address?.city }}, {{ user.address?.country }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <button nbButton status="primary" fullWidth (click)="goToEdit()">
-                Chỉnh sửa hồ sơ
-            </button>
-        </nb-card-body>
-    </nb-card>
+<div class="profile-container">
+  <h2>Profile</h2>
+  <div *ngIf="user">
+    <p><strong>Họ tên:</strong> {{ user.fullname }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Địa chỉ:</strong> {{ user.address?.street }}, {{ user.address?.city }}, {{ user.address?.country }}</p>
+  </div>
+  <div *ngIf="!user">
+    <p>Chưa có thông tin người dùng.</p>
+  </div>
 </div>

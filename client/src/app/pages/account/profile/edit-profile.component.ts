@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppServices } from 'src/app/@core/services/AppServices.service';
-import { Router } from '@angular/router';
+import { GlobalStateService } from 'src/app/@core/services/GlobalStateService.service';
+import { User } from 'src/app/@core/models/auth.model';
 
 @Component({
   selector: 'app-edit-profile',
@@ -9,35 +9,31 @@ import { Router } from '@angular/router';
   styleUrls: ['./edit-profile.component.scss']
 })
 export class EditProfileComponent implements OnInit {
-
   editForm!: FormGroup;
+  user: User | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private appServices: AppServices,
-    private router: Router
+    private appServices: GlobalStateService
   ) {}
 
   ngOnInit(): void {
-    const user = this.appServices.GlobalStateService.getUser();
+    this.user = this.appServices.currentUser;
 
     this.editForm = this.fb.group({
-      fullname: [user.fullname, Validators.required],
-      email: [user.email, Validators.required],
-      country: [user.address?.country],
-      city: [user.address?.city],
-      street: [user.address?.street],
+      fullname: [this.user?.fullname, [Validators.required]],
+      email: [this.user?.email, [Validators.required, Validators.email]],
+      country: [this.user?.address?.country],
+      city: [this.user?.address?.city],
+      street: [this.user?.address?.street]
     });
   }
 
-  onSave() {
+  onSubmit(): void {
     if (this.editForm.valid) {
-      console.log("Dữ liệu gửi API:", this.editForm.value);
-
-      // TODO: Gọi API update user
-      this.appServices.NotificationService.createSuccess("Cập nhật thành công!");
-
-      this.router.navigate(['/account/profile']);
+      const updatedUser = { ...this.user, ...this.editForm.value };
+      this.appServices.setUser(updatedUser);  // Cập nhật thông tin người dùng
+      console.log('Thông tin người dùng đã được cập nhật:', updatedUser);
     }
   }
 }
