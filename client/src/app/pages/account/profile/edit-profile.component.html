@@ -1,0 +1,26 @@
+<div class="edit-profile-container">
+  <h2>Chỉnh sửa hồ sơ cá nhân</h2>
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="fullname">Họ tên</label>
+      <input id="fullname" formControlName="fullname" />
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input id="email" formControlName="email" />
+    </div>
+    <div>
+      <label for="street">Địa chỉ</label>
+      <input id="street" formControlName="street" />
+    </div>
+    <div>
+      <label for="city">Thành phố</label>
+      <input id="city" formControlName="city" />
+    </div>
+    <div>
+      <label for="country">Quốc gia</label>
+      <input id="country" formControlName="country" />
+    </div>
+    <button type="submit" [disabled]="editForm.invalid">Cập nhật</button>
+  </form>
+</div>
