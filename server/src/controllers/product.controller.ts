@@ -59,28 +59,40 @@ class ProductController {
     }
 
     static async AllProducts(req: Request, res: Response): Promise<void> {
-        const { q, brand, category, minPrice, maxPrice, minRating, sort, page, limit } = req.query;
+        try {
+            const { q, brand, category, minPrice, maxPrice, minRating, sort, page = 1, limit = 10 } = req.query;
 
-        const response = await ProductService.AllProducts({
-            q: q ? String(q) : undefined,
-            brand: brand ? String(brand) : undefined,
-            category: category ? String(category) : undefined,
-            minPrice: minPrice ? Number(minPrice) : undefined,
-            maxPrice: maxPrice ? Number(maxPrice) : undefined,
-            minRating: minRating ? Number(minRating) : undefined,
-            sort: sort ? String(sort) : undefined,
-            page: Number(page),
-            limit: Number(limit)
-        });
+            const pageIndex = Number(page) || 1;
+            const pageSize = Number(limit) || 10;
 
-        new OK({
-            message: "Lấy danh sách sản phẩm thành công",
-            data: {
-                products: response.products,
-                page: Number(page),
-                total: response.total
-            }
-        }).send(res);
+            const response = await ProductService.AllProducts({
+                q: q ? String(q) : undefined,
+                brand: brand ? String(brand) : undefined,
+                category: category ? String(category) : undefined,
+                minPrice: minPrice ? Number(minPrice) : undefined,
+                maxPrice: maxPrice ? Number(maxPrice) : undefined,
+                minRating: minRating ? Number(minRating) : undefined,
+                sort: sort ? String(sort) : undefined,
+                page: pageIndex,
+                limit: pageSize
+            });
+
+            // response.total là tổng sản phẩm, response.products là mảng sản phẩm của trang này
+            new OK({
+                message: "Lấy danh sách sản phẩm thành công",
+                data: {
+                    products: response.products,
+                    pageIndex,
+                    pageSize,
+                    totalItems: response.total,
+                    totalPages: Math.ceil(response.total / pageSize),
+                    hasNextPage: pageIndex * pageSize < response.total,
+                    hasPreviousPage: pageIndex > 1
+                }
+            }).send(res);
+        } catch (err) {
+            throw new NotFoundError(err);
+        }
     }
 
     static async GetSingleProduct(req: Request, res: Response): Promise<void> {
