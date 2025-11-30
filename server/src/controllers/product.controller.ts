@@ -77,21 +77,22 @@ class ProductController {
                 limit: pageSize
             });
 
-            // response.total là tổng sản phẩm, response.products là mảng sản phẩm của trang này
+            const { products, total } = response;
+
             new OK({
                 message: "Lấy danh sách sản phẩm thành công",
                 data: {
-                    products: response.products,
+                    products,
                     pageIndex,
                     pageSize,
-                    totalItems: response.total,
-                    totalPages: Math.ceil(response.total / pageSize),
-                    hasNextPage: pageIndex * pageSize < response.total,
+                    totalItems: total,
+                    totalPages: Math.ceil(total / pageSize),
+                    hasNextPage: pageIndex * pageSize < total,
                     hasPreviousPage: pageIndex > 1
                 }
             }).send(res);
         } catch (err) {
-            throw new NotFoundError(err);
+            throw new NotFoundError("Products not found");
         }
     }
 

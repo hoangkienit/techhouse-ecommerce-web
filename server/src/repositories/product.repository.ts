@@ -52,6 +52,9 @@ class ProductRepo {
         return product;
     }
 
+    static async count(filter: any): Promise<number> {
+        return Product.countDocuments(filter).exec();
+    }
 }
 
 export default ProductRepo;
