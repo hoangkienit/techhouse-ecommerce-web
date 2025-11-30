@@ -12,13 +12,12 @@ export class ProductService {
   constructor(private http: HttpClient) { }
 
   addProduct(product: Product): Observable<any> {
-    console.log('Adding product:', product);
     return this.http.post<{}>(`${this.baseUrl}/add`, product, this.credentials);
   }
 
-  // getAll(): Observable<Product[]> {
-  //   return of(this.products);
-  // }
+  getAllProducts(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/list`, this.credentials);
+  }
 
   // getNewProducts(limit = 6): Observable<Product[]> {
   //   return of(this.products.filter(p => p.isNew).slice(0, limit));
@@ -33,7 +32,7 @@ export class ProductService {
   //   return of(cats);
   // }
 
-      getProductsByCategory(slug: string): Observable<Product[]> {
-      return this.http.get<Product[]>(`${this.baseUrl}/category/${slug}`);
-    }
+  getProductsByCategory(slug: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.baseUrl}/category/${slug}`);
+  }
 }
