@@ -1,3 +1,4 @@
+import { UploadService } from './UploadService.service';
 import { Product } from './../models/product.model';
 import { AuthService } from './apis/auth.service';
 import { ModalService } from './Modal.service';
@@ -23,5 +24,6 @@ export class AppServices {
         //APIS
         public AuthService: AuthService,
         public ProductService: ProductService,
+        public UploadService: UploadService,
     ) { }
 }

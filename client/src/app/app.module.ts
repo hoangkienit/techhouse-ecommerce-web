@@ -25,16 +25,20 @@ import { CartComponent } from './pages/cart/cart.component';
 import { OrdersComponent } from './pages/orders/orders.component';
 import { LoyaltyComponent } from './pages/loyalty/loyalty.component';
 import { DiscountComponent } from './pages/discount/discount.component';
-import { ProfileComponent } from './pages/account/profile/profile.component';
+import { ViewProfileComponent } from './pages/account/profile/profile.component';
+import { EditProfileComponent } from './pages/account/profile/edit-profile.component';
 import { UsersComponent } from './pages/admin/users/users.component';
 import { ProductsAdminComponent } from './pages/admin/products/products-admin.component';
 import { DiscountsComponent } from './pages/admin/discounts/discounts.component';
-import { AuthComponent } from './pages/account/auth/auth.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BaseModalComponentComponent } from './@core/services-components/base-modal-component/base-modal-component.component';
 import { ViewProductComponent } from './pages/admin/products/view-product/view-product.component';
 import { EditProductComponent } from './pages/admin/products/edit-product/edit-product.component';
 import { AddProductComponent } from './pages/admin/products/add-product/add-product.component';
+import { NgxTagComponent } from './@core/services-components/ngx-tag/ngx-tag.component';
+import { LoginComponent } from './pages/account/auth/login/login.component';
+import { RegisterComponent } from './pages/account/auth/register/register.component';
+import { NgxImgUploadComponent } from './@core/services-components/ngx-img-upload/ngx-img-upload.component';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -48,7 +52,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     FooterComponent,
     DashboardComponent,
     LoadingDirective,
-    AuthComponent,
     HomeComponent,
     ProductsComponent,
     CategoriesComponent,
@@ -57,14 +60,19 @@ export function HttpLoaderFactory(http: HttpClient) {
     OrdersComponent,
     LoyaltyComponent,
     DiscountComponent,
-    ProfileComponent,
+    ViewProfileComponent,
+    EditProfileComponent,
     UsersComponent,
     DiscountsComponent,
     ProductsAdminComponent,
     BaseModalComponentComponent,
     ViewProductComponent,
     EditProductComponent,
-    AddProductComponent
+    AddProductComponent,
+    NgxTagComponent,
+    LoginComponent,
+    RegisterComponent,
+    NgxImgUploadComponent
   ],
   imports: [
     BrowserModule,
@@ -101,6 +109,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
+    TranslateModule
   ],
   providers: [],
   bootstrap: [AppComponent]

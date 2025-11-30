@@ -25,6 +25,7 @@ export interface User {
     role: string;
     socialProvider?: string | null;
     socialId?: string | null;
+    address?: AddressDto;
     addresses?: string[];
     isBanned: boolean;
     createdAt: string;

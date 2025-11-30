@@ -5,6 +5,7 @@ import { ViewProductComponent } from './view-product/view-product.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { ProductCategory, ProductStatus } from 'src/app/@core/enums/products/product.enum';
 import { AddProductComponent } from './add-product/add-product.component';
+import { StatusServiceTag } from 'src/app/@core/services-components/ngx-tag/ngx-tag.component';
 
 @Component({
   selector: 'app-products',
@@ -13,6 +14,7 @@ import { AddProductComponent } from './add-product/add-product.component';
 })
 export class ProductsAdminComponent {
   products: Product[] = [];
+  _statusServiceTag = StatusServiceTag;
 
   constructor(private _appService: AppServices) { }
 
@@ -129,17 +131,17 @@ export class ProductsAdminComponent {
       product_sold_amount: 0,
       product_status: ProductStatus.Active
     };
-    this._appService.ProductService.addProduct(sampleProduct).subscribe({
-      next: (response) => {
-        console.log('Product added successfully:', response);
-      },
-      error: (err) => {
-        console.error('Error adding product:', err);
-      },
-      complete: () => {
-        console.log('Request completed');
-      }
-    });
+    // this._appService.ProductService.addProduct(sampleProduct).subscribe({
+    //   next: (response) => {
+    //     console.log('Product added successfully:', response);
+    //   },
+    //   error: (err) => {
+    //     console.error('Error adding product:', err);
+    //   },
+    //   complete: () => {
+    //     console.log('Request completed');
+    //   }
+    // });
 
     this._appService.ModalService.createModal('Thêm sản phẩm mới', AddProductComponent, {});
   }
