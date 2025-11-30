@@ -60,10 +60,10 @@ class ProductController {
 
     static async AllProducts(req: Request, res: Response): Promise<void> {
         try {
-            const { q, brand, category, minPrice, maxPrice, minRating, sort, page = 1, limit = 10 } = req.query;
+            const { q, brand, category, minPrice, maxPrice, minRating, sort, pageIndex = 1, pageSize = 10 } = req.query;
 
-            const pageIndex = Number(page) || 1;
-            const pageSize = Number(limit) || 10;
+            const pageIndexNum = Number(pageIndex) || 1;
+            const pageSizeNum = Number(pageSize) || 10;
 
             const response = await ProductService.AllProducts({
                 q: q ? String(q) : undefined,
@@ -73,8 +73,8 @@ class ProductController {
                 maxPrice: maxPrice ? Number(maxPrice) : undefined,
                 minRating: minRating ? Number(minRating) : undefined,
                 sort: sort ? String(sort) : undefined,
-                page: pageIndex,
-                limit: pageSize
+                pageIndex: pageIndexNum,
+                pageSize: pageSizeNum
             });
 
             const { products, total } = response;
@@ -83,12 +83,12 @@ class ProductController {
                 message: "Lấy danh sách sản phẩm thành công",
                 data: {
                     products,
-                    pageIndex,
-                    pageSize,
+                    pageIndex: pageIndexNum,
+                    pageSize: pageSizeNum,
                     totalItems: total,
-                    totalPages: Math.ceil(total / pageSize),
-                    hasNextPage: pageIndex * pageSize < total,
-                    hasPreviousPage: pageIndex > 1
+                    totalPages: Math.ceil(total / pageSizeNum),
+                    hasNextPage: pageIndexNum * pageSizeNum < total,
+                    hasPreviousPage: pageIndexNum > 1
                 }
             }).send(res);
         } catch (err) {

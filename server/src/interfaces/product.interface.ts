@@ -36,7 +36,7 @@ export interface IProductQueryOptions {
   maxPrice?: number | undefined;
   minRating?: number | undefined;
   sort?: string | undefined;
-  page: number;
-  limit: number;
+  pageIndex?: number | undefined;
+  pageSize?: number | undefined;
 }
 
