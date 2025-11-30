@@ -1,5 +1,5 @@
-<nb-card style="min-width: 500px !important;">
-    <nb-card-body>
+<div style="min-width: 500px !important;">
+    <div>
         <form [formGroup]="form" class="edit-product-form">
             <div class="row">
                 <div class="col-6">
@@ -27,6 +27,10 @@
                         <label class="form-label">Giá</label>
                         <input class="form-control" nbInput fullWidth type="number" formControlName="price"
                             placeholder="Nhập giá sản phẩm" />
+                        <small class="w-100 text-danger"
+                            *ngIf="form.controls['price'].invalid && form.controls['price'].touched">
+                            Giá sản phẩm phải là số hợp lệ (lớn hơn hoặc bằng 0)
+                        </small>
                     </div>
 
                     <div class="mb-3">
@@ -34,9 +38,7 @@
                         <nb-select fullWidth formControlName="status">
                             <nb-option *ngFor="let s of statusOptions" [value]="s.value">
                                 <span>
-                                    <ngx-tag [TagStatus]="s.value">
-                                        {{ s.label }}
-                                    </ngx-tag>
+                                    {{ s.label }}
                                 </span>
                             </nb-option>
                         </nb-select>
@@ -48,14 +50,26 @@
                         <label class="form-label">Mô tả chi tiết</label>
                         <textarea nbInput fullWidth formControlName="description"
                             placeholder="Nhập mô tả chi tiết"></textarea>
+                        <small class="w-100 text-danger"
+                            *ngIf="form.controls['description'].invalid && form.controls['description'].touched">
+                            Thêm một mô tả chi tiết cho sản phẩm
+                        </small>
                     </div>
 
                     <!-- Loại sản phẩm -->
                     <div class="mb-3">
                         <label class="form-label">Loại sản phẩm</label>
                         <nb-select fullWidth formControlName="category">
-                            <!-- <nb-option *ngFor="let c of categoryOptions" [value]="c.value">{{ c.label }}</nb-option> -->
+                            <nb-option *ngFor="let c of categoryOptions" [value]="c.value">
+                                <span>
+                                    {{ c.label }}
+                                </span>
+                            </nb-option>
                         </nb-select>
+                        <small class="w-100 text-danger"
+                            *ngIf="form.controls['category'].invalid && form.controls['category'].touched">
+                            Lựa chọn danh mục sản phẩm
+                        </small>
                     </div>
 
                     <!-- Tồn kho -->
@@ -63,35 +77,39 @@
                         <label class="form-label">Tồn kho</label>
                         <input nbInput fullWidth type="number" formControlName="stock"
                             placeholder="Nhập số lượng tồn kho" />
-                    </div>
-
-                    <!-- Hình ảnh -->
-                    <div class="mb-3">
-                        <label class="form-label">Hình ảnh sản phẩm (3-4 tấm)</label>
-                        <input type="file" multiple (change)="onFileChange($event)" accept="image/*" />
-                        <div class="preview-images">
-                            <!-- <img *ngFor="let img of previewImages" [src]="img" class="preview-thumb" /> -->
-                        </div>
+                        <small class="w-100 text-danger"
+                            *ngIf="form.controls['stock'].invalid && form.controls['stock'].touched">
+                            Nhập số lượng tồn kho hợp lệ (lớn hơn hoặc bằng 0)
+                        </small>
                     </div>
 
                     <!-- Thuộc tính sản phẩm -->
                     <div class="mb-3">
                         <label class="form-label">Thông số kỹ thuật</label>
                         <!-- <input nbInput fullWidth formControlName="cpu" placeholder="CPU" />
-                <input nbInput fullWidth formControlName="ram" placeholder="RAM" />
-                <input nbInput fullWidth formControlName="storage" placeholder="Storage" />
-                <input nbInput fullWidth formControlName="screen" placeholder="Màn hình" />
-                <input nbInput fullWidth formControlName="color" placeholder="Màu sắc" /> -->
+                        <input nbInput fullWidth formControlName="ram" placeholder="RAM" />
+                        <input nbInput fullWidth formControlName="storage" placeholder="Storage" />
+                        <input nbInput fullWidth formControlName="screen" placeholder="Màn hình" />
+                        <input nbInput fullWidth formControlName="color" placeholder="Màu sắc" /> -->
                     </div>
                 </div>
             </div>
+            <!-- Hình ảnh -->
+            <div class="mb-2">
+                <label class="form-label">Hình ảnh sản phẩm (3-4 tấm)</label>
+                <ngx-img-upload (uploaded)="images = $event"></ngx-img-upload>
+            </div>
         </form>
-
-    </nb-card-body>
-
-    <nb-card-footer class="text-end">
-        <button nbButton status="success" [disabled]="form.invalid" (click)="product.close(add())">
+    </div>
+    <ng-container *ngIf="isErrMsg">
+        <div class="alert alert-danger d-flex align-items-center gap-2 py-1 my-2" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <small class="w-100 text-center text-danger fw-bold">{{ errMsg }}</small>
+        </div>
+    </ng-container>
+    <div class="text-end">
+        <button nbButton status="success" [disabled]="form.invalid" (click)="addProduct()">
             Lưu
         </button>
-    </nb-card-footer>
-</nb-card>
+    </div>
+</div>

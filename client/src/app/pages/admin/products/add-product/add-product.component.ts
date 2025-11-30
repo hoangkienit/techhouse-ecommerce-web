@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductCategory, ProductStatus } from 'src/app/@core/enums/products/product.enum';
 import { NotificationStatus } from 'src/app/@core/enums/status.enum';
+import { Product } from 'src/app/@core/models/product.model';
 import { AppServices } from 'src/app/@core/services/AppServices.service';
 import { EnumService } from 'src/app/@core/services/array-services/enum.service';
 
@@ -17,6 +18,11 @@ export class AddProductComponent {
   statusTagService = StatusServiceTag;
   statusOptions = EnumService.ParseEnumToArray(ProductStatus);
   productCategories = EnumService.ParseEnumToArray(ProductCategory);
+  images: string[] = [];
+  categoryOptions = EnumService.ParseEnumToArray(ProductCategory);
+  isErrMsg: boolean = false;
+  errMsg: string = null as any;
+  isLoading: boolean = false;
 
   constructor(private fb: FormBuilder, private readonly _appServices: AppServices) { }
 
@@ -24,29 +30,59 @@ export class AddProductComponent {
     this.form = this.fb.group({
       name: [this.product?.name || '', Validators.required],
       brand: [this.product?.brand || '', Validators.required],
-      price: [this.product?.price || 0],
-      status: [this.product?.status || 'available', Validators.required],
-      description: [this.product?.description || 'available', Validators.required],
-      category: [this.product?.category || 'available', Validators.required],
+      price: [this.product?.price || 0, [Validators.required, Validators.min(0)]],
+      status: [this.product?.status || this.statusTagService.ACTIVE, Validators.required],
+      description: [this.product?.description || '', Validators.required],
+      category: [this.product?.category || ProductCategory.Computer, Validators.required],
       stock: [this.product?.stock || 0, [Validators.required, Validators.min(0)]]
     });
   }
 
-  add() {
+  addProduct() {
+    this.isLoading = true;
     if (this.form.valid) {
-      this.form.value;
-      this._appServices.ProductService.addProduct(this.form.value).subscribe({
+      this._appServices.ProductService.addProduct(this.getProductFromForm()).subscribe({
         next: (res) => {
           this._appServices.ModalService.closeModal();
           this._appServices.NotificationService.createNotification('Thêm sản phẩm thành công!', NotificationStatus.SUCSSESS, 3000);
+          this.isErrMsg = true;
+          this.errMsg = null as any;
+          this.isLoading = false;
         },
-        error: (err) => {
+        error: (e) => {
+          this.isErrMsg = true;
+          this.errMsg = e.error?.errors || e.error?.message || null as any;
+          this.isLoading = false;
           this._appServices.NotificationService.createNotification('Thêm sản phẩm thất bại!', NotificationStatus.ERROR, 3000);
         }
       });
     } else {
+      this.isLoading = false;
       this.form.markAllAsTouched();
     }
+  }
+
+  getProductFromForm(): Product {
+    const f = this.form.value;
+
+    return {
+      product_name: f.name,
+      product_brand: f.brand,
+      product_price: f.price,
+      product_status: f.status,
+      product_description: f.description,
+      product_category: f.category,
+      product_stock: f.stock,
+      product_imgs: this.product?.product_imgs || this.images || [],
+      product_sold_amount: this.product?.product_sold_amount || 0,
+      product_attributes: this.product?.product_attributes || {},
+      short_description: this.product?.short_description || '',
+      weight: this.product?.weight || '',
+      dimensions: this.product?.dimensions || '',
+      warranty: this.product?.warranty || '',
+      tags: this.product?.tags || [],
+      product_slug: this.product?.product_slug || '',
+    };
   }
 
   onFileChange(event: any) {
@@ -58,45 +94,3 @@ export class AddProductComponent {
     });
   }
 }
-
-
-//  product_name: {
-//         type: String,
-//         required: true
-//     },
-//     product_description: {
-//         type: String,
-//         required: true
-//     },
-//     product_slug: {
-//         type: String,
-//         default: ""
-//     },
-//     product_brand: {
-//         type: String,
-//         required: true,
-//         index: true
-//     },
-//     product_price: {
-//         type: Number,
-//         required: true,
-//         index: true
-//     },
-//     product_imgs: [{ type: String, required: true }],
-//     product_category: {
-//         type: String,
-//         enum: ["laptop", "phone", "tablet", "computer"],
-//         required: true,
-//         index: true
-//     },
-//     product_attributes: {
-//         type: mongoose.Schema.Types.Mixed,
-//         required: true
-//     },
-//     product_stock: { type: Number, default: 0 },
-//     product_sold_amount: { type: Number, default: 0 },
-//     product_status: {
-//       type: String,
-//       enum: ["active", "inactive"],
-//       default: "active",
-//     },
