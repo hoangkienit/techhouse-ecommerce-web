@@ -8,7 +8,7 @@ import { User } from '../models/auth.model';
 export class GlobalStateService {
 
     private _currentUser = new BehaviorSubject<User | null>(null);
-
+    
     currentUser$ = this._currentUser.asObservable();
 
     setUser(user: User | null): void {
