@@ -5,6 +5,7 @@ import { ViewProductComponent } from './view-product/view-product.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { ProductCategory, ProductStatus } from 'src/app/@core/enums/products/product.enum';
 import { AddProductComponent } from './add-product/add-product.component';
+import { StatusServiceTag } from 'src/app/@core/services-components/ngx-tag/ngx-tag.component';
 
 @Component({
   selector: 'app-products',
@@ -13,6 +14,7 @@ import { AddProductComponent } from './add-product/add-product.component';
 })
 export class ProductsAdminComponent {
   products: Product[] = [];
+  _statusServiceTag = StatusServiceTag;
 
   constructor(private _appService: AppServices) { }
 

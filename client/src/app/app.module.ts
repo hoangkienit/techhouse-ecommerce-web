@@ -37,6 +37,7 @@ import { AddProductComponent } from './pages/admin/products/add-product/add-prod
 import { NgxTagComponent } from './@core/services-components/ngx-tag/ngx-tag.component';
 import { LoginComponent } from './pages/account/auth/login/login.component';
 import { RegisterComponent } from './pages/account/auth/register/register.component';
+import { NgxImgUploadComponent } from './@core/services-components/ngx-img-upload/ngx-img-upload.component';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -68,7 +69,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AddProductComponent,
     NgxTagComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    NgxImgUploadComponent
   ],
   imports: [
     BrowserModule,

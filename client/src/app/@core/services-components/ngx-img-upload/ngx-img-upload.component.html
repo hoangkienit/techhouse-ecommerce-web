@@ -1,0 +1,21 @@
+<div class="upload-zone" [class.dragging]="isDragging" (drop)="onDrop($event)" (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave()">
+
+    <p>Kéo thả hình vào đây hoặc</p>
+
+    <button type="button" class="btn-select" (click)="fileInput.click()">
+        Chọn ảnh
+    </button>
+
+    <input #fileInput type="file" multiple accept="image/*" (change)="onFileSelect($event)" hidden />
+</div>
+
+<div class="preview-list">
+    <div class="image-box" *ngFor="let p of previewUrls; let i = index">
+        <img [src]="p" />
+
+        <div class="progress-bar" *ngIf="progress[i] < 100">
+            <div class="progress-fill" [style.width.%]="progress[i]"></div>
+        </div>
+    </div>
+</div>
