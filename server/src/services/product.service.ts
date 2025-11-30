@@ -72,6 +72,7 @@ class ProductService {
             if (minPrice != null) filter.product_price.$gte = Number(minPrice);
             if (maxPrice != null) filter.product_price.$lte = Number(maxPrice);
         }
+
         if (minRating != null) filter.rating = { $gte: minRating };
 
         if (q) {
@@ -89,15 +90,19 @@ class ProductService {
             case "name_desc": sortOption.product_name = -1; break;
             case "price_asc": sortOption.product_price = 1; break;
             case "price_desc": sortOption.product_price = -1; break;
-            case "newest": default: sortOption.createdAt = -1; break;
+            case "newest":
+            default: sortOption.createdAt = -1; break;
         }
 
         const skip = (page - 1) * limit;
 
-        // Fetch products from the repository
-        const result = await ProductRepo.findAll(filter, skip, limit, sortOption);
+        // Fetch products và tổng số
+        const [products, total] = await Promise.all([
+            ProductRepo.findAll(filter, skip, limit, sortOption),
+            ProductRepo.count(filter)
+        ]);
 
-        return result;
+        return { products, total }; // trả về products và total
     }
 
     static async GetSingleProduct(productId: string) {
