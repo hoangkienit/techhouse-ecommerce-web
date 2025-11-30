@@ -1,4 +1,6 @@
-<div class="w-100 text-white d-inline-block font-weight-bold text-center"
-    [ngStyle]="{'background-color': mappingColor(TagStatus) || '#e0e0e0','font-size':'0.65rem', 'border-radius':'8px', 'padding':'2px 6px', 'text-transform':'uppercase'}">
+<div class="w-100 text-white d-inline-block font-weight-bold text-center" [ngStyle]="{'background-color': mappingColor(TagStatus) || '#e0e0e0','font-size':'0.65rem', 
+    'border-radius':'8px', 'padding':'2px 6px', 'text-transform':'uppercase',
+    'font-weight':'800', 'width': '50%', 'min-width': '40%', 'user-select': 'none'
+}">
     <ng-content></ng-content>
 </div>
