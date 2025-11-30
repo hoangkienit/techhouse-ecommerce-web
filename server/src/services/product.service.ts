@@ -60,9 +60,11 @@ class ProductService {
     }
 
     static async AllProducts(options: IProductQueryOptions) {
-        const { q, brand, category, minPrice, maxPrice, minRating, sort, page, limit } = options;
-
+        const { q, brand, category, minPrice, maxPrice, minRating, sort, pageIndex, pageSize } = options;
         const filter: any = {};
+
+        const pageIndexNum = Number(pageIndex) || 1;
+        const pageSizeNum = Number(pageSize) || 10;
 
         if (brand) filter.product_brand = brand;
         if (category) filter.product_category = category;
@@ -94,11 +96,11 @@ class ProductService {
             default: sortOption.createdAt = -1; break;
         }
 
-        const skip = (page - 1) * limit;
+        const skip = (pageIndexNum - 1) * pageSizeNum;
 
         // Fetch products và tổng số
         const [products, total] = await Promise.all([
-            ProductRepo.findAll(filter, skip, limit, sortOption),
+            ProductRepo.findAll(filter, skip, pageSize, sortOption),
             ProductRepo.count(filter)
         ]);
 
