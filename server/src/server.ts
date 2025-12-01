@@ -26,7 +26,6 @@ import { initializeSocket } from './config/socket';
 import path from 'path';
 // import { setupSwagger } from './config/swagger';
 
-
 const app = express();
 const server = http.createServer(app);
 initializeSocket(server);

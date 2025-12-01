@@ -1,5 +1,6 @@
 import { AppServices } from 'src/app/@core/services/AppServices.service';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'ngx-img-upload',
@@ -7,11 +8,19 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./ngx-img-upload.component.scss']
 })
 export class NgxImgUploadComponent {
-  @Output() uploaded = new EventEmitter<string[]>(); // emit URL hoặc file ID backend trả về
+
+  @Input() maxFiles: number = 5;
+
+  // ➜ choose what to emit
+  @Input() emitType: 'files' | 'subscriptions' | 'both' = 'files';
+
+  // ➜ unified output
+  @Output() uploaded = new EventEmitter<any>();
 
   files: File[] = [];
   previewUrls: string[] = [];
   progress: number[] = [];
+  uploadSubs: Subscription[] = [];
 
   isDragging = false;
 
@@ -40,28 +49,57 @@ export class NgxImgUploadComponent {
   }
 
   private handleFiles(files: FileList) {
-    Array.from(files).forEach(file => {
-      this.files.push(file);
-      this.progress.push(0);
+    const remaining = this.maxFiles - this.files.length;
 
-      const reader = new FileReader();
-      reader.onload = () => this.previewUrls.push(reader.result as string);
-      reader.readAsDataURL(file);
-    });
+    if (remaining <= 0) return;
 
-    this.startUpload();
-  }
+    Array.from(files)
+      .slice(0, remaining)
+      .forEach(file => {
+        this.files.push(file);
+        this.progress.push(0);
 
-  private startUpload() {
-    this.files.forEach((file, index) => {
-      this._appServices.UploadService.upload(file).subscribe(p => {
-        this.progress[index] = p;
-
-        if (p === 100) {
-          // có thể emit danh sách file đã upload
-          this.uploaded.emit(this.previewUrls);
-        }
+        const reader = new FileReader();
+        reader.onload = () => this.previewUrls.push(reader.result as string);
+        reader.readAsDataURL(file);
       });
-    });
+
+    this.emitData();
   }
+
+  private emitData() {
+    if (this.emitType === TypeUpload.FILES) {
+      this.uploaded.emit(this.files);
+    }
+
+    if (this.emitType === TypeUpload.SUBSCRIPTION) {
+      this.uploaded.emit(this.uploadSubs);
+    }
+
+    if (this.emitType === TypeUpload.BOTH) {
+      this.uploaded.emit({
+        files: this.files,
+        subscriptions: this.uploadSubs
+      });
+    }
+  }
+
+  removeFile(index: number) {
+    if (this.uploadSubs[index]) {
+      this.uploadSubs[index].unsubscribe();
+    }
+
+    this.files.splice(index, 1);
+    this.previewUrls.splice(index, 1);
+    this.progress.splice(index, 1);
+    this.uploadSubs.splice(index, 1);
+
+    this.emitData();
+  }
+}
+
+export enum TypeUpload {
+  FILES = 'files',
+  SUBSCRIPTION = 'subscriptions',
+  BOTH = 'both'
 }

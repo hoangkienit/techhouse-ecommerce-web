@@ -1,4 +1,4 @@
-import { ProductCategory, ProductStatus } from "../enums/products/product.enum";
+import { ProductStatus } from "../enums/products/product.enum";
 
 export interface Product {
     product_name: string;               // Tên sản phẩm
@@ -6,8 +6,8 @@ export interface Product {
     product_slug: string;               // Slug dùng cho URL
     product_brand: string;              // Thương hiệu
     product_price: number;              // Giá
-    product_imgs: string[];             // Mảng hình sản phẩm (3-4 tấm)
-    product_category: ProductCategory;  // Loại sản phẩm
+    product_imgs: File[];             // Mảng hình sản phẩm (3-4 tấm)
+    product_category: string;  // Loại sản phẩm
     product_attributes: {               // Các thông số kỹ thuật
         cpu?: string;
         ram?: string;
@@ -25,4 +25,14 @@ export interface Product {
     dimensions?: string;                // Kích thước sản phẩm
     warranty?: string;                  // Thời gian bảo hành
     tags?: string[];                    // Các tag liên quan sản phẩm
+}
+
+export interface filterProduct {
+    q?: string;
+    brand?: string;
+    category?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    minRating?: number;
+    sort?: string
 }
