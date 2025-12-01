@@ -32,7 +32,6 @@ import { ProductsAdminComponent } from './pages/admin/products/products-admin.co
 import { DiscountsComponent } from './pages/admin/discounts/discounts.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BaseModalComponentComponent } from './@core/services-components/base-modal-component/base-modal-component.component';
-import { ViewProductComponent } from './pages/admin/products/view-product/view-product.component';
 import { EditProductComponent } from './pages/admin/products/edit-product/edit-product.component';
 import { AddProductComponent } from './pages/admin/products/add-product/add-product.component';
 import { NgxTagComponent } from './@core/services-components/ngx-tag/ngx-tag.component';
@@ -66,7 +65,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     DiscountsComponent,
     ProductsAdminComponent,
     BaseModalComponentComponent,
-    ViewProductComponent,
     EditProductComponent,
     AddProductComponent,
     NgxTagComponent,

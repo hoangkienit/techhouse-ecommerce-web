@@ -1,13 +1,68 @@
 <nb-card [isLoading]="isLoading">
-  <nb-card-header class="d-flex justify-content-between align-item-center">
-    <div>Danh sách sản phẩm</div>
+  <nb-card-header class="d-flex align-items-center position-relative justify-content-between">
+    <div class="my-auto">Danh sách sản phẩm</div>
     <button nbButton status="success" (click)="openAddModalProduct()">
       <nb-icon icon="plus-outline"></nb-icon>
       Thêm sản phẩm
     </button>
   </nb-card-header>
   <nb-card-body>
+    <div class="filter-wrapper">
+      <!-- Danh mục -->
+      <div class="filter-item">
+        <label class="filter-label">Danh mục</label>
+        <nb-select [(selected)]="selectedCategory" placeholder="Chọn danh mục" (selectedChange)="onFilterChange()">
+          <nb-option value="">Tất cả</nb-option>
+          <nb-option *ngFor="let c of categoryList" [value]="c.label">
+            {{ c.label }}
+          </nb-option>
+        </nb-select>
+      </div>
 
+      <!-- Brand -->
+      <div class="filter-item">
+        <label class="filter-label">Thương hiệu</label>
+        <nb-select [(selected)]="selectedBrand" placeholder="Chọn thương hiệu" (selectedChange)="onFilterChange()">
+          <nb-option value="">Tất cả</nb-option>
+          <nb-option *ngFor="let c of brandList" [value]="c.label">
+            {{ c.label }}
+          </nb-option>
+        </nb-select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label" id="sort">Sắp xếp theo</label>
+        <nb-select [(selected)]="selectedSort" placeholder="Sắp xếp theo" (selectedChange)="onFilterChange()">
+          <nb-option value="">Mặc định</nb-option>
+          <nb-option *ngFor="let c of SortActionLs" [value]="c.value">
+            {{ c.value | sortLabel }}
+          </nb-option>
+        </nb-select>
+      </div>
+    </div>
+    <div class="filter-wrapper mt-2">
+      <!-- Tìm theo tên -->
+      <div class="filter-item">
+        <label class="filter-label">Tìm theo tên</label>
+        <input nbInput placeholder="Nhập tên..." [(ngModel)]="searchName">
+      </div>
+      <div class="filter-item">
+        <label class="filter-label" for="price-range">Khoảng giá mong muốn</label>
+        <div class="price-range-input d-flex gap-2">
+          <div class="input-wrapper">
+            <input id="minPrice" type="text" [value]="_currencyHelper.minValue" (input)="onMinInput($event)"
+              placeholder="0.000.000">
+            <span class="currency-label">VNĐ</span>
+          </div>
+          <div class="input-wrapper">
+            <input id="maxPrice" type="text" [value]="_currencyHelper.maxValue" (input)="onMaxInput($event)"
+              placeholder="0.000.000">
+            <span class="currency-label">VNĐ</span>
+          </div>
+        </div>
+      </div>
+      <button nbButton status="primary" (click)="onFilterChange()">Search</button>
+    </div>
   </nb-card-body>
 </nb-card>
 
@@ -30,29 +85,41 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let product of products; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ product.product_name }}</td>
-            <td>{{ product.product_category }}</td>
-            <td>{{ product.product_brand }}</td>
-            <td>{{ product.product_price | currency:'VND':'symbol' }}</td>
-            <td>{{ product.product_stock }}</td>
-            <td>{{ product.product_sold_amount }}</td>
-            <td>
-              <ngx-tag [TagStatus]="_statusServiceTag.ACTIVE">{{_statusServiceTag.ACTIVE}}</ngx-tag>
-            </td>
-            <td class="text-truncate" style="max-width: 180px;">{{ product.product_description }}</td>
-            <td class="text-center d-flex justify-content-around">
-              <button nbButton size="tiny" status="info">
-                <nb-icon icon="edit-2-outline"></nb-icon>
-              </button>
-              <button nbButton size="tiny" status="danger" class="ms-1">
-                <nb-icon icon="trash-2-outline"></nb-icon>
-              </button>
-            </td>
-          </tr>
+          <ng-container *ngIf="products && products.length > 0; else empty">
+            <tr *ngFor="let product of products; let i = index">
+              <td>{{ (_paging.pageIndex - 1) * _paging.pageSize + i + 1 }}</td>
+              <td>{{ product.product_name }}</td>
+              <td>{{ product.product_category }}</td>
+              <td>{{ product.product_brand }}</td>
+              <td>{{ product.product_price | currency:'VND':'symbol' }}</td>
+              <td>{{ product.product_stock }}</td>
+              <td>{{ product.product_sold_amount }}</td>
+              <td>
+                <ngx-tag [TagStatus]="_statusServiceTag.ACTIVE">{{_statusServiceTag.ACTIVE}}</ngx-tag>
+              </td>
+              <td class="text-truncate" style="max-width: 180px;">{{ product.product_description }}</td>
+              <td class="text-center d-flex justify-content-around">
+                <button nbButton size="tiny" status="info" (click)="openEditModalProduct(product)">
+                  <nb-icon icon="edit-2-outline"></nb-icon>
+                </button>
+                <button nbButton size="tiny" status="danger" class="ms-1">
+                  <nb-icon icon="trash-2-outline"></nb-icon>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
     </div>
+    <ngx-paging [pageIndex]="_paging.pageIndex" [pageSize]="_paging.pageSize" [totalItems]="_paging.totalItems"
+      (onPageChange)="onPageChange($event)">></ngx-paging>
   </nb-card-body>
 </nb-card>
+
+<ng-template #empty>
+  <tr>
+    <td colspan="10" class="fw-bold text-center text-muted">
+      No items
+    </td>
+  </tr>
+</ng-template>
