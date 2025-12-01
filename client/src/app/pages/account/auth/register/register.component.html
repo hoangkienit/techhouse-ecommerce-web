@@ -1,64 +1,44 @@
-<div class="auth-container">
-    <div class="auth-right">
-        <h2>Đăng ký</h2>
+<nb-card [isLoading]="isLoading">
+    <div class="auth-container" [isLoading]="isLoading">
+        <div class="auth-right">
+            <h2>Đăng ký</h2>
 
-        <form (ngSubmit)="onSignup()" [formGroup]="signupForm">
-            <input
-                nbInput
-                fullWidth
-                placeholder="{{ 'auth.fullname' | translate }}"
-                formControlName="fullname"
-            />
+            <form (ngSubmit)="onSignup()" [formGroup]="signupForm">
+                <input nbInput fullWidth placeholder="{{ 'auth.fullname' | translate }}" formControlName="fullname" />
 
-            <input
-                nbInput
-                fullWidth
-                placeholder="{{ 'auth.email' | translate }}"
-                formControlName="email"
-            />
+                <input nbInput fullWidth placeholder="{{ 'auth.email' | translate }}" formControlName="email" />
 
-            <div class="form-group">
-                <label class="fw-bold text-muted w-100 pb-2">
-                    {{ 'auth.address' | translate }}
-                </label>
+                <div class="form-group">
+                    <label class="fw-bold text-muted w-100 pb-2">
+                        {{ 'auth.address' | translate }}
+                    </label>
 
-                <div class="d-flex w-100 justify-content-between gap-2">
-                    <div class="w-30">
-                        <input
-                            nbInput
-                            fullWidth
-                            placeholder="{{ 'auth.province' | translate }}"
-                            formControlName="country"
-                        />
-                    </div>
+                    <div class="d-flex w-100 justify-content-between gap-2">
+                        <div class="w-30">
+                            <input nbInput fullWidth placeholder="{{ 'auth.province' | translate }}"
+                                formControlName="country" />
+                        </div>
 
-                    <div class="w-30">
-                        <input
-                            nbInput
-                            fullWidth
-                            placeholder="{{ 'auth.city' | translate }}"
-                            formControlName="city"
-                        />
-                    </div>
+                        <div class="w-30">
+                            <input nbInput fullWidth placeholder="{{ 'auth.city' | translate }}"
+                                formControlName="city" />
+                        </div>
 
-                    <div class="w-30">
-                        <input
-                            nbInput
-                            fullWidth
-                            placeholder="{{ 'auth.street' | translate }}"
-                            formControlName="street"
-                        />
+                        <div class="w-30">
+                            <input nbInput fullWidth placeholder="{{ 'auth.street' | translate }}"
+                                formControlName="street" />
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div *ngIf="isInvalidRegister" class="text-danger text-center w-100">
-                {{ registerMsg || '' }}
-            </div>
+                <div *ngIf="isInvalidRegister" class="text-danger text-center w-100">
+                    {{ registerMsg || '' }}
+                </div>
 
-            <button nbButton status="success" fullWidth type="submit">
-                Đăng ký
-            </button>
-        </form>
+                <button nbButton status="success" fullWidth type="submit">
+                    Đăng ký
+                </button>
+            </form>
+        </div>
     </div>
-</div>
+</nb-card>
