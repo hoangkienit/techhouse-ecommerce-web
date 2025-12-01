@@ -60,10 +60,10 @@ class ProductController {
 
     static async AllProducts(req: Request, res: Response): Promise<void> {
         try {
-            const { q, brand, category, minPrice, maxPrice, minRating, sort, page = 1, limit = 10 } = req.query;
+            const { q, brand, category, minPrice, maxPrice, minRating, sort, pageIndex = 1, pageSize = 10 } = req.query;
 
-            const pageIndex = Number(page) || 1;
-            const pageSize = Number(limit) || 10;
+            const pageIndexNum = Number(pageIndex) || 1;
+            const pageSizeNum = Number(pageSize) || 10;
 
             const response = await ProductService.AllProducts({
                 q: q ? String(q) : undefined,
@@ -73,25 +73,28 @@ class ProductController {
                 maxPrice: maxPrice ? Number(maxPrice) : undefined,
                 minRating: minRating ? Number(minRating) : undefined,
                 sort: sort ? String(sort) : undefined,
-                page: pageIndex,
-                limit: pageSize
+                pageIndex: pageIndexNum,
+                pageSize: pageSizeNum
             });
 
-            // response.total là tổng sản phẩm, response.products là mảng sản phẩm của trang này
+            const { products, total } = response;
+
             new OK({
                 message: "Lấy danh sách sản phẩm thành công",
                 data: {
-                    products: response.products,
-                    pageIndex,
-                    pageSize,
-                    totalItems: response.total,
-                    totalPages: Math.ceil(response.total / pageSize),
-                    hasNextPage: pageIndex * pageSize < response.total,
-                    hasPreviousPage: pageIndex > 1
+                    ...products,
+                    pagination: {
+                        pageIndex: pageIndexNum,
+                        pageSize: pageSizeNum,
+                        totalItems: total,
+                        totalPages: Math.ceil(total / pageSizeNum),
+                        hasNextPage: pageIndexNum * pageSizeNum < total,
+                        hasPreviousPage: pageIndexNum > 1
+                    }
                 }
             }).send(res);
         } catch (err) {
-            throw new NotFoundError(err);
+            throw new NotFoundError("Products not found");
         }
     }
 

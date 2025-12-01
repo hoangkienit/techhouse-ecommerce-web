@@ -1,22 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Product } from '../../models/product.model';
+import { filterProduct, Product } from '../../models/product.model';
 import { apiUrl, apiUrl_test } from '../../constants/api.constant';
 import { HttpClient } from '@angular/common/http';
+import { buildHttpParams } from '../BuildHttpParams.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private baseUrl = apiUrl + 'product';
+  // private baseUrl = apiUrl_test + 'product';
   private credentials = { withCredentials: true };
 
   constructor(private http: HttpClient) { }
 
-  addProduct(product: Product): Observable<any> {
+  addProduct(product: any): Observable<any> {
     return this.http.post<{}>(`${this.baseUrl}/add`, product, this.credentials);
   }
 
-  getAllProducts(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/list`, this.credentials);
+  getAllProducts(params: any): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/list`, { params: buildHttpParams(params), ...this.credentials });
   }
 
   // getNewProducts(limit = 6): Observable<Product[]> {

@@ -60,9 +60,11 @@ class ProductService {
     }
 
     static async AllProducts(options: IProductQueryOptions) {
-        const { q, brand, category, minPrice, maxPrice, minRating, sort, page, limit } = options;
-
+        const { q, brand, category, minPrice, maxPrice, minRating, sort, pageIndex, pageSize } = options;
         const filter: any = {};
+
+        const pageIndexNum = Number(pageIndex) || 1;
+        const pageSizeNum = Number(pageSize) || 10;
 
         if (brand) filter.product_brand = brand;
         if (category) filter.product_category = category;
@@ -72,6 +74,7 @@ class ProductService {
             if (minPrice != null) filter.product_price.$gte = Number(minPrice);
             if (maxPrice != null) filter.product_price.$lte = Number(maxPrice);
         }
+
         if (minRating != null) filter.rating = { $gte: minRating };
 
         if (q) {
@@ -89,15 +92,19 @@ class ProductService {
             case "name_desc": sortOption.product_name = -1; break;
             case "price_asc": sortOption.product_price = 1; break;
             case "price_desc": sortOption.product_price = -1; break;
-            case "newest": default: sortOption.createdAt = -1; break;
+            case "newest":
+            default: sortOption.createdAt = -1; break;
         }
 
-        const skip = (page - 1) * limit;
+        const skip = (pageIndexNum - 1) * pageSizeNum;
 
-        // Fetch products from the repository
-        const result = await ProductRepo.findAll(filter, skip, limit, sortOption);
+        // Fetch products và tổng số
+        const [products, total] = await Promise.all([
+            ProductRepo.findAll(filter, skip, pageSize, sortOption),
+            ProductRepo.count(filter)
+        ]);
 
-        return result;
+        return { products, total }; // trả về products và total
     }
 
     static async GetSingleProduct(productId: string) {
