@@ -99,7 +99,7 @@
               </td>
               <td class="text-truncate" style="max-width: 180px;">{{ product.product_description }}</td>
               <td class="text-center d-flex justify-content-around">
-                <button nbButton size="tiny" status="info">
+                <button nbButton size="tiny" status="info" (click)="openEditModalProduct(product)">
                   <nb-icon icon="edit-2-outline"></nb-icon>
                 </button>
                 <button nbButton size="tiny" status="danger" class="ms-1">

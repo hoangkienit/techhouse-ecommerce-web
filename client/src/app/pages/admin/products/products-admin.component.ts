@@ -3,7 +3,6 @@ import { EnumService } from 'src/app/@core/services/array-services/enum.service'
 import { Component } from '@angular/core';
 import { filterProduct, Product } from 'src/app/@core/models/product.model';
 import { AppServices } from 'src/app/@core/services/AppServices.service';
-import { ViewProductComponent } from './view-product/view-product.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { ProductBrand, ProductCategory, ProductStatus } from 'src/app/@core/enums/products/product.enum';
 import { AddProductComponent } from './add-product/add-product.component';
@@ -98,6 +97,12 @@ export class ProductsAdminComponent {
 
   openAddModalProduct() {
     this._appService.ModalService.createModal('Thêm sản phẩm mới', AddProductComponent, {});
+  }
+
+  openEditModalProduct(product: any) {
+    this._appService.ModalService.createModal('Chỉnh sửa thông tin sản phẩm', EditProductComponent, {
+      product
+    });
   }
 
   onPageChange(e: { pageIndex: number, pageSize: number }) {
