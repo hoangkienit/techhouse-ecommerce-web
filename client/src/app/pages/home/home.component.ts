@@ -27,27 +27,27 @@ export class HomeComponent implements OnInit {
   }
 
   loadData() {
-  //   // Lấy sản phẩm mới
-  //   // this.AppServices.ProductService.getNewProducts().subscribe(products => {
-  //   //   this.newProducts = products;
-  //   // });
+    //   // Lấy sản phẩm mới
+    //   // this.AppServices.ProductService.getNewProducts().subscribe(products => {
+    //   //   this.newProducts = products;
+    //   // });
 
-  //   // // Lấy sản phẩm bán chạy
-  //   // this.AppServices.ProductService.getBestSellers().subscribe(products => {
-  //   //   this.bestSellers = products;
-  //   // });
+    //   // // Lấy sản phẩm bán chạy
+    //   // this.AppServices.ProductService.getBestSellers().subscribe(products => {
+    //   //   this.bestSellers = products;
+    //   // });
 
-  //   // // Lấy danh mục chính
-  //   // this.AppServices.ProductService.getMainCategories().subscribe(cats => {
-  //   //   this.categories = cats;
-  //   // });
-    
-  //   // Lấy 3 section danh mục
-  //   this.getCategoryProducts('laptop', 'laptopProducts');
-  //   this.getCategoryProducts('man-hinh', 'monitorProducts');
-  //   this.getCategoryProducts('o-cung', 'storageProducts');
+    //   // // Lấy danh mục chính
+    //   // this.AppServices.ProductService.getMainCategories().subscribe(cats => {
+    //   //   this.categories = cats;
+    //   // });
 
-  //   this.isLoading = false;
+    //   // Lấy 3 section danh mục
+    //   this.getCategoryProducts('laptop', 'laptopProducts');
+    //   this.getCategoryProducts('man-hinh', 'monitorProducts');
+    //   this.getCategoryProducts('o-cung', 'storageProducts');
+
+    //   this.isLoading = false;
   }
 
 
@@ -55,9 +55,9 @@ export class HomeComponent implements OnInit {
     slug: string,
     target: 'laptopProducts' | 'monitorProducts' | 'storageProducts'
   ) {
-    this.AppServices.ProductService.getProductsByCategory(slug).subscribe(products => {
-      this[target] = products;
-    });
+    // this.AppServices.ProductService.getProductsByCategory(slug).subscribe(products => {
+    //   this[target] = products;
+    // });
   }
 
   formatPrice(v: number) {

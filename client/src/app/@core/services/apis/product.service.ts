@@ -21,20 +21,16 @@ export class ProductService {
     return this.http.get<any>(`${this.baseUrl}/list`, { params: buildHttpParams(params), ...this.credentials });
   }
 
-  // getNewProducts(limit = 6): Observable<Product[]> {
-  //   return of(this.products.filter(p => p.isNew).slice(0, limit));
-  // }
+  updateProducts(formData: FormData): Observable<any> {
+    const productId = formData.get('productId');
 
-  // getBestSellers(limit = 6): Observable<Product[]> {
-  //   return of(this.products.sort((a, b) => (b.sold || 0) - (a.sold || 0)).slice(0, limit));
-  // }
-
-  // getMainCategories(): Observable<string[]> {
-  //   const cats = Array.from(new Set(this.products.map(p => p.category)));
-  //   return of(cats);
-  // }
-
-  getProductsByCategory(slug: string): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.baseUrl}/category/${slug}`);
+    return this.http.patch<any>(
+      `${this.baseUrl}/update/${productId}`,
+      formData,
+      {
+        headers: {},
+        withCredentials: true
+      }
+    );
   }
 }
