@@ -8,8 +8,8 @@ import { apiUrl, apiUrl_test } from '../../constants/api.constant';
 })
 export class AuthService {
   private baseUrl = apiUrl + 'auth';
-  private credentials = { withCredentials: true };
   // private baseUrl = apiUrl_test + 'auth';
+  private credentials = { withCredentials: true };
 
   constructor(private http: HttpClient) { }
 

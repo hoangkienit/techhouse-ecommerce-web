@@ -4,8 +4,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductCategory, ProductStatus } from 'src/app/@core/enums/products/product.enum';
 import { NotificationStatus } from 'src/app/@core/enums/status.enum';
 import { Product } from 'src/app/@core/models/product.model';
+import { TypeUpload } from 'src/app/@core/services-components/ngx-img-upload/ngx-img-upload.component';
 import { AppServices } from 'src/app/@core/services/AppServices.service';
 import { EnumService } from 'src/app/@core/services/array-services/enum.service';
+import { CurrencyHelper } from 'src/app/@core/services/currency/currency.helper';
 
 @Component({
   selector: 'app-add-product',
@@ -17,12 +19,13 @@ export class AddProductComponent {
   form!: FormGroup;
   statusTagService = StatusServiceTag;
   statusOptions = EnumService.ParseEnumToArray(ProductStatus);
-  productCategories = EnumService.ParseEnumToArray(ProductCategory);
-  images: string[] = [];
   categoryOptions = EnumService.ParseEnumToArray(ProductCategory);
   isErrMsg: boolean = false;
   errMsg: string = null as any;
   isLoading: boolean = false;
+  _typeUpload = TypeUpload;
+  imgLs: File[] = [];
+  _currencyHelper = new CurrencyHelper();
 
   constructor(private fb: FormBuilder, private readonly _appServices: AppServices) { }
 
@@ -39,9 +42,24 @@ export class AddProductComponent {
   }
 
   addProduct() {
+    const product = this.getProductFromForm();
+    const formData = new FormData();
+
+    // append từng field của product
+    for (const key in product) {
+      if ((product as any)[key] != null) {
+        formData.append(key, (product as any)[key]);
+      }
+    }
+
+    // append file
+    this.imgLs.forEach(file => {
+      formData.append('images', file); // backend đang expect 'images'
+    });
+
     this.isLoading = true;
     if (this.form.valid) {
-      this._appServices.ProductService.addProduct(this.getProductFromForm()).subscribe({
+      this._appServices.ProductService.addProduct(formData).subscribe({
         next: (res) => {
           this._appServices.ModalService.closeModal();
           this._appServices.NotificationService.createNotification('Thêm sản phẩm thành công!', NotificationStatus.SUCSSESS, 3000);
@@ -64,6 +82,7 @@ export class AddProductComponent {
 
   getProductFromForm(): Product {
     const f = this.form.value;
+    console.log(this.imgLs)
 
     return {
       product_name: f.name,
@@ -71,9 +90,9 @@ export class AddProductComponent {
       product_price: f.price,
       product_status: f.status,
       product_description: f.description,
-      product_category: f.category,
+      product_category: f.category.toLowerCase(),
       product_stock: f.stock,
-      product_imgs: this.product?.product_imgs || this.images || [],
+      product_imgs: [],
       product_sold_amount: this.product?.product_sold_amount || 0,
       product_attributes: this.product?.product_attributes || {},
       short_description: this.product?.short_description || '',
@@ -85,12 +104,15 @@ export class AddProductComponent {
     };
   }
 
-  onFileChange(event: any) {
-    const files = event.target.files;
-    Array.from(files).forEach((file: any) => {
-      const reader = new FileReader();
-      reader.onload = (e: any) => this.product.product_imgs.push(e.target.result);
-      reader.readAsDataURL(file);
+  onReceiveFiles(e: any) {
+    this.imgLs = e;
+  }
+
+  onInputPrice(event: any) {
+    const val = event.target.value;
+    this._currencyHelper.setMinValue(val);
+    this.form.patchValue({
+      price: Number(this._currencyHelper.minValue.replace(/\./g, ''))
     });
   }
 }

@@ -39,6 +39,8 @@ import { NgxTagComponent } from './@core/services-components/ngx-tag/ngx-tag.com
 import { LoginComponent } from './pages/account/auth/login/login.component';
 import { RegisterComponent } from './pages/account/auth/register/register.component';
 import { NgxImgUploadComponent } from './@core/services-components/ngx-img-upload/ngx-img-upload.component';
+import { NgxPagingComponent } from './@core/services-components/ngx-paging/ngx-paging.component';
+import { SortLabelPipe } from './@core/pipe/sort-label.pipe';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -72,7 +74,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     NgxTagComponent,
     LoginComponent,
     RegisterComponent,
-    NgxImgUploadComponent
+    NgxImgUploadComponent,
+    NgxPagingComponent,
+    SortLabelPipe
   ],
   imports: [
     BrowserModule,
