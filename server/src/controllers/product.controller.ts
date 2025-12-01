@@ -82,13 +82,15 @@ class ProductController {
             new OK({
                 message: "Lấy danh sách sản phẩm thành công",
                 data: {
-                    products,
-                    pageIndex: pageIndexNum,
-                    pageSize: pageSizeNum,
-                    totalItems: total,
-                    totalPages: Math.ceil(total / pageSizeNum),
-                    hasNextPage: pageIndexNum * pageSizeNum < total,
-                    hasPreviousPage: pageIndexNum > 1
+                    ...products,
+                    pagination: {
+                        pageIndex: pageIndexNum,
+                        pageSize: pageSizeNum,
+                        totalItems: total,
+                        totalPages: Math.ceil(total / pageSizeNum),
+                        hasNextPage: pageIndexNum * pageSizeNum < total,
+                        hasPreviousPage: pageIndexNum > 1
+                    }
                 }
             }).send(res);
         } catch (err) {
