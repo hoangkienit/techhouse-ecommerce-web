@@ -1,0 +1,25 @@
+<div class="paging-container">
+    <div class="paging-left">
+        <button class="pg-btn" (click)="prev()" [disabled]="pageIndex <= 1">
+            ‹
+        </button>
+
+        <span class="pg-info">
+            Trang {{ pageIndex }} / {{ totalPages }}
+        </span>
+
+        <button class="pg-btn" (click)="next()" [disabled]="pageIndex >= totalPages">
+            ›
+        </button>
+    </div>
+
+    <div class="paging-right">
+        <span class="pg-label">Hiển thị:</span>
+
+        <select class="pg-select" (change)="changePageSize($any($event.target).value)">
+            <option value="10" [selected]="pageSize === 10">10</option>
+            <option value="20" [selected]="pageSize === 20">20</option>
+            <option value="50" [selected]="pageSize === 50">50</option>
+        </select>
+    </div>
+</div>

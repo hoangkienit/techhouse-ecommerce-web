@@ -67,4 +67,11 @@ export class Paging {
             hasPreviousPage: this.hasPreviousPage,
         };
     }
+
+    getPagingParams() {
+        return {
+            pageIndex: this.pageIndex,
+            pageSize: this.pageSize,
+        }
+    }
 }

@@ -25,8 +25,13 @@
 
                     <div class="mb-3">
                         <label class="form-label">Giá</label>
-                        <input class="form-control" nbInput fullWidth type="number" formControlName="price"
-                            placeholder="Nhập giá sản phẩm" />
+                        <div class="price-range-input d-flex gap-2">
+                            <div class="input-wrapper">
+                                <input id="minPrice" type="text" [value]="_currencyHelper.minValue"
+                                    (input)="onInputPrice($event)" placeholder="0.000.000">
+                                <span class="currency-label">VNĐ</span>
+                            </div>
+                        </div>
                         <small class="w-100 text-danger"
                             *ngIf="form.controls['price'].invalid && form.controls['price'].touched">
                             Giá sản phẩm phải là số hợp lệ (lớn hơn hoặc bằng 0)
@@ -45,17 +50,6 @@
                     </div>
                 </div>
                 <div class="col-6">
-                    <!-- Mô tả chi tiết -->
-                    <div class="mb-3">
-                        <label class="form-label">Mô tả chi tiết</label>
-                        <textarea nbInput fullWidth formControlName="description"
-                            placeholder="Nhập mô tả chi tiết"></textarea>
-                        <small class="w-100 text-danger"
-                            *ngIf="form.controls['description'].invalid && form.controls['description'].touched">
-                            Thêm một mô tả chi tiết cho sản phẩm
-                        </small>
-                    </div>
-
                     <!-- Loại sản phẩm -->
                     <div class="mb-3">
                         <label class="form-label">Loại sản phẩm</label>
@@ -84,20 +78,30 @@
                     </div>
 
                     <!-- Thuộc tính sản phẩm -->
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label class="form-label">Thông số kỹ thuật</label>
-                        <!-- <input nbInput fullWidth formControlName="cpu" placeholder="CPU" />
-                        <input nbInput fullWidth formControlName="ram" placeholder="RAM" />
-                        <input nbInput fullWidth formControlName="storage" placeholder="Storage" />
-                        <input nbInput fullWidth formControlName="screen" placeholder="Màn hình" />
-                        <input nbInput fullWidth formControlName="color" placeholder="Màu sắc" /> -->
-                    </div>
+                        <input class="mb-1" nbInput fullWidth formControlName="cpu" placeholder="CPU" />
+                        <input class="mb-1" nbInput fullWidth formControlName="ram" placeholder="RAM" />
+                        <input class="mb-1" nbInput fullWidth formControlName="storage" placeholder="Storage" />
+                        <input class="mb-1" nbInput fullWidth formControlName="screen" placeholder="Màn hình" />
+                        <input class="mb-1" nbInput fullWidth formControlName="color" placeholder="Màu sắc" />
+                    </div> -->
                 </div>
+            </div>
+            <!-- Mô tả chi tiết -->
+            <div class="mb-3">
+                <label class="form-label">Mô tả ngắn</label>
+                <textarea nbInput fullWidth formControlName="description" placeholder="Nhập mô tả chi tiết"></textarea>
+                <small class="w-100 text-danger"
+                    *ngIf="form.controls['description'].invalid && form.controls['description'].touched">
+                    Thêm một mô tả chi tiết cho sản phẩm
+                </small>
             </div>
             <!-- Hình ảnh -->
             <div class="mb-2">
                 <label class="form-label">Hình ảnh sản phẩm (3-4 tấm)</label>
-                <ngx-img-upload (uploaded)="images = $event"></ngx-img-upload>
+                <ngx-img-upload [maxFiles]="4" [emitType]="_typeUpload.FILES"
+                    (uploaded)="onReceiveFiles($event)"></ngx-img-upload>
             </div>
         </form>
     </div>
