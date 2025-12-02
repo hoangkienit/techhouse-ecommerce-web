@@ -1,35 +1,43 @@
-<nb-card [isLoading]="isLoading">
-    <div class="auth-container">
-        <div class="auth-left">
-            <h2 class="text-white">{{ 'auth.title' | translate }}</h2>
+<nb-card [isLoading]="isLoading" class="auth-wrapper">
+    <div class="auth-box">
 
-            <form (ngSubmit)="onLogin()" [formGroup]="loginForm">
-                <input nbInput fullWidth placeholder="{{ 'auth.email' | translate }}" formControlName="email" />
+        <div class="branding">
+            <h2>{{ 'auth.title' | translate }}</h2>
+        </div>
 
-                <input nbInput fullWidth placeholder="{{ 'auth.password' | translate }}" type="password"
-                    formControlName="password" />
+        <form (ngSubmit)="onLogin()" [formGroup]="loginForm" class="auth-form">
 
-                <div *ngIf="isInvalidLogin" class="text-white text-center w-100 badge bg-danger fw-bold pt-2 pb-2">
-                    {{ loginMsg || '' }}
-                </div>
-
-                <button nbButton status="primary" fullWidth type="submit">
-                    {{ 'auth.button-login' | translate }}
-                </button>
-            </form>
-
-            <div class="social-login">
-                <button nbButton status="danger" (click)="googleLogin()" fullWidth>
-                    <nb-icon icon="google-outline"></nb-icon>
-                    {{ 'auth.google-login' | translate }}
-                </button>
-
-                <button nbButton status="info" fullWidth>
-                    <nb-icon icon="facebook-outline"></nb-icon>
-                    Facebook
-                </button>
+            <div class="input-group">
+                <input nbInput fullWidth formControlName="email" placeholder="{{ 'auth.email' | translate }}" />
             </div>
 
+            <div class="input-group">
+                <input nbInput fullWidth type="password" formControlName="password"
+                    placeholder="{{ 'auth.password' | translate }}" />
+            </div>
+
+            <div *ngIf="isInvalidLogin" class="alert-error">
+                {{ loginMsg || '' }}
+            </div>
+
+            <button nbButton status="primary" fullWidth>
+                {{ 'auth.button-login' | translate }}
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>hoặc</span>
         </div>
+
+        <div class="social-login">
+            <button nbButton status="danger" fullWidth (click)="googleLogin()">
+                <nb-icon icon="google-outline"></nb-icon> Google
+            </button>
+
+            <button nbButton status="info" fullWidth>
+                <nb-icon icon="facebook-outline"></nb-icon> Facebook
+            </button>
+        </div>
+
     </div>
 </nb-card>
