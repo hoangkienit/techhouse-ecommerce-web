@@ -6,17 +6,9 @@ export interface Product {
     product_slug: string;               // Slug dùng cho URL
     product_brand: string;              // Thương hiệu
     product_price: number;              // Giá
-    product_imgs: File[];             // Mảng hình sản phẩm (3-4 tấm)
+    product_imgs: any[];             // Mảng hình sản phẩm (3-4 tấm)
     product_category: string;  // Loại sản phẩm
-    product_attributes: {               // Các thông số kỹ thuật
-        cpu?: string;
-        ram?: string;
-        storage?: string;
-        screen?: string;
-        color?: string;
-        battery?: string;
-        [key: string]: any;             // Cho phép thêm bất kỳ thuộc tính nào khác
-    };
+    product_attributes: ProductAttributes;
     product_stock: number;              // Số lượng tồn kho
     product_sold_amount: number;        // Số lượng đã bán
     product_status: ProductStatus;      // Trạng thái: active/inactive
@@ -36,3 +28,13 @@ export interface filterProduct {
     minRating?: number;
     sort?: string
 }
+
+export interface ProductAttributes {
+    cpu?: string;
+    ram?: string;
+    storage?: string;
+    screen?: string;
+    color?: string;
+    battery?: string;
+    [key: string]: any;
+};

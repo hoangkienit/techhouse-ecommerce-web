@@ -2,123 +2,92 @@
     display: flex;
     height: 100vh;
     font-family: 'Segoe UI', Roboto, sans-serif;
+    background: #f5f6fa;
 
-    .title {
-        margin-bottom: 1rem;
-        font-size: 1.8rem;
-        font-weight: 600;
-    }
-
-    .auth-left,
     .auth-right {
         flex: 1;
-        padding: 3rem;
+        padding: 3rem 4rem;
         display: flex;
         flex-direction: column;
         justify-content: center;
-    }
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 8px 35px rgba(0, 0, 0, 0.08);
+        max-width: 520px;
+        margin: auto;
 
-    /* ---- LEFT (Login) ---- */
-    .auth-left {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: #fff;
-
-        input[nbInput] {
-            background: rgba(255, 255, 255, 0.15);
-            border: none;
-            color: #fff;
-            border-radius: 10px;
-
-            &::placeholder {
-                color: rgba(255, 255, 255, 0.7);
-            }
-        }
-
-        button[nbButton] {
-            border-radius: 10px;
-            font-weight: 500;
-        }
-    }
-
-    /* ---- RIGHT (Register) ---- */
-    .auth-right {
-        background: #fff;
-        border-left: 1px solid #eee;
-        border-radius: 0 20px 20px 0;
-        box-shadow: -4px 0 20px rgba(0, 0, 0, 0.05);
-
-        input[nbInput] {
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            background: rgba(255, 255, 255, 0.15);
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.4rem;
             color: #333;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+
+        input[nbInput] {
+            border-radius: 12px;
+            border: 1px solid #dcdcdc;
+            padding: 0.65rem 1rem;
+            background: #fafafa;
+            transition: 0.2s all ease;
+            font-size: 0.95rem;
 
             &:focus {
-                border-color: #667eea;
-                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+                background: #fff;
+                border-color: #6a75ff;
+                box-shadow: 0 0 0 4px rgba(106, 117, 255, 0.15);
             }
         }
 
         button[nbButton] {
-            border-radius: 10px;
-            font-weight: 500;
+            border-radius: 12px;
+            padding: 0.9rem;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .form-group {
+            margin-top: 0.6rem;
+
+            label {
+                font-weight: 600;
+                font-size: 0.9rem;
+                color: #666;
+            }
+        }
+
+        /* Ô địa chỉ 3 cột */
+        .d-flex {
+            .w-30 {
+                flex: 1;
+
+                input {
+                    width: 100%;
+                }
+            }
+        }
+
+        .text-danger {
+            margin-top: -0.5rem;
+            font-weight: 600;
         }
     }
 
-    /* Form */
-    form {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .label {
-        font-weight: 600;
-        color: #555;
-        padding-bottom: 0.3rem;
-    }
-
-    /* 3 inputs ngang cho đăng ký */
-    .row {
-        display: flex;
-        gap: 0.75rem;
-
-        .col {
-            flex: 1;
-        }
-    }
-
-    /* Social (login) */
-    .social-login {
-        margin-top: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-
-        button {
-            border-radius: 10px;
-            font-weight: 500;
-        }
-    }
-
-    /* Error message */
-    .alert-error {
-        background: #e53935;
-        color: #fff;
-        padding: 0.5rem;
-        border-radius: 8px;
-        text-align: center;
-        font-weight: 600;
-    }
-
-    /* Responsive */
+    /* mobile responsive */
     @media (max-width: 768px) {
-        flex-direction: column;
+        height: auto;
+        padding: 2rem;
 
-        .auth-left,
         .auth-right {
-            border-radius: 0;
-            height: auto;
+            box-shadow: none;
+            padding: 2rem;
         }
     }
 }

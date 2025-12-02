@@ -28,7 +28,7 @@
         "contactSupport": "Vui lòng liên hệ bộ phận hỗ trợ.",
         "loginAttemptsExceeded": "Bạn đã vượt quá số lần đăng nhập. Vui lòng thử lại sau 15 phút.",
         "deviceRemembered": "Ghi nhớ thiết bị này",
-        "success-register": "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.",
+        "success-register": "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản. Quay lại trang đăng nhập để tiếp tục...",
         "success-login": "Đăng Nhập thành công!",
         "validate-err-register": "Hãy điền đầy đủ thông tin đăng ký.",
         "validate-err-login": "Hãy điền đầy đủ thông tin đăng nhập.",

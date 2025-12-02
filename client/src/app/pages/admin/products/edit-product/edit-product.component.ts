@@ -32,13 +32,19 @@ export class EditProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      name: [this.product?.name || '', Validators.required],
-      brand: [this.product?.brand || '', Validators.required],
-      price: [this.product?.price || 0, [Validators.required, Validators.min(0)]],
-      status: [this.product?.status || this.statusTagService.ACTIVE, Validators.required],
-      description: [this.product?.description || '', Validators.required],
-      category: [this.product?.category || ProductCategory.Computer, Validators.required],
-      stock: [this.product?.stock || 0, [Validators.required, Validators.min(0)]]
+      productId: [this.product?._id || '', Validators.required],
+      name: [this.product?.product_name || '', Validators.required],
+      brand: [this.product?.product_brand || '', Validators.required],
+      price: [this.product?.product_price || 0, [Validators.required, Validators.min(0)]],
+      status: [this.product?.product_status || this.statusTagService.ACTIVE, Validators.required],
+      description: [this.product?.product_description || '', Validators.required],
+      category: [this.product?.product_category || ProductCategory.Computer, Validators.required],
+      stock: [this.product?.product_stock || 0, [Validators.required]],
+      cpu: [this.product?.product_attributes?.cpu || ''],
+      ram: [this.product?.product_attributes?.ram || ''],
+      storage: [this.product?.product_attributes?.storage || ''],
+      screen: [this.product?.product_attributes?.screen || ''],
+      color: [this.product?.product_attributes?.color || ''],
     });
 
     this.patchValues();
@@ -47,26 +53,22 @@ export class EditProductComponent implements OnInit {
   patchValues() {
     this.onPatchPrice(this.product.product_price);
     this.selectedCategory = this.categoryOptions.find(e => e.value.toLocaleLowerCase().includes(this.product.product_category))?.value || '';
-    this.form.patchValue({
-      name: this.product.product_name,
-      brand: this.product.product_brand,
-      price: this.product.product_price,
-      status: this.product.product_status,
-      description: this.product.product_description,
-      category: this.selectedCategory,
-      stock: this.product.product_stock
-    })
-
   }
 
-  addProduct() {
+  editProduct() {
     const product = this.getProductFromForm();
     const formData = new FormData();
 
     // append từng field của product
     for (const key in product) {
-      if ((product as any)[key] != null) {
-        formData.append(key, (product as any)[key]);
+      const value = (product as any)[key];
+
+      if (value !== null && value !== undefined) {
+        if (typeof value === 'object') {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value);
+        }
       }
     }
 
@@ -75,12 +77,14 @@ export class EditProductComponent implements OnInit {
       formData.append('images', file); // backend đang expect 'images'
     });
 
+    console.log(formData)
+
     this.isLoading = true;
     if (this.form.valid) {
-      this._appServices.ProductService.addProduct(formData).subscribe({
+      this._appServices.ProductService.updateProducts(formData).subscribe({
         next: (res) => {
           this._appServices.ModalService.closeModal();
-          this._appServices.NotificationService.createNotification('Thêm sản phẩm thành công!', NotificationStatus.SUCSSESS, 3000);
+          this._appServices.NotificationService.createNotification('Cập nhật sản phẩm thành công!', NotificationStatus.SUCSSESS, 3000);
           this.isErrMsg = true;
           this.errMsg = null as any;
           this.isLoading = false;
@@ -89,7 +93,7 @@ export class EditProductComponent implements OnInit {
           this.isErrMsg = true;
           this.errMsg = e.error?.errors || e.error?.message || null as any;
           this.isLoading = false;
-          this._appServices.NotificationService.createNotification('Thêm sản phẩm thất bại!', NotificationStatus.ERROR, 3000);
+          this._appServices.NotificationService.createNotification('Cập nhật sản phẩm thất bại!', NotificationStatus.ERROR, 3000);
         }
       });
     } else {
@@ -100,7 +104,6 @@ export class EditProductComponent implements OnInit {
 
   getProductFromForm(): Product {
     const f = this.form.value;
-    console.log(this.imgLs)
 
     return {
       product_name: f.name,
@@ -112,13 +115,19 @@ export class EditProductComponent implements OnInit {
       product_stock: f.stock,
       product_imgs: [],
       product_sold_amount: this.product?.product_sold_amount || 0,
-      product_attributes: this.product?.product_attributes || {},
       short_description: this.product?.short_description || '',
       weight: this.product?.weight || '',
       dimensions: this.product?.dimensions || '',
       warranty: this.product?.warranty || '',
       tags: this.product?.tags || [],
       product_slug: this.product?.product_slug || '',
+      product_attributes: {
+        cpu: f.cpu || '',
+        ram: f.ram || '',
+        storage: f.storage || '',
+        screen: f.screen || '',
+        color: f.color || '',
+      }
     };
   }
 
