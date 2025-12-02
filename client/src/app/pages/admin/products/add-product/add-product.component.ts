@@ -31,13 +31,19 @@ export class AddProductComponent {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      name: [this.product?.name || '', Validators.required],
-      brand: [this.product?.brand || '', Validators.required],
-      price: [this.product?.price || 0, [Validators.required, Validators.min(0)]],
-      status: [this.product?.status || this.statusTagService.ACTIVE, Validators.required],
-      description: [this.product?.description || '', Validators.required],
-      category: [this.product?.category || ProductCategory.Computer, Validators.required],
-      stock: [this.product?.stock || 0, [Validators.required, Validators.min(0)]]
+      productId: [this.product?._id || ''],
+      name: [this.product?.product_name || '', Validators.required],
+      brand: [this.product?.product_brand || '', Validators.required],
+      price: [this.product?.product_price || 0, [Validators.required, Validators.min(0)]],
+      status: [this.product?.product_status || this.statusTagService.ACTIVE, Validators.required],
+      description: [this.product?.product_description || '', Validators.required],
+      category: [this.product?.product_category || ProductCategory.Computer, Validators.required],
+      stock: [this.product?.product_stock || 0, [Validators.required]],
+      cpu: [this.product?.product_attributes?.cpu || ''],
+      ram: [this.product?.product_attributes?.ram || ''],
+      storage: [this.product?.product_attributes?.storage || ''],
+      screen: [this.product?.product_attributes?.screen || ''],
+      color: [this.product?.product_attributes?.color || ''],
     });
   }
 
@@ -82,7 +88,6 @@ export class AddProductComponent {
 
   getProductFromForm(): Product {
     const f = this.form.value;
-    console.log(this.imgLs)
 
     return {
       product_name: f.name,

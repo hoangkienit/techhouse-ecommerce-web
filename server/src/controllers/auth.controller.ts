@@ -5,13 +5,14 @@ import { BadRequestError, UnauthorizedError } from '../core/error.response';
 import { IUserPayload } from '../interfaces/jwt.interface';
 import { generateTokenPair } from '../utils/tokens.helper';
 import saveTokenToCookie from '../utils/cookie.helper';
+import { IsSameSite } from '../utils/setSamesite.helper';
 
 class AuthController {
     static async Login(req: Request, res: Response): Promise<void> {
         const response = await AuthService.Login(req.body);
 
         // Save tokens to cookie
-        saveTokenToCookie(response.accessToken, response.refreshToken, res);
+        saveTokenToCookie(req, response.accessToken, response.refreshToken, res);
 
         new OK({
             message: 'Đăng nhập thành công',
@@ -31,16 +32,17 @@ class AuthController {
     }
 
     static async Logout(req: Request, res: Response): Promise<void> {
+        const isSameSite = IsSameSite(req.headers.origin);
         res.clearCookie("accessToken", {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none'
+            sameSite: isSameSite ? 'lax' : 'none'
         });
 
         res.clearCookie("refreshToken", {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none'
+            sameSite: isSameSite ? 'lax' : 'none'
         });
 
         new CREATED({
@@ -51,6 +53,7 @@ class AuthController {
 
     static async RefreshToken(req: Request, res: Response): Promise<void> {
         const refreshToken = req.cookies.refreshToken;
+        const isSameSite = IsSameSite(req.headers.origin);
 
         if (!refreshToken) {
             throw new BadRequestError("Không có refresh token");
@@ -61,7 +64,7 @@ class AuthController {
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none',
+            sameSite: isSameSite ? 'lax' : 'none'
         });
 
         new OK({
@@ -78,7 +81,7 @@ class AuthController {
         const { accessToken, refreshToken } = generateTokenPair(user);
 
         // Save tokens to cookie
-        saveTokenToCookie(accessToken, refreshToken, res);
+        saveTokenToCookie(req, accessToken, refreshToken, res);
 
         new OK({
             message: "Success",
