@@ -6,7 +6,7 @@ export interface Product {
     product_slug: string;               // Slug dùng cho URL
     product_brand: string;              // Thương hiệu
     product_price: number;              // Giá
-    product_imgs: File[];             // Mảng hình sản phẩm (3-4 tấm)
+    product_imgs: any[];             // Mảng hình sản phẩm (3-4 tấm)
     product_category: string;  // Loại sản phẩm
     product_attributes: ProductAttributes;
     product_stock: number;              // Số lượng tồn kho
