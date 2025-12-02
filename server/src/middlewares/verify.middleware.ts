@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { IUserPayload } from '../interfaces/jwt.interface';
+import { IsSameSite } from '../utils/setSamesite.helper';
 
 export const Authenticate = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
@@ -34,6 +35,7 @@ export const Authenticate = async (req: Request, res: Response, next: NextFuncti
             }
 
             try {
+                const isSameSite = IsSameSite(req.headers.origin);
                 // Verify refresh token
                 const refreshPayload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as IUserPayload;
 
@@ -52,7 +54,7 @@ export const Authenticate = async (req: Request, res: Response, next: NextFuncti
                 // Set new access token cookie
                 res.cookie('accessToken', newAccessToken, {
                     httpOnly: true,
-                    sameSite: 'none',
+                    sameSite: isSameSite ? 'lax' : 'none',
                     secure: process.env.NODE_ENV === 'production',
                 });
 
