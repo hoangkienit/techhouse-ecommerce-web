@@ -1,1 +1,83 @@
-<p>users works!</p>
+<nb-card [isLoading]="isLoading">
+  <nb-card-header class="d-flex align-items-center position-relative justify-content-between">
+    <div class="my-auto">Danh sách Người dùng</div>
+    <button nbButton status="success" (click)="openAddModalUser()">
+      <nb-icon icon="plus-outline"></nb-icon>
+      Thêm người dùng
+    </button>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="filter-wrapper">
+      <!-- Vai trò -->
+      <div class="filter-item">
+        <label class="filter-label">Vai trò</label>
+        <nb-select [(selected)]="selectedRole" placeholder="Chọn vai trò" (selectedChange)="onFilterChange()">
+          <nb-option value="">Tất cả</nb-option>
+          <nb-option *ngFor="let role of roleList" [value]="role">
+            {{ role }}
+          </nb-option>
+        </nb-select>
+      </div>
+
+      <!-- Tìm theo tên -->
+      <div class="filter-item">
+        <label class="filter-label">Tìm theo tên</label>
+        <input nbInput placeholder="Nhập tên..." [(ngModel)]="searchName">
+      </div>
+
+      <button nbButton status="primary" (click)="onFilterChange()">Tìm kiếm</button>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<nb-card>
+  <nb-card-body>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+          <tr class="text-center">
+            <th>#</th>
+            <th>Email</th>
+            <th>Tên</th>
+            <th>Vai trò</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="users && users.length > 0; else empty">
+            <tr *ngFor="let user of users; let i = index">
+              <td>{{ (_paging.pageIndex - 1) * _paging.pageSize + i + 1 }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.role }}</td>
+              <td>
+                <ngx-tag [TagStatus]="user.isActive ? _statusServiceTag.ACTIVE : _statusServiceTag.INACTIVE">
+                  {{ user.isActive ? 'Kích hoạt' : 'Cấm' }}
+                </ngx-tag>
+              </td>
+              <td class="text-center d-flex justify-content-around">
+                <button nbButton size="tiny" status="info" (click)="openEditModalUser(user)">
+                  <nb-icon icon="edit-2-outline"></nb-icon>
+                </button>
+                <button nbButton size="tiny" status="danger" class="ms-1" (click)="toggleUserStatus(user)">
+                  <nb-icon icon="lock-outline"></nb-icon>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <ngx-paging [pageIndex]="_paging.pageIndex" [pageSize]="_paging.pageSize" [totalItems]="_paging.totalItems"
+      (onPageChange)="onPageChange($event)"></ngx-paging>
+  </nb-card-body>
+</nb-card>
+
+<ng-template #empty>
+  <tr>
+    <td colspan="6" class="fw-bold text-center text-muted">
+      Không có người dùng
+    </td>
+  </tr>
+</ng-template>

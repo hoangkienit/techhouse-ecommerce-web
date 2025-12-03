@@ -1,1 +1,97 @@
-<p>orders works!</p>
+<nb-card [isLoading]="isLoading">
+  <nb-card-header class="d-flex align-items-center position-relative justify-content-between">
+    <div class="my-auto">Danh sách đơn hàng</div>
+    <button nbButton status="success" (click)="openAddModalOrder()">
+      <nb-icon icon="plus-outline"></nb-icon>
+      Thêm đơn hàng
+    </button>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="filter-wrapper">
+      <!-- Bộ lọc thời gian -->
+      <div class="filter-item">
+        <label class="filter-label">Lọc theo thời gian</label>
+        <nb-select [(selected)]="selectedTimeFilter" placeholder="Chọn thời gian" (selectedChange)="onFilterChange()">
+          <nb-option value="today">Hôm nay</nb-option>
+          <nb-option value="yesterday">Hôm qua</nb-option>
+          <nb-option value="thisWeek">Tuần này</nb-option>
+          <nb-option value="thisMonth">Tháng này</nb-option>
+          <nb-option value="customRange">Khoảng thời gian</nb-option>
+        </nb-select>
+      </div>
+    </div>
+    <div class="table-responsive mt-2">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+          <tr class="text-center">
+            <th>#</th>
+            <th>Tên người mua</th>
+            <th>Thời gian mua</th>
+            <th>Tổng tiền</th>
+            <th>Địa chỉ giao hàng</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="orders && orders.length > 0; else empty">
+            <tr *ngFor="let order of orders; let i = index">
+              <td>{{ (_paging.pageIndex - 1) * _paging.pageSize + i + 1 }}</td>
+              <td>{{ order.customer_name }}</td>
+              <td>{{ order.order_date | date: 'short' }}</td>
+              <td>{{ order.total_amount | currency: 'VND' }}</td>
+              <td>{{ order.delivery_address }}</td>
+              <td>
+                <ngx-tag [TagStatus]="order.status">{{ order.status }}</ngx-tag>
+              </td>
+              <td class="text-center d-flex justify-content-around">
+                <button nbButton size="tiny" status="info" (click)="openOrderDetails(order)">
+                  <nb-icon icon="eye-outline"></nb-icon>
+                </button>
+                <button nbButton size="tiny" status="danger" (click)="deleteOrder(order)">
+                  <nb-icon icon="trash-2-outline"></nb-icon>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <ngx-paging [pageIndex]="_paging.pageIndex" [pageSize]="_paging.pageSize" [totalItems]="_paging.totalItems"
+      (onPageChange)="onPageChange($event)">
+    </ngx-paging>
+  </nb-card-body>
+</nb-card>
+
+<ng-template #empty>
+  <tr>
+    <td colspan="7" class="fw-bold text-center text-muted">
+      Không có đơn hàng
+    </td>
+  </tr>
+</ng-template>
+
+<!-- Chi tiết đơn hàng -->
+<nb-card *ngIf="selectedOrder">
+  <nb-card-header>
+    Chi tiết đơn hàng
+  </nb-card-header>
+  <nb-card-body>
+    <div>
+      <h5>Tên người mua: {{ selectedOrder.customer_name }}</h5>
+      <p>Thời gian mua: {{ selectedOrder.order_date | date: 'short' }}</p>
+      <p>Tổng tiền: {{ selectedOrder.total_amount | currency: 'VND' }}</p>
+      <p>Địa chỉ giao hàng: {{ selectedOrder.delivery_address }}</p>
+      <p>Mã giảm giá: {{ selectedOrder.discount_code || 'Không có' }}</p>
+      <h6>Danh sách sản phẩm:</h6>
+      <ul>
+        <li *ngFor="let product of selectedOrder.products">
+          {{ product.name }} - {{ product.quantity }} x {{ product.price | currency: 'VND' }}
+        </li>
+      </ul>
+    </div>
+    <button nbButton status="success" (click)="updateOrderStatus(selectedOrder)">
+      Cập nhật trạng thái
+    </button>
+  </nb-card-body>
+</nb-card>

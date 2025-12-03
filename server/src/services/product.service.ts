@@ -99,10 +99,7 @@ class ProductService {
         const skip = (pageIndexNum - 1) * pageSizeNum;
 
         // Fetch products và tổng số
-        const [products, total] = await Promise.all([
-            ProductRepo.findAll(filter, skip, pageSize, sortOption),
-            ProductRepo.count(filter)
-        ]);
+        const { products, total } = await ProductRepo.findAll(filter, skip, pageSizeNum, sortOption);
 
         return { products, total }; // trả về products và total
     }

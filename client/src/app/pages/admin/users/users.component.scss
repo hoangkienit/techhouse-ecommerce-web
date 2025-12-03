@@ -1,0 +1,133 @@
+.filter-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-label {
+  font-size: 14px;
+  color: var(--text-basic-color);
+  font-weight: 600;
+}
+
+.table-responsive {
+  margin-top: 20px;
+}
+
+.table th {
+  background-color: #333;
+  color: white;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-around {
+  justify-content: space-around;
+}
+
+.text-truncate {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.ms-1 {
+  margin-left: 0.25rem;
+}
+
+.fw-bold {
+  font-weight: bold;
+}
+
+.text-muted {
+  color: #6c757d;
+}
+
+/* Styling for user status (active / banned) */
+.status-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.status-active {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-banned {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Action buttons for user */
+.action-btn {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.action-btn button {
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.action-btn .edit-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.action-btn .ban-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.action-btn .edit-btn:hover, .action-btn .ban-btn:hover {
+  opacity: 0.8;
+}
+
+/* Styling for the pagination section */
+.ngx-paging {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.ngx-paging button {
+  margin: 0 5px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.ngx-paging button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.ngx-paging .active {
+  background-color: #007bff;
+  color: white;
+}
