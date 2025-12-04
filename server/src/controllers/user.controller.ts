@@ -28,7 +28,9 @@ class UserController {
             phone: phone ? String(phone) : undefined,
             role: role ? String(role) : undefined,
             email: email ? String(email) : undefined,
-            isBanned: isBanned ? isBanned === "true" : undefined,
+            isBanned: isBanned === 'true' ? true :
+                isBanned === 'false' ? false :
+                    undefined,
             socialProvider: socialProvider ? String(socialProvider) : undefined,
             loyalty_points: loyalty_points ? Number(loyalty_points) : 0
         });
