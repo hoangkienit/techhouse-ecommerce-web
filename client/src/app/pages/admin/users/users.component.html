@@ -1,1 +1,136 @@
-<p>users works!</p>
+<nb-card [isLoading]="isLoading">
+    <nb-card-header class="d-flex align-items-center position-relative justify-content-between">
+        <div class="my-auto">Danh sách người dùng</div>
+        <button nbButton status="success" (click)="openAddModalProduct()">
+            <nb-icon icon="plus-outline"></nb-icon>
+            Thêm người dùng
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="filter-wrapper">
+            <!-- Danh mục -->
+            <div class="filter-item">
+                <label class="filter-label">Danh mục</label>
+                <nb-select [(selected)]="selectedCategory" placeholder="Chọn danh mục"
+                    (selectedChange)="onFilterChange()">
+                    <nb-option value="">Tất cả</nb-option>
+                    <nb-option *ngFor="let c of categoryList" [value]="c.label">
+                        {{ c.label }}
+                    </nb-option>
+                </nb-select>
+            </div>
+
+            <!-- Brand -->
+            <div class="filter-item">
+                <label class="filter-label">Thương hiệu</label>
+                <nb-select [(selected)]="selectedBrand" placeholder="Chọn thương hiệu"
+                    (selectedChange)="onFilterChange()">
+                    <nb-option value="">Tất cả</nb-option>
+                    <nb-option *ngFor="let c of brandList" [value]="c.label">
+                        {{ c.label }}
+                    </nb-option>
+                </nb-select>
+            </div>
+
+            <div class="filter-item">
+                <label class="filter-label" id="sort">Sắp xếp theo</label>
+                <nb-select [(selected)]="selectedSort" placeholder="Sắp xếp theo" (selectedChange)="onFilterChange()">
+                    <nb-option value="">Mặc định</nb-option>
+                    <nb-option *ngFor="let c of SortActionLs" [value]="c.value">
+                        {{ c.value | sortLabel }}
+                    </nb-option>
+                </nb-select>
+            </div>
+        </div>
+        <div class="filter-wrapper mt-2">
+            <!-- Tìm theo tên -->
+            <div class="filter-item">
+                <label class="filter-label">Tìm theo tên</label>
+                <input nbInput placeholder="Nhập tên..." [(ngModel)]="searchName">
+            </div>
+            <div class="filter-item">
+                <label class="filter-label" for="price-range">Khoảng giá mong muốn</label>
+                <div class="price-range-input d-flex gap-2">
+                    <div class="input-wrapper">
+                        <input id="minPrice" type="text" [value]="_currencyHelper.minValue" (input)="onMinInput($event)"
+                            placeholder="0.000.000">
+                        <span class="currency-label">VNĐ</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <input id="maxPrice" type="text" [value]="_currencyHelper.maxValue" (input)="onMaxInput($event)"
+                            placeholder="0.000.000">
+                        <span class="currency-label">VNĐ</span>
+                    </div>
+                </div>
+            </div>
+            <button nbButton status="primary" (click)="onFilterChange()">Search</button>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+<nb-card>
+    <nb-card-body>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>Điện thoại</th>
+                        <th>Quyền</th>
+                        <th>Địa chỉ</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
+                        <th>Thay đổi cuối</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="users && users.length > 0; else empty">
+                        <tr *ngFor="let u of users; let i = index">
+                            <td>{{ (_paging.pageIndex - 1) * _paging.pageSize + i + 1 }}</td>
+                            <td>{{ u.fullname }}</td>
+                            <td>{{ u.email }}</td>
+                            <td>{{ u.phone }}</td>
+                            <td>
+                                <ngx-tag
+                                    [TagStatus]="u.role == roles.ADMIN ? _statusServiceTag.PRIMARY : _statusServiceTag.WARNING ">
+                                    {{ u.role}}
+                                </ngx-tag>
+                            </td>
+                            <td>{{ u.addresses }}</td>
+
+                            <td>
+                                <ngx-tag
+                                    [TagStatus]="u.isBanned ? _statusServiceTag.BANDED : _statusServiceTag.ACTIVE ">
+                                    {{ u.isBanned ? _statusServiceTag.BANDED : _statusServiceTag.ACTIVE }}
+                                </ngx-tag>
+                            </td>
+                            <td>{{ u.createdAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                            <td>{{ u.updatedAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                            <td class="text-center d-flex justify-content-around">
+                                <button nbButton size="tiny" status="info" (click)="openEditModalProduct(null)">
+                                    <nb-icon icon="edit-2-outline"></nb-icon>
+                                </button>
+                                <button nbButton size="tiny" status="danger" class="ms-1">
+                                    <nb-icon icon="trash-2-outline"></nb-icon>
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+        <ngx-paging [pageIndex]="_paging.pageIndex" [pageSize]="_paging.pageSize" [totalItems]="_paging.totalItems"
+            (onPageChange)="onPageChange($event)">></ngx-paging>
+    </nb-card-body>
+</nb-card>
+
+<ng-template #empty>
+    <tr>
+        <td colspan="10" class="fw-bold text-center text-muted">
+            No items
+        </td>
+    </tr>
+</ng-template>

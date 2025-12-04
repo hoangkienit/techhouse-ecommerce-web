@@ -62,9 +62,9 @@ export class LoginComponent {
   }
 
   googleLogin() {
-    this.appServices.AuthService.LoginGoogle().subscribe({
-      next: res => console.log(res),
-      error: err => console.log(err)
-    });
+    // this.appServices.AuthService.LoginGoogle().subscribe({
+    //   next: res => console.log(res),
+    //   error: err => console.log(err)
+    // });
   }
 }

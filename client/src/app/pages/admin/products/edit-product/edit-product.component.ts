@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductCategory, ProductStatus } from 'src/app/@core/enums/products/product.enum';
@@ -77,23 +78,22 @@ export class EditProductComponent implements OnInit {
       formData.append('images', file); // backend đang expect 'images'
     });
 
-    console.log(formData)
-
     this.isLoading = true;
     if (this.form.valid) {
-      this._appServices.ProductService.updateProducts(formData).subscribe({
-        next: (res) => {
-          this._appServices.ModalService.closeModal();
-          this._appServices.NotificationService.createNotification('Cập nhật sản phẩm thành công!', NotificationStatus.SUCSSESS, 3000);
-          this.isErrMsg = true;
-          this.errMsg = null as any;
-          this.isLoading = false;
-        },
+      this._appServices.ProductService.updateProducts(formData, this.form.value.productId).subscribe({
+        next: (res) => { },
         error: (e) => {
           this.isErrMsg = true;
           this.errMsg = e.error?.errors || e.error?.message || null as any;
-          this.isLoading = false;
           this._appServices.NotificationService.createNotification('Cập nhật sản phẩm thất bại!', NotificationStatus.ERROR, 3000);
+          this.isLoading = false;
+        },
+        complete: () => {
+          this.isLoading = false;
+          this._appServices.NotificationService.createNotification('Cập nhật sản phẩm thành công!', NotificationStatus.SUCSSESS, 3000);
+          this.isErrMsg = false;
+          this.errMsg = null as any;
+          this._appServices.ModalService.closeModal(true);
         }
       });
     } else {

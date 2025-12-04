@@ -87,15 +87,14 @@ class UserRepo {
 
     }
 
-    static async findAll(filter = {}, skip = 0, limit = 10) {
+    static async findAll(filter: any, skip: number, limit: number) {
         const [users, total] = await Promise.all([
-            User.find(filter).skip(skip).limit(limit).lean(),
+            User.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }).lean(),
             User.countDocuments(filter)
         ]);
 
         return { users, total };
     }
-
 }
 
 export default UserRepo;
