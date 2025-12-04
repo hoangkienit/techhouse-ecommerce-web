@@ -33,6 +33,7 @@ class ProductController {
     static async UpdateProduct(req: Request, res: Response): Promise<void> {
         const productId = req.params.productId as string;
         const productData = req.body;
+        console.log(productData)
 
         if (!productId) throw new NotFoundError("Missing credentials");
 

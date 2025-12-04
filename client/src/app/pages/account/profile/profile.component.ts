@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserDtoRequest } from 'src/app/@core/models/auth.model';
 import { GlobalStateService } from 'src/app/@core/services/GlobalStateService.service';
-import { User } from 'src/app/@core/models/auth.model';
 
 @Component({
   selector: 'app-view-profile',
@@ -8,7 +8,7 @@ import { User } from 'src/app/@core/models/auth.model';
   styleUrls: ['./profile.component.scss']
 })
 export class ViewProfileComponent implements OnInit {
-  user: User | null = null;
+  user: UserDtoRequest | null = null;
 
   constructor(private appServices: GlobalStateService) { }
 

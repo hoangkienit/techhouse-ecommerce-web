@@ -5,11 +5,32 @@ import { OK } from "../core/success.response";
 
 class UserController {
     static async GetUserList(req: Request, res: Response): Promise<void> {
-        const { q, page, limit } = req.query;
+        const {
+            q,
+            pageIndex,
+            pageSize,
+            fullname,
+            phone,
+            role,
+            email,
+            isBanned,
+            socialProvider,
+            loyalty_points
+        } = req.query;
+
         const response = await UserService.GetUserList({
             q: q ? String(q) : undefined,
-            page: Number(page),
-            limit: Number(limit)
+            page: Number(pageIndex) || 1,
+            limit: Number(pageSize) || 10,
+            pageSize: Number(pageSize) || 10,
+            pageIndex: Number(pageIndex) || 1,
+            fullname: fullname ? String(fullname) : undefined,
+            phone: phone ? String(phone) : undefined,
+            role: role ? String(role) : undefined,
+            email: email ? String(email) : undefined,
+            isBanned: isBanned ? isBanned === "true" : undefined,
+            socialProvider: socialProvider ? String(socialProvider) : undefined,
+            loyalty_points: loyalty_points ? Number(loyalty_points) : 0
         });
 
         new OK({
@@ -17,6 +38,7 @@ class UserController {
             data: response
         }).send(res);
     }
+
     static async UpdateInformation(req: Request, res: Response): Promise<void> {
         const userId = req.user?.userId;
         const { fullname, phone } = req.body;
