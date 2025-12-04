@@ -1,3 +1,5 @@
+import { AddressDto } from "./address.model";
+
 export interface AuthDtos {
     fullname: string;
     email: string;
@@ -10,11 +12,7 @@ export interface AuthDtos {
     rememberMe?: boolean;
 }
 
-export interface AddressDto {
-    country: string;
-    city: string;
-    street: string;
-}
+
 
 export interface UserDtoRequest {
     fullname: string;

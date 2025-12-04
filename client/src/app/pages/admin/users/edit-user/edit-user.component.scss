@@ -1,0 +1,23 @@
+.user-detail-text {
+    font-size: 15px;
+}
+
+.user-detail-text .label {
+    font-weight: 600;
+    color: #555;
+    display: inline-block;
+    min-width: 140px;
+}
+
+.user-detail-text .value {
+    color: #222;
+}
+
+.avatar-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #e4e9f2;
+    margin-top: 6px;
+}
