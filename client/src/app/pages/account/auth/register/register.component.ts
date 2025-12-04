@@ -45,7 +45,8 @@ export class RegisterComponent {
         address: {
           country: formValues.country,
           city: formValues.city,
-          street: formValues.street
+          street: formValues.street,
+          isDefault: true
         }
       };
 

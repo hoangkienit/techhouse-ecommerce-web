@@ -140,3 +140,8 @@
   color: #555;
   pointer-events: none;
 }
+
+.igrore-select {
+  user-select: none;
+  /* không cho bôi đen */
+}

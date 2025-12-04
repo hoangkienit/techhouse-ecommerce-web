@@ -54,5 +54,13 @@
         "logout": "Đăng xuất",
         "admin": "Quản trị",
         "users": "Người dùng"
+    },
+    "tooltips": {
+        "user-page": {
+            "view-detail": "Xem thông tin chi tiết người dùng",
+            "delete": "Xóa tài khoản người dùng",
+            "unban": "Dùng cho mở cấm tài khoản",
+            "ban": "Dùng cho mở cấm tài khoản"
+        }
     }
 }

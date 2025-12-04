@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { apiUrl, apiUrl_test } from '../../constants/api.constant';
+import { buildHttpParams } from '../BuildHttpParams.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,8 +13,8 @@ export class UserService {
 
     constructor(private http: HttpClient) { }
 
-    GetAllUsers() {
-        return this.http.get<any>(`${this.baseUrl}/list`, this.credentials);
+    GetAllUsers(params: any) {
+        return this.http.get<any>(`${this.baseUrl}/list`, { params: buildHttpParams(params), ...this.credentials });
     }
 
     GetUserById(userId: string) {
@@ -26,5 +27,9 @@ export class UserService {
 
     DeleteUserById(userId: string) {
         return this.http.delete<{}>(`${this.baseUrl}/${userId}`, this.credentials);
+    }
+
+    BandUserById(params: any) {
+        return this.http.patch<{}>(`${this.baseUrl}/set-status/${params.userId}`, { status: params.status }, this.credentials)
     }
 }

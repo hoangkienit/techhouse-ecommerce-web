@@ -1,4 +1,4 @@
-import { roles } from "../constants/role.constant";
+import { UserRoles } from "../constants/role.constant";
 
 export interface UserDtoResponse {
     _id: string;
@@ -7,7 +7,7 @@ export interface UserDtoResponse {
     phone: string;
     password: string;
     profileImg: string;
-    role: roles.ADMIN | roles.USER | string;
+    role: UserRoles.ADMIN | UserRoles.USER | string;
     socialProvider: string | null;
     socialId: string | null;
     addresses?: string;
@@ -17,3 +17,13 @@ export interface UserDtoResponse {
     __v: number;
 }
 
+export interface filterUser {
+    q?: string;
+    fullname?: string | undefined;
+    phone?: string | undefined;
+    role?: string | undefined;
+    email?: string | undefined;
+    isBanned?: boolean | undefined;
+    socialProvider?: string | undefined;
+    loyalty_points?: number;
+}
