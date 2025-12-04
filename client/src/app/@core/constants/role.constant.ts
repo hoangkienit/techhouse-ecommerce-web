@@ -31,3 +31,8 @@ export const Roles = {
         ],
     },
 };
+
+export enum roles {
+    ADMIN = 'admin',
+    USER = 'user'
+}

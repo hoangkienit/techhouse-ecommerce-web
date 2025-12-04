@@ -31,7 +31,7 @@ export class NgxTagComponent {
       case StatusServiceTag.ACTIVE:
         return '#22C55E'; // Green 500 - active đúng nghĩa, tươi vừa
 
-      case StatusServiceTag.INACTIVE:
+      case StatusServiceTag.INACTIVE || StatusServiceTag.BANDED:
         return '#94A3B8'; // Slate 400 - xám smoooooth minimal
 
       default:
@@ -49,4 +49,5 @@ export enum StatusServiceTag {
   DANGER = 'danger',
   ACTIVE = 'active',
   INACTIVE = 'inactive',
+  BANDED = 'banded'
 }

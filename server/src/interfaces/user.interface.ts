@@ -12,7 +12,7 @@ export interface IUser {
   role: "user" | "admin" | "manager";
   socialProvider?: "google" | "facebook" | "github" | "apple" | null;
   socialId?: string | null;
-  addresses: IAddress[]; 
+  addresses: IAddress[];
   isBanned: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -23,4 +23,13 @@ export interface IUserQueryOptions {
   q?: string | undefined;
   page: number;
   limit: number;
+  pageIndex?: number;
+  pageSize?: number;
+  fullname?: string | undefined;
+  phone?: string | undefined;
+  role?: string | undefined;
+  email?: string | undefined;
+  isBanned?: boolean | undefined;
+  socialProvider?: string | undefined;
+  loyalty_points?: number;
 }
