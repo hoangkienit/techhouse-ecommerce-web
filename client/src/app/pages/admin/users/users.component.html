@@ -1,67 +1,46 @@
 <nb-card [isLoading]="isLoading">
     <nb-card-header class="d-flex align-items-center position-relative justify-content-between">
         <div class="my-auto">Danh sách người dùng</div>
-        <button nbButton status="success" (click)="openAddModalProduct()">
-            <nb-icon icon="plus-outline"></nb-icon>
-            Thêm người dùng
-        </button>
     </nb-card-header>
     <nb-card-body>
         <div class="filter-wrapper">
-            <!-- Danh mục -->
+            <!-- Status -->
             <div class="filter-item">
-                <label class="filter-label">Danh mục</label>
-                <nb-select [(selected)]="selectedCategory" placeholder="Chọn danh mục"
+                <label class="filter-label">Trạng thái</label>
+                <nb-select [(selected)]="selectedStatus" placeholder="Chọn trạng thái"
                     (selectedChange)="onFilterChange()">
                     <nb-option value="">Tất cả</nb-option>
-                    <nb-option *ngFor="let c of categoryList" [value]="c.label">
-                        {{ c.label }}
+                    <nb-option *ngFor="let s of userStatusList" [value]="s.label">
+                        {{ s.label }}
                     </nb-option>
                 </nb-select>
             </div>
 
             <!-- Brand -->
             <div class="filter-item">
-                <label class="filter-label">Thương hiệu</label>
-                <nb-select [(selected)]="selectedBrand" placeholder="Chọn thương hiệu"
+                <label class="filter-label">Nhóm quyền</label>
+                <nb-select [(selected)]="selectedRole" placeholder="Chọn nhóm quyền"
                     (selectedChange)="onFilterChange()">
                     <nb-option value="">Tất cả</nb-option>
-                    <nb-option *ngFor="let c of brandList" [value]="c.label">
-                        {{ c.label }}
-                    </nb-option>
-                </nb-select>
-            </div>
-
-            <div class="filter-item">
-                <label class="filter-label" id="sort">Sắp xếp theo</label>
-                <nb-select [(selected)]="selectedSort" placeholder="Sắp xếp theo" (selectedChange)="onFilterChange()">
-                    <nb-option value="">Mặc định</nb-option>
-                    <nb-option *ngFor="let c of SortActionLs" [value]="c.value">
-                        {{ c.value | sortLabel }}
+                    <nb-option *ngFor="let r of rolesList" [value]="r.label">
+                        {{ r.value }}
                     </nb-option>
                 </nb-select>
             </div>
         </div>
         <div class="filter-wrapper mt-2">
-            <!-- Tìm theo tên -->
+            <!-- Tìm theo Q -->
             <div class="filter-item">
                 <label class="filter-label">Tìm theo tên</label>
                 <input nbInput placeholder="Nhập tên..." [(ngModel)]="searchName">
             </div>
             <div class="filter-item">
-                <label class="filter-label" for="price-range">Khoảng giá mong muốn</label>
-                <div class="price-range-input d-flex gap-2">
-                    <div class="input-wrapper">
-                        <input id="minPrice" type="text" [value]="_currencyHelper.minValue" (input)="onMinInput($event)"
-                            placeholder="0.000.000">
-                        <span class="currency-label">VNĐ</span>
-                    </div>
-                    <div class="input-wrapper">
-                        <input id="maxPrice" type="text" [value]="_currencyHelper.maxValue" (input)="onMaxInput($event)"
-                            placeholder="0.000.000">
-                        <span class="currency-label">VNĐ</span>
-                    </div>
-                </div>
+                <label class="filter-label">Tìm theo email</label>
+                <input nbInput placeholder="Nhập email..." [(ngModel)]="searchEmail">
+            </div>
+            <div class="filter-item">
+                <label class="filter-label">Tìm theo số điện thoại</label>
+                <input nbInput placeholder="Nhập số điện thoại..." [(ngModel)]="searchPhone">
             </div>
             <button nbButton status="primary" (click)="onFilterChange()">Search</button>
         </div>
@@ -79,7 +58,6 @@
                         <th>Email</th>
                         <th>Điện thoại</th>
                         <th>Quyền</th>
-                        <th>Địa chỉ</th>
                         <th>Trạng thái</th>
                         <th>Ngày tạo</th>
                         <th>Thay đổi cuối</th>
@@ -99,8 +77,6 @@
                                     {{ u.role}}
                                 </ngx-tag>
                             </td>
-                            <td>{{ u.addresses }}</td>
-
                             <td>
                                 <ngx-tag
                                     [TagStatus]="u.isBanned ? _statusServiceTag.BANDED : _statusServiceTag.ACTIVE ">
@@ -110,11 +86,18 @@
                             <td>{{ u.createdAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
                             <td>{{ u.updatedAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
                             <td class="text-center d-flex justify-content-around">
-                                <button nbButton size="tiny" status="info" (click)="openEditModalProduct(null)">
-                                    <nb-icon icon="edit-2-outline"></nb-icon>
+                                <button nbButton size="tiny" status="info" (click)="openEditModalUser(u)"
+                                    [nbTooltip]="'tooltips.user-page.view-detail' | translate"
+                                    nbTooltipStatus="primary">
+                                    <nb-icon icon="file-text-outline"></nb-icon>
                                 </button>
-                                <button nbButton size="tiny" status="danger" class="ms-1">
-                                    <nb-icon icon="trash-2-outline"></nb-icon>
+                                <button nbButton size="tiny" [status]="!u?.isBanned ? 'success' : 'warning'"
+                                    class="ms-1" [nbTooltip]="!u?.isBanned 
+                                    ? ('tooltips.user-page.unban' | translate)
+                                    : ('tooltips.user-page.ban' | translate)" nbTooltipStatus="primary"
+                                    (click)="bandAccHandle(u)">
+                                    <nb-icon [icon]="!u?.isBanned ?  'unlock' : 'lock-outline'">
+                                    </nb-icon>
                                 </button>
                             </td>
                         </tr>

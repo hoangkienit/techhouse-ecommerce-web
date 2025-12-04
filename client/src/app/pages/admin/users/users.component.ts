@@ -1,16 +1,16 @@
+import { UserStatus } from './../../../@core/enums/users/user.enum';
 import { Component } from '@angular/core';
-import { ProductCategory, ProductStatus, ProductBrand } from 'src/app/@core/enums/products/product.enum';
 import { SortAction } from 'src/app/@core/enums/sort.enum';
 import { AppServices } from 'src/app/@core/services/AppServices.service';
 import { EnumService } from 'src/app/@core/services/array-services/enum.service';
 import { CurrencyHelper } from 'src/app/@core/services/currency/currency.helper';
-import { EditProductComponent } from '../products/edit-product/edit-product.component';
-import { AddProductComponent } from '../products/add-product/add-product.component';
-import { filterProduct } from 'src/app/@core/models/product.model';
 import { StatusServiceTag } from 'src/app/@core/services-components/ngx-tag/ngx-tag.component';
 import { Paging } from 'src/app/@core/models/paging.model';
-import { roles } from 'src/app/@core/constants/role.constant';
-import { UserDtoResponse } from 'src/app/@core/models/user.model';
+import { UserRoles } from 'src/app/@core/constants/role.constant';
+import { filterUser, UserDtoResponse } from 'src/app/@core/models/user.model';
+import { EditUserComponent } from './edit-user/edit-user.component';
+import { Subscription } from 'rxjs';
+import { NotificationStatus } from 'src/app/@core/enums/status.enum';
 
 @Component({
   selector: 'app-users',
@@ -19,24 +19,24 @@ import { UserDtoResponse } from 'src/app/@core/models/user.model';
 })
 export class UsersComponent {
   users: UserDtoResponse[] = [];
-  roles = roles;
+  roles = UserRoles;
+  userStatus = UserStatus;
   _statusServiceTag = StatusServiceTag;
   _currencyHelper: any;
   isLoading: boolean = false;
   _paging: Paging = new Paging();
-  filter: filterProduct = {};
+  filter: filterUser = {};
 
-  selectedCategory: any = '';
-  selectedBrand: any = '';
+  selectedRole: any = '';
   selectedStatus: any = '';
-  selectedSort: any = '';
   searchName: string = '';
-  minPrice: number = 0;
-  maxPrice: number = 0;
+  searchEmail: string = '';
+  searchPhone: string = '';
 
-  categoryList = EnumService.ParseEnumToArray(ProductCategory);
-  statusList = EnumService.ParseEnumToArray(ProductStatus);
-  brandList = EnumService.ParseEnumToArray(ProductBrand);
+  subs = new Subscription();
+
+  rolesList = EnumService.ParseEnumToArray(this.roles);
+  userStatusList = EnumService.ParseEnumToArray(this.userStatus);
   SortActionLs = EnumService.ParseEnumToArray(SortAction);
 
   params: any = null;
@@ -47,32 +47,34 @@ export class UsersComponent {
     this._paging.setPaging(1, 10, 0);
     this.params = this._paging.getPagingParams();
     this._currencyHelper = new CurrencyHelper();
-    this.loadProducts();
+    this.loadUsers();
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 
   onFilterChange() {
     this.filter = {
-      category: this.selectedCategory.toLowerCase(),
-      brand: this.selectedBrand,
-      sort: this.selectedSort,
-      minPrice: this.minPrice || undefined,
-      maxPrice: this.maxPrice || undefined,
-      q: this.searchName || undefined,
-      // status: this.selectedStatus.toLowerCase()
+      fullname: this.searchName.toLowerCase(),
+      email: this.searchEmail.toLowerCase(),
+      phone: this.searchPhone.toLowerCase(),
+      role: this.selectedRole.toLowerCase(),
+      isBanned: this.selectedStatus.toLowerCase() == this.userStatus.BANDED,
     }
 
-    this.loadProducts();
+    this.loadUsers();
   }
 
-  loadProducts() {
+  loadUsers() {
     this.isLoading = true;
     this.params = {
       ...this.filter,
       ...this._paging.getPagingParams()
     }
-    this._appService.UserService.GetAllUsers().subscribe({
+    const s = this._appService.UserService.GetAllUsers(this.params).subscribe({
       next: (res) => {
-        this._paging.setPaging(res.data?.pagination?.pageIndex, res.data?.pagination?.pageSize, res.data?.pagination?.totalItems)
+        this._paging.setPaging(res.data?.pageIndex, res.data?.pageSize, res.data?.total)
         this.users = res.data?.users || [];
       },
       error: (e) => {
@@ -83,36 +85,20 @@ export class UsersComponent {
         this.isLoading = false;
       }
     });
+    this.subs.add(s);
   }
 
-  viewModalProduct() {
-    this._appService.ModalService.createModal('Chỉnh sửa sản phẩm', EditProductComponent, {
-      product: {
-        code: 'SP001',
-        name: 'Áo Thun Nam',
-        price: 199000,
-        status: 'available',
-        description: 'Chất liệu cotton, co giãn thoải mái.',
-        image: 'https://example.com/image.jpg',
-      },
-    });
-  }
-
-  openAddModalProduct() {
-    this._appService.ModalService.createModal('Thêm sản phẩm mới', AddProductComponent, {});
-  }
-
-  openEditModalProduct(product: any) {
+  openEditModalUser(user: any) {
     const ref = this._appService.ModalService.createModal(
-      'Chỉnh sửa thông tin sản phẩm',
-      EditProductComponent,
-      { product }
+      'Thông tin tài khoản người dùng',
+      EditUserComponent,
+      { user }
     );
 
     ref.onClose.subscribe((result) => {
       console.log(this.isLoading)
       if (result) {
-        this.loadProducts(); // load lại bảng
+        this.loadUsers(); // load lại bảng
       }
     });
   }
@@ -120,18 +106,30 @@ export class UsersComponent {
   onPageChange(e: { pageIndex: number, pageSize: number }) {
     this._paging.setPageIndex(e.pageIndex);
     this._paging.setPageSize(e.pageSize);
-    this.loadProducts();
+    this.loadUsers();
   }
 
-  onMinInput(event: any) {
-    const val = event.target.value;
-    this._currencyHelper.setMinValue(val);
-    this.minPrice = Number(this._currencyHelper.minValue.replace(/\./g, ''));
-  }
-
-  onMaxInput(event: any) {
-    const val = event.target.value;
-    this._currencyHelper.setMaxValue(val);
-    this.maxPrice = Number(this._currencyHelper.maxValue.replace(/\./g, ''));
+  bandAccHandle(u: any) {
+    this.isLoading = true;
+    const params = {
+      userId: u._id,
+      status: !u.isBanned
+    }
+    const s = this._appService.UserService.BandUserById(params).subscribe({
+      next: (res) => {
+        // console.log(res)
+      },
+      error: (e) => {
+        this.isLoading = false;
+        this._appService.NotificationService.createNotification('Có lỗi khi thay đổi trạng thái tài khoản!!', NotificationStatus.ERROR);
+        console.log(e);
+      },
+      complete: () => {
+        this._appService.NotificationService.createNotification('Thay đổi trạng thái tài khoản thành công', NotificationStatus.SUCSSESS);
+        this.loadUsers();
+        this.isLoading = false;
+      }
+    })
+    this.subs.add(s);
   }
 }

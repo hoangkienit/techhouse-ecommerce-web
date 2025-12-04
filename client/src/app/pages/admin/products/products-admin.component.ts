@@ -83,19 +83,6 @@ export class ProductsAdminComponent {
     });
   }
 
-  viewModalProduct() {
-    this._appService.ModalService.createModal('Chỉnh sửa sản phẩm', EditProductComponent, {
-      product: {
-        code: 'SP001',
-        name: 'Áo Thun Nam',
-        price: 199000,
-        status: 'available',
-        description: 'Chất liệu cotton, co giãn thoải mái.',
-        image: 'https://example.com/image.jpg',
-      },
-    });
-  }
-
   openAddModalProduct() {
     this._appService.ModalService.createModal('Thêm sản phẩm mới', AddProductComponent, {});
   }

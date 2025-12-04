@@ -32,7 +32,7 @@ export const Roles = {
     },
 };
 
-export enum roles {
+export enum UserRoles {
     ADMIN = 'admin',
     USER = 'user'
 }

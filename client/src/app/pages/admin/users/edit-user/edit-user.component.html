@@ -1,0 +1,106 @@
+<div style="min-width: 550px" [isLoading]="isLoading">
+    <div class="user-detail-text">
+
+        <!-- GENERAL INFO -->
+        <div class="row">
+            <div class="col-6">
+                <p>
+                    <span class="label igrore-select text-muted">Họ và tên:</span>
+                    <span class="value text-primary">{{ user?.fullname || '---' }}</span>
+                </p>
+
+                <p>
+                    <span class="label igrore-select text-muted">Email:</span>
+                    <span class="value text-primary">{{ user?.email || '---' }}</span>
+                </p>
+
+                <p>
+                    <span class="label igrore-select text-muted">Số điện thoại:</span>
+                    <span class="value text-primary">{{ user?.phone || '---' }}</span>
+                </p>
+
+                <p>
+                    <span class="label igrore-select text-muted">User ID:</span>
+                    <span class="value text-primary">{{ user?._id }}</span>
+                </p>
+            </div>
+
+            <div class="col-6">
+                <p>
+                    <span class="label igrore-select text-muted">Vai trò:</span>
+                    <span class="value text-primary text-capitalize">{{ user?.role || '---' }}</span>
+                </p>
+
+                <p>
+                    <span class="label igrore-select text-muted">Điểm Loyalty:</span>
+                    <span class="value text-primary">{{ user?.loyalty_points || 0 }}</span>
+                </p>
+
+                <div>
+                    <div>
+                        <span class="label igrore-select text-muted">Địa chỉ gắn:</span>
+                        <span class="value text-primary">
+                            {{ user?.addresses?.length || 0 }} địa chỉ
+                        </span>
+                    </div>
+                    <div class="value text-muted">
+                        <ul>
+                            <li class="value " *ngFor="let a of addresses">
+                                <div style="max-width: 70px;">
+                                    <ngx-tag
+                                        [TagStatus]="statusServiceTag.DEFAULT">{{statusServiceTag.DEFAULT}}</ngx-tag>
+                                </div>
+                                <span class="text-muted">
+                                    {{ formatAddress(a) }}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOCIAL -->
+        <div class="mt-2">
+            <p>
+                <span class="label igrore-select text-muted">Tình trạng:</span>
+                <span class="value" [ngClass]="user?.isBanned ? 'text-danger' : 'text-success'">
+                    {{ user?.isBanned ? 'Đang bị khóa' : 'Đang hoạt động' }}
+                </span>
+
+            </p>
+            <p>
+                <span class="label igrore-select text-muted">Đăng nhập bằng:</span>
+                <span class="value text-primary">
+                    {{ user?.socialProvider || 'Email truyền thống' }}
+                </span>
+            </p>
+
+            <p *ngIf="user?.socialId">
+                <span class="label igrore-select text-muted">Social ID:</span>
+                <span class="value text-primary">{{ user?.socialId }}</span>
+            </p>
+        </div>
+
+        <!-- META -->
+        <div class="mt-3">
+            <p>
+                <span class="label igrore-select text-muted">Ngày tạo:</span>
+                <span class="value text-primary">{{ user?.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+            </p>
+
+            <p>
+                <span class="label igrore-select text-muted">Cập nhật lần cuối:</span>
+                <span class="value text-primary">{{ user?.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+            </p>
+        </div>
+
+        <!-- AVATAR -->
+        <p class="mt-3">
+            <span class="label igrore-select">Avatar:</span>
+        </p>
+        <div class="w-100 d-flex justify-content-around align-items-center">
+            <img [src]="user?.profileImg" alt="avatar" class="avatar-img" />
+        </div>
+    </div>
+</div>

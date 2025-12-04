@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { TranslationService } from './translate.service';
 import { ProductService } from './apis/product.service';
 import { NotificationService } from './notification.service';
+import { AddressService } from './apis/address.service';
 
 @Injectable({
     providedIn: 'root'
@@ -26,5 +27,6 @@ export class AppServices {
         public ProductService: ProductService,
         public UploadService: UploadService,
         public UserService: UserService,
+        public AddressService: AddressService,
     ) { }
 }
