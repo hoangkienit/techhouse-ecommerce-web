@@ -16,6 +16,17 @@ class AddressController {
     }).send(res);
   }
 
+  static async ListAddressByUserId(req: Request, res: Response) {
+    const userId = req.params.userId;
+    if (!userId) throw new NotFoundError("User not found");
+
+    const addresses = await AddressService.GetMyAddresses(userId);
+    new OK({
+      message: "Lấy danh sách địa chỉ thành công",
+      data: { addresses }
+    }).send(res);
+  }
+
   static async Create(req: Request, res: Response) {
     const user = req.user;
     if (!user?.userId) throw new NotFoundError("User not found");

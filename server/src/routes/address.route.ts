@@ -8,11 +8,12 @@ import { addressCreateSchema, addressUpdateSchema } from "../validators/address.
 const router = express.Router();
 
 /**
- * GET /api/v1/address
+ * POST /api/v1/address
  * @description Lấy danh sách địa chỉ đã lưu của người dùng
  * @access Authenticated
  */
-router.get("/", Authenticate, AsyncHandler(AddressController.List));
+router.post("/", Authenticate, AsyncHandler(AddressController.List));
+router.get("/:userId", Authenticate, AsyncHandler(AddressController.ListAddressByUserId));
 
 /**
  * POST /api/v1/address
