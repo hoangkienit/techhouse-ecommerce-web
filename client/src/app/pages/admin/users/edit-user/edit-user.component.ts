@@ -7,6 +7,7 @@ import { UserRoles } from 'src/app/@core/constants/role.constant';
 import { EnumService } from 'src/app/@core/services/array-services/enum.service';
 import { AddressDto } from 'src/app/@core/models/address.model';
 import { StatusServiceTag } from 'src/app/@core/services-components/ngx-tag/ngx-tag.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-user',
@@ -20,6 +21,7 @@ export class EditUserComponent implements OnInit {
 
   addresses: AddressDto[] = [];
   statusServiceTag = StatusServiceTag;
+  subs = new Subscription();
 
   form!: FormGroup;
   // isErrMsg = false;
@@ -53,7 +55,7 @@ export class EditUserComponent implements OnInit {
   }
 
   loadAddresses() {
-    this._appServices.AddressService.GetAddressesByUserId(this.user._id).subscribe({
+    this.subs.add(this._appServices.AddressService.GetAddressesByUserId(this.user._id).subscribe({
       next: (res) => {
         this.addresses = res.data?.addresses;
       },
@@ -63,12 +65,18 @@ export class EditUserComponent implements OnInit {
       complete: () => {
         this.isLoading = false;
       }
-    })
+    }))
   }
 
   formatAddress(a: any): string {
     if (!a) return '';
     return [a?.street, a?.city, a?.state, a?.country].filter(x => !!x).join(', ');
+  }
+
+  changeLoyalty() {
+    // this.subs.add(
+    //   this._appServices.
+    // )
   }
 
   // onReceiveFiles(files: File[]) {

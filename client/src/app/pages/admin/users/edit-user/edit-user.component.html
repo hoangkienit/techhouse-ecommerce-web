@@ -34,6 +34,7 @@
                 <p>
                     <span class="label igrore-select text-muted">Điểm Loyalty:</span>
                     <span class="value text-primary">{{ user?.loyalty_points || 0 }}</span>
+                    <nb-icon icon="edit-2-outline" (click)="changeLoyalty()"></nb-icon>
                 </p>
 
                 <div>
