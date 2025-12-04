@@ -1,10 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { GlobalStateService } from 'src/app/@core/services/GlobalStateService.service';
+import { User } from 'src/app/@core/models/auth.model';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'app-view-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent {
+export class ViewProfileComponent implements OnInit {
+  user: User | null = null;
 
+  constructor(private appServices: GlobalStateService) { }
+
+  ngOnInit(): void {
+    this.user = this.appServices.currentUser;
+  }
 }

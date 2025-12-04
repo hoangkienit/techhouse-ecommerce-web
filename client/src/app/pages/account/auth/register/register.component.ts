@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppServices } from 'src/app/@core/services/AppServices.service';
 import { AuthDtos } from 'src/app/@core/models/auth.model';
 import { NotificationStatus } from 'src/app/@core/enums/status.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -18,8 +19,9 @@ export class RegisterComponent {
 
   constructor(
     private fb: FormBuilder,
-    private appServices: AppServices
-  ) {}
+    private appServices: AppServices,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.signupForm = this.fb.group({
@@ -57,6 +59,9 @@ export class RegisterComponent {
 
           this.signupForm.reset();
           this.isLoading = false;
+          // setTimeout(() => {
+          //   this.router.navigate(['/account/auth/login']);
+          // }, 1000)
         },
         error: e => {
           this.registerMsg = e.error.errors;

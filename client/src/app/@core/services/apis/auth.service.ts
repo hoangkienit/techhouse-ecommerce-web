@@ -7,8 +7,8 @@ import { apiUrl, apiUrl_test } from '../../constants/api.constant';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = apiUrl + 'auth';
-  // private baseUrl = apiUrl_test + 'auth';
+  // private baseUrl = apiUrl + 'auth';
+  private baseUrl = apiUrl_test + 'auth';
   private credentials = { withCredentials: true };
 
   constructor(private http: HttpClient) { }
