@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserDtoRequest } from 'src/app/@core/models/auth.model';
 import { GlobalStateService } from 'src/app/@core/services/GlobalStateService.service';
-import { User } from 'src/app/@core/models/auth.model';
 
 @Component({
   selector: 'app-edit-profile',
@@ -10,12 +10,12 @@ import { User } from 'src/app/@core/models/auth.model';
 })
 export class EditProfileComponent implements OnInit {
   editForm!: FormGroup;
-  user: User | null = null;
+  user: UserDtoRequest | null = null;
 
   constructor(
     private fb: FormBuilder,
     private appServices: GlobalStateService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.user = this.appServices.currentUser;

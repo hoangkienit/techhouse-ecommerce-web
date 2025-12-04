@@ -29,9 +29,9 @@ export class ModalService {
         return this.dialogRef;
     }
 
-    closeModal() {
+    closeModal(data?: any) {
         if (this.dialogRef) {
-            this.dialogRef.close();
+            this.dialogRef.close(data);
             this.dialogRef = undefined;
         }
     }

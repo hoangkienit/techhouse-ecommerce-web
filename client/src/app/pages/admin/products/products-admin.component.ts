@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { SortAction } from './../../../@core/enums/sort.enum';
 import { EnumService } from 'src/app/@core/services/array-services/enum.service';
 import { Component } from '@angular/core';
@@ -44,7 +45,6 @@ export class ProductsAdminComponent {
     this._paging.setPaging(1, 10, 0);
     this.params = this._paging.getPagingParams();
     this._currencyHelper = new CurrencyHelper();
-    this.isLoading = true;
     this.loadProducts();
   }
 
@@ -75,6 +75,7 @@ export class ProductsAdminComponent {
       },
       error: (e) => {
         console.error('Error fetching products:', e);
+        this.isLoading = false;
       },
       complete: () => {
         this.isLoading = false;
@@ -100,8 +101,17 @@ export class ProductsAdminComponent {
   }
 
   openEditModalProduct(product: any) {
-    this._appService.ModalService.createModal('Chỉnh sửa thông tin sản phẩm', EditProductComponent, {
-      product
+    const ref = this._appService.ModalService.createModal(
+      'Chỉnh sửa thông tin sản phẩm',
+      EditProductComponent,
+      { product }
+    );
+
+    ref.onClose.subscribe((result) => {
+      console.log(this.isLoading)
+      if (result) {
+        this.loadProducts(); // load lại bảng
+      }
     });
   }
 

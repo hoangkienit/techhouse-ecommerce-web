@@ -159,30 +159,53 @@ class UserService {
     }
 
     static async GetUserList(options: IUserQueryOptions) {
-        const { q, page, limit } = options;
+        const {
+            q,
+            pageIndex = 1,
+            pageSize = 10,
+            fullname,
+            phone,
+            role,
+            email,
+            isBanned,
+            socialProvider,
+            loyalty_points
+        } = options;
 
         const filter: any = {};
 
+        // Search toàn cục
         if (q) {
             filter.$or = [
                 { fullname: new RegExp(q, "i") },
                 { email: new RegExp(q, "i") },
+                { phone: new RegExp(q, "i") }
             ];
         }
 
-        const skip = (page - 1) * limit;
+        // Filter riêng từng trường
+        if (fullname) filter.fullname = new RegExp(fullname, "i");
+        if (phone) filter.phone = new RegExp(phone, "i");
+        if (role) filter.role = role;
+        if (email) filter.email = new RegExp(email, "i");
+        if (isBanned !== undefined) filter.isBanned = isBanned;
+        if (socialProvider) filter.socialProvider = socialProvider;
+        if (loyalty_points !== undefined) filter.loyalty_points = { $gte: loyalty_points };
 
-        let {users, total } = await UserRepo.findAll(filter, skip, limit);
-        if(users.length > 0){
-            users = users.map((u) => ({...u, password: ""}));
-        }
+        const skip = (pageIndex - 1) * pageSize;
+
+        let { users, total } = await UserRepo.findAll(filter, skip, pageSize);
+
+        // Xóa password cho an toàn
+        users = users.map(u => ({ ...u, password: "" }));
 
         return {
             users,
-            total
-        }
+            total,
+            pageIndex,
+            pageSize
+        };
     }
-
 }
 
 export default UserService;

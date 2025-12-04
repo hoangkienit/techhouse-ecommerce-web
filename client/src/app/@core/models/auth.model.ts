@@ -16,7 +16,7 @@ export interface AddressDto {
     street: string;
 }
 
-export interface User {
+export interface UserDtoRequest {
     fullname: string;
     email: string;
     phone?: string;
