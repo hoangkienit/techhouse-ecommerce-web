@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbIconModule, NbUserModule, NbSidebarModule, NbMenuModule, NbSelectModule, NbContextMenuModule, NbCardModule, NbInputModule, NbButtonModule, NbToast, NbToastrModule, NbDialogModule, NbBadgeModule, NbTagModule, NbStepperModule, NbTabsetModule, NbListModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbIconModule, NbUserModule, NbSidebarModule, NbMenuModule, NbSelectModule, NbContextMenuModule, NbCardModule, NbInputModule, NbButtonModule, NbToast, NbToastrModule, NbDialogModule, NbBadgeModule, NbTagModule, NbStepperModule, NbTabsetModule, NbListModule, NbTooltipModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { HeaderComponent } from './layouts/header/header.component';
 import { FooterComponent } from './layouts/footer/footer.component';
@@ -40,6 +40,7 @@ import { RegisterComponent } from './pages/account/auth/register/register.compon
 import { NgxImgUploadComponent } from './@core/services-components/ngx-img-upload/ngx-img-upload.component';
 import { NgxPagingComponent } from './@core/services-components/ngx-paging/ngx-paging.component';
 import { SortLabelPipe } from './@core/pipe/sort-label.pipe';
+import { EditUserComponent } from './pages/admin/users/edit-user/edit-user.component';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -74,7 +75,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     RegisterComponent,
     NgxImgUploadComponent,
     NgxPagingComponent,
-    SortLabelPipe
+    SortLabelPipe,
+    EditUserComponent
   ],
   imports: [
     BrowserModule,
@@ -111,7 +113,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    TranslateModule
+    TranslateModule,
+    NbTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]
