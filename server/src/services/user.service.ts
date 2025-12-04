@@ -186,7 +186,7 @@ class UserService {
         // Filter riêng từng trường
         if (fullname) filter.fullname = new RegExp(fullname, "i");
         if (phone) filter.phone = new RegExp(phone, "i");
-        if (role) filter.role = role;
+        if (role) filter.role = new RegExp(`^${role}$`, "i");
         if (email) filter.email = new RegExp(email, "i");
         if (isBanned !== undefined) filter.isBanned = isBanned;
         if (socialProvider) filter.socialProvider = socialProvider;
@@ -195,7 +195,6 @@ class UserService {
         const skip = (pageIndex - 1) * pageSize;
 
         let { users, total } = await UserRepo.findAll(filter, skip, pageSize);
-
         // Xóa password cho an toàn
         users = users.map(u => ({ ...u, password: "" }));
 
