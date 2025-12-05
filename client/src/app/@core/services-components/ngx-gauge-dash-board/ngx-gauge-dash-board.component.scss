@@ -1,0 +1,60 @@
+// Board loyal
+.board-bg {
+    background: linear-gradient(180deg, #d2e9ff, #b9dcff);
+    border-radius: 20px;
+    padding: 40px 20px 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.gauge-safe-zone {
+    overflow: visible;
+    position: relative;
+    z-index: 5;
+}
+
+.momo-gauge-wrapper {
+    position: relative;
+    width: 220px;
+    margin: auto;
+    z-index: 10; // ép nó lên trên
+    pointer-events: none; // để không cản click
+}
+
+.momo-gauge {
+    overflow: visible;
+    transform: translateY(10px);
+    position: relative;
+    z-index: 11;
+}
+
+.momo-gauge-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.35);
+    stroke-width: 14;
+    stroke-linecap: round;
+}
+
+.momo-gauge-progress {
+    fill: none;
+    stroke: url(#momoGradient);
+    stroke-width: 14;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s ease;
+    filter: drop-shadow(0 4px 8px rgba(255, 44, 156, 0.35));
+}
+
+.momo-gauge-value {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 26px;
+    font-weight: 800;
+
+    background: linear-gradient(180deg, #ff2c9c, #7b5cff);
+    -webkit-background-clip: text;
+    color: transparent;
+
+    text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.12);
+}
