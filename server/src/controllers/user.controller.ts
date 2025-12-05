@@ -160,7 +160,20 @@ class UserController {
             }
         }).send(res);
     }
+    static async UpdateUserLoyaltyPoints(req: Request, res: Response): Promise<void> {
+        const userId = req.params?.userId;
+        const newPoint = req.body.point;
+        if (!userId) throw new NotFoundError("User not found");
 
+        const points = await UserService.UpdateLoyaltyPoints(userId, newPoint);
+
+        new OK({
+            message: "Lấy điểm tích luỹ thành công",
+            data: {
+                points: points
+            }
+        }).send(res);
+    }
 }
 
 
