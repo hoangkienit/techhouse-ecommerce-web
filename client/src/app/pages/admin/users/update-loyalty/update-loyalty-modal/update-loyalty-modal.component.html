@@ -1,0 +1,60 @@
+<div class="loyalty-modal" [isLoading]="isLoading">
+    <h3 class="title">Cập nhật điểm hội viên</h3>
+    <p class="subtitle text-muted">
+        Tuỳ chỉnh điểm khách hàng theo hành vi, chương trình, hoặc nâng hạng hội viên.
+    </p>
+
+    <app-ngx-gauge-dash-board [(value)]="currentLoyalty" [(max)]="maximunBoardVal">
+    </app-ngx-gauge-dash-board>
+
+    <div class="d-flex align-items-center mb-2 w-100">
+        <div class="d-flex align-items-center justify-content-around w-100">
+            <div class="rank-display" [style.--rank-color]="getRankColor(currentRank)">
+                <nb-icon class="rank-icon" [icon]="rankIcon">
+                </nb-icon>
+
+                <span class="rank-label">
+                    {{ currentRankLabel }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action -->
+    <nb-select fullWidth placeholder="Chọn hành động" [(selected)]="action" (selectedChange)="handleAction()">
+        <nb-option [value]="actionHandleLoyalty.INCREASE">Chọn hành động</nb-option>
+        <nb-option [value]="actionHandleLoyalty.INCREASE">+ Tăng điểm</nb-option>
+        <nb-option [value]="actionHandleLoyalty.DECREASE">- Giảm điểm</nb-option>
+        <nb-option [value]="actionHandleLoyalty.DEFAULT">= Gán điểm cố định</nb-option>
+        <nb-option [value]="actionHandleLoyalty.BONUS">
+            <nb-icon icon="gift-outline"></nb-icon> Thưởng sự kiện
+        </nb-option>
+
+        <nb-option [value]="actionHandleLoyalty.DOUBLE">
+            <nb-icon icon="star-outline"></nb-icon> Nâng hạng VIP (bonus x2)
+        </nb-option>
+    </nb-select>
+
+    <!-- Amount -->
+    <div class="d-flex align-items-center gap-2">
+        <div class="text-muted">
+            Số điểm
+        </div>
+        <div>
+            <input nbInput type="number" min="0" [(ngModel)]="amount" placeholder="Nhập số điểm..."
+                (input)="handleAction()" />
+        </div>
+    </div>
+
+    <!-- Slider hỗ trợ kéo điểm -->
+    <div class="slider-block">
+        <label>Kéo để chọn nhanh</label>
+        <input type="range" min="0" max="500" step="10" [(ngModel)]="amount" (mouseup)="handleAction()" />
+        <div class="range-value">{{ amount }}</div>
+    </div>
+    <!-- Actions -->
+    <div class="actions">
+        <button nbButton status="success" (click)="confirmCheck()">Cập nhật</button>
+    </div>
+
+</div>

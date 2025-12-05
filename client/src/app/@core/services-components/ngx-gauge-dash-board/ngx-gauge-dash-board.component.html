@@ -1,0 +1,28 @@
+<div class="board-bg mb-3">
+    <div class="gauge-safe-zone" style="min-height: 200px;">
+        <div class="momo-gauge-wrapper">
+            <svg [attr.width]="size" [attr.height]="size / 2" class="momo-gauge">
+
+                <defs>
+                    <linearGradient id="momoGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#7b5cff" />
+                        <stop offset="100%" stop-color="#ff2c9c" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Background arc -->
+                <path class="momo-gauge-bg" [attr.d]="arcPath">
+                </path>
+
+                <!-- Progress arc -->
+                <path class="momo-gauge-progress" [attr.d]="arcPath" [style.strokeDasharray]="arcLength"
+                    [style.strokeDashoffset]="dashOffset">
+                </path>
+            </svg>
+
+            <div class="momo-gauge-value">
+                {{ displayValue }}
+            </div>
+        </div>
+    </div>
+</div>

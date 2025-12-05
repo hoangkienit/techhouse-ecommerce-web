@@ -17,7 +17,7 @@ const resetPasswordLimiter = rateLimit({ windowMs: 60_000, max: 4 });
  * @query page: number
  * @access Admin
  */
-router.get('/list',  AsyncHandler(UserController.GetUserList));
+router.get('/list', AsyncHandler(UserController.GetUserList));
 
 /**
  * POST /api/v1/user/update-information
@@ -82,5 +82,11 @@ router.post('/update-avatar', Authenticate, UploadMiddleware.upload.single('imag
  * @access Authenticated
  */
 router.post('/loyalty-points', Authenticate, AsyncHandler(UserController.GetUserLoyaltyPoints));
+/**
+ * GET /api/v1/user/loyalty-points
+ * @description Cập nhật điểm loyalty của người dùng
+ * @access Authenticated
+ */
+router.put('/loyalty-points/:userId', Authenticate, AsyncHandler(UserController.UpdateUserLoyaltyPoints));
 
 export default router;

@@ -31,7 +31,7 @@
                     <span class="value text-primary text-capitalize">{{ user?.role || '---' }}</span>
                 </p>
 
-                <p>
+                <p class="loyalty-line">
                     <span class="label igrore-select text-muted">Điểm Loyalty:</span>
                     <span class="value text-primary">{{ user?.loyalty_points || 0 }}</span>
                 </p>
@@ -40,14 +40,14 @@
                     <div>
                         <span class="label igrore-select text-muted">Địa chỉ gắn:</span>
                         <span class="value text-primary">
-                            {{ user?.addresses?.length || 0 }} địa chỉ
+                            {{ addresses?.length || 0 }} địa chỉ
                         </span>
                     </div>
                     <div class="value text-muted">
                         <ul>
                             <li class="value " *ngFor="let a of addresses">
                                 <div style="max-width: 70px;">
-                                    <ngx-tag
+                                    <ngx-tag *ngIf="a.isDefault"
                                         [TagStatus]="statusServiceTag.DEFAULT">{{statusServiceTag.DEFAULT}}</ngx-tag>
                                 </div>
                                 <span class="text-muted">
