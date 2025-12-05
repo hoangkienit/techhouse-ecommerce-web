@@ -9,6 +9,7 @@ import { generatePassword, generateRandomID } from "../utils/random.helper";
 import { HashPassword, VerifyPassword } from "../utils/crypto.handler";
 import { ClientSession } from "mongoose";
 import NotificationService from "./notification.service";
+import User from "../models/user.model";
 
 class UserService {
 
@@ -156,6 +157,16 @@ class UserService {
 
     static async GetUserLoyaltyPoints(userId: string) {
         return await UserRepo.getUserLoyaltyPoints(userId);
+    }
+
+    static async UpdateLoyaltyPoints(userId: string, newPoints: number) {
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { loyalty_points: newPoints },
+            { new: true }
+        );
+
+        return updatedUser;
     }
 
     static async GetUserList(options: IUserQueryOptions) {
