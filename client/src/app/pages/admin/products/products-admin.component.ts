@@ -8,8 +8,8 @@ import { EditProductComponent } from './edit-product/edit-product.component';
 import { ProductBrand, ProductCategory, ProductStatus } from 'src/app/@core/enums/products/product.enum';
 import { AddProductComponent } from './add-product/add-product.component';
 import { StatusServiceTag } from 'src/app/@core/services-components/ngx-tag/ngx-tag.component';
-import { Paging } from 'src/app/@core/models/paging.model';
 import { CurrencyHelper } from 'src/app/@core/services/currency/currency.helper';
+import { Paging } from 'src/app/@core/models/paging.model';
 
 @Component({
   selector: 'app-products',

@@ -14,6 +14,7 @@ export interface UserDtoResponse {
     isBanned: boolean;
     createdAt: Date;
     updatedAt: Date;
+    loyalty_points?: number;
     __v: number;
 }
 

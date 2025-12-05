@@ -8,6 +8,7 @@ import { EnumService } from 'src/app/@core/services/array-services/enum.service'
 import { AddressDto } from 'src/app/@core/models/address.model';
 import { StatusServiceTag } from 'src/app/@core/services-components/ngx-tag/ngx-tag.component';
 import { Subscription } from 'rxjs';
+import { UpdateLoyaltyModalComponent } from '../update-loyalty/update-loyalty-modal/update-loyalty-modal.component';
 
 @Component({
   selector: 'app-edit-user',
@@ -40,7 +41,6 @@ export class EditUserComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.user)
     // this.form = this.fb.group({
     //   userId: [this.user?._id, Validators.required],
     //   fullname: [this.user?.fullname ?? '', Validators.required],
@@ -71,12 +71,6 @@ export class EditUserComponent implements OnInit {
   formatAddress(a: any): string {
     if (!a) return '';
     return [a?.street, a?.city, a?.state, a?.country].filter(x => !!x).join(', ');
-  }
-
-  changeLoyalty() {
-    // this.subs.add(
-    //   this._appServices.
-    // )
   }
 
   // onReceiveFiles(files: File[]) {

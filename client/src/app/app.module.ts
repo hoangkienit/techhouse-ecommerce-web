@@ -41,6 +41,10 @@ import { NgxImgUploadComponent } from './@core/services-components/ngx-img-uploa
 import { NgxPagingComponent } from './@core/services-components/ngx-paging/ngx-paging.component';
 import { SortLabelPipe } from './@core/pipe/sort-label.pipe';
 import { EditUserComponent } from './pages/admin/users/edit-user/edit-user.component';
+import { UpdateLoyaltyModalComponent } from './pages/admin/users/update-loyalty/update-loyalty-modal/update-loyalty-modal.component';
+import { EditRoleModalComponent } from './pages/admin/users/role-user/edit-role-modal/edit-role-modal.component';
+import { ConfirmDialogBaseBodyComponent } from './@core/services-components/confirm-dialog-base-body/confirm-dialog-base-body.component';
+import { NgxGaugeDashBoardComponent } from './@core/services-components/ngx-gauge-dash-board/ngx-gauge-dash-board.component';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -76,7 +80,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     NgxImgUploadComponent,
     NgxPagingComponent,
     SortLabelPipe,
-    EditUserComponent
+    EditUserComponent,
+    UpdateLoyaltyModalComponent,
+    EditRoleModalComponent,
+    ConfirmDialogBaseBodyComponent,
+    NgxGaugeDashBoardComponent
   ],
   imports: [
     BrowserModule,

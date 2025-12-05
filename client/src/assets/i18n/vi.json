@@ -60,7 +60,9 @@
             "view-detail": "Xem thông tin chi tiết người dùng",
             "delete": "Xóa tài khoản người dùng",
             "unban": "Dùng cho mở cấm tài khoản",
-            "ban": "Dùng cho mở cấm tài khoản"
+            "ban": "Dùng cho mở cấm tài khoản",
+            "loyalty": "Sử dụng cho sửa điểm hội viên",
+            "role": "Sử dụng cho thay đổi quyền người dùng"
         }
     }
 }

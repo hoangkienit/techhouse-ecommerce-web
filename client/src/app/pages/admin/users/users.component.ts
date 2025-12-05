@@ -5,12 +5,14 @@ import { AppServices } from 'src/app/@core/services/AppServices.service';
 import { EnumService } from 'src/app/@core/services/array-services/enum.service';
 import { CurrencyHelper } from 'src/app/@core/services/currency/currency.helper';
 import { StatusServiceTag } from 'src/app/@core/services-components/ngx-tag/ngx-tag.component';
-import { Paging } from 'src/app/@core/models/paging.model';
 import { UserRoles } from 'src/app/@core/constants/role.constant';
 import { filterUser, UserDtoResponse } from 'src/app/@core/models/user.model';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { Subscription } from 'rxjs';
 import { NotificationStatus } from 'src/app/@core/enums/status.enum';
+import { UpdateLoyaltyModalComponent } from './update-loyalty/update-loyalty-modal/update-loyalty-modal.component';
+import { EditRoleModalComponent } from './role-user/edit-role-modal/edit-role-modal.component';
+import { Paging } from 'src/app/@core/models/paging.model';
 
 @Component({
   selector: 'app-users',
@@ -67,6 +69,7 @@ export class UsersComponent {
   }
 
   loadUsers() {
+    console.log('bbb')
     this.isLoading = true;
     this.params = {
       ...this.filter,
@@ -96,7 +99,6 @@ export class UsersComponent {
     );
 
     ref.onClose.subscribe((result) => {
-      console.log(this.isLoading)
       if (result) {
         this.loadUsers(); // load lại bảng
       }
@@ -131,5 +133,24 @@ export class UsersComponent {
       }
     })
     this.subs.add(s);
+  }
+  openEditModalLoyalty(user: any) {
+    const ref = this._appService.ModalService.createModal("Cập nhật điểm thành viên", UpdateLoyaltyModalComponent, { user });
+
+    ref.onClose.subscribe({
+      next: () => {
+        this.loadUsers();
+      }
+    })
+  }
+
+  openEditRoleModal(user: any) {
+    const ref = this._appService.ModalService.createModal("Thay đổi quền tài khoản", EditRoleModalComponent, { user });
+
+    ref.onClose.subscribe({
+      next: () => {
+        this.loadUsers();
+      }
+    })
   }
 }
