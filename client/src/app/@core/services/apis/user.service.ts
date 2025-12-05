@@ -21,13 +21,16 @@ export class UserService {
         return this.http.get<{}>(`${this.baseUrl}/${userId}`, this.credentials);
     }
 
-    UpdateUserById(userId: string, params: any) {
-        return this.http.put<{}>(`${this.baseUrl}/${userId}`, params, this.credentials);
+    UpdateLoyaltyPoint(userId: string, point: number) {
+        return this.http.put<{}>(`${this.baseUrl}/loyalty-points/${userId}`, { point }, this.credentials);
     }
+    // UpdateUserById(userId: string, params: any) {
+    //     return this.http.post<{}>(`${this.baseUrl}/${userId}`, params, this.credentials);
+    // }
 
-    DeleteUserById(userId: string) {
-        return this.http.delete<{}>(`${this.baseUrl}/${userId}`, this.credentials);
-    }
+    // DeleteUserById(userId: string) {
+    //     return this.http.delete<{}>(`${this.baseUrl}/${userId}`, this.credentials);
+    // }
 
     BandUserById(params: any) {
         return this.http.patch<{}>(`${this.baseUrl}/set-status/${params.userId}`, { status: params.status }, this.credentials)

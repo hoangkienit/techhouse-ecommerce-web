@@ -59,6 +59,7 @@
                         <th>Điện thoại</th>
                         <th>Quyền</th>
                         <th>Trạng thái</th>
+                        <th>Điểm hội viên</th>
                         <th>Ngày tạo</th>
                         <th>Thay đổi cuối</th>
                         <th>Hành động</th>
@@ -67,11 +68,11 @@
                 <tbody>
                     <ng-container *ngIf="users && users.length > 0; else empty">
                         <tr *ngFor="let u of users; let i = index">
-                            <td>{{ (_paging.pageIndex - 1) * _paging.pageSize + i + 1 }}</td>
-                            <td>{{ u.fullname }}</td>
-                            <td>{{ u.email }}</td>
-                            <td>{{ u.phone }}</td>
-                            <td>
+                            <td class="text-left">{{ (_paging.pageIndex - 1) * _paging.pageSize + i + 1 }}</td>
+                            <td class="text-left">{{ u.fullname }}</td>
+                            <td class="text-left">{{ u.email }}</td>
+                            <td class="text-center">{{ u.phone }}</td>
+                            <td class="text-center">
                                 <ngx-tag
                                     [TagStatus]="u.role == roles.ADMIN ? _statusServiceTag.PRIMARY : _statusServiceTag.WARNING ">
                                     {{ u.role}}
@@ -83,22 +84,34 @@
                                     {{ u.isBanned ? _statusServiceTag.BANDED : _statusServiceTag.ACTIVE }}
                                 </ngx-tag>
                             </td>
-                            <td>{{ u.createdAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
-                            <td>{{ u.updatedAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                            <td class="text-center text-primary fw-bold"><small>{{ u.loyalty_points }}</small></td>
+                            <td class="text-center">{{ u.createdAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                            <td class="text-center">{{ u.updatedAt| date:'dd/MM/yyyy HH:mm:ss' }}</td>
                             <td class="text-center d-flex justify-content-around">
-                                <button nbButton size="tiny" status="info" (click)="openEditModalUser(u)"
+                                <button nbButton ghost size="small" status="info" (click)="openEditModalUser(u)"
                                     [nbTooltip]="'tooltips.user-page.view-detail' | translate"
                                     nbTooltipStatus="primary">
                                     <nb-icon icon="file-text-outline"></nb-icon>
                                 </button>
-                                <button nbButton size="tiny" [status]="!u?.isBanned ? 'success' : 'warning'"
-                                    class="ms-1" [nbTooltip]="!u?.isBanned 
+                                <button nbButton ghost size="small" (click)="openEditModalLoyalty(u)"
+                                    [nbTooltip]="'tooltips.user-page.loyalty' | translate" status="danger"
+                                    nbTooltipStatus="primary">
+                                    <nb-icon icon="edit-2-outline"></nb-icon>
+                                </button>
+                                <button nbButton ghost status="warning" size="small"
+                                    [status]="!u?.isBanned ? 'success' : 'warning'" class="ms-1" [nbTooltip]="!u?.isBanned 
                                     ? ('tooltips.user-page.unban' | translate)
                                     : ('tooltips.user-page.ban' | translate)" nbTooltipStatus="primary"
                                     (click)="bandAccHandle(u)">
                                     <nb-icon [icon]="!u?.isBanned ?  'unlock' : 'lock-outline'">
                                     </nb-icon>
                                 </button>
+
+                                <!-- <button nbButton ghost size="small" (click)="openEditRoleModal(u)"
+                                    [nbTooltip]="'tooltips.user-page.role' | translate" status="danger"
+                                    nbTooltipStatus="primary">
+                                    <nb-icon icon="shield-outline"></nb-icon>
+                                </button> -->
                             </td>
                         </tr>
                     </ng-container>
