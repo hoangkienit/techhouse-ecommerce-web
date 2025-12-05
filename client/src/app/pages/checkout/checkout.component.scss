@@ -1,0 +1,223 @@
+/* ===== CHECKOUT LAYOUT ===== */
+.checkout-wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Panel chung */
+.checkout-panel {
+  nb-card {
+    border-radius: 12px !important;
+    overflow: hidden;
+  }
+
+  .panel-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #222;
+  }
+}
+
+/* ===== STEP HEADER (multi–step) ===== */
+.checkout-steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+
+  .step {
+    flex: 1;
+    text-align: center;
+    font-size: 0.85rem;
+    padding: 6px 4px;
+    border-radius: 999px;
+    background: #f5f5f5;
+    color: #777;
+
+    &.active {
+      background: #3f51b5;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    &.done {
+      background: #4caf50;
+      color: #fff;
+    }
+  }
+}
+
+/* ===== FORM CHUNG ===== */
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .form-row {
+    display: flex;
+    gap: 10px;
+
+    > * {
+      flex: 1;
+    }
+  }
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 4px;
+    display: inline-block;
+  }
+
+  input[nbInput],
+  textarea[nbInput],
+  nb-select {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
+}
+
+/* ===== PAYMENT METHODS ===== */
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  nb-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  nb-radio {
+    font-size: 0.9rem;
+    color: #444;
+  }
+}
+
+/* ===== DISCOUNT CODE ===== */
+.discount-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .discount-input-row {
+    display: flex;
+    gap: 8px;
+
+    input[nbInput] {
+      flex: 1;
+    }
+
+    button {
+      white-space: nowrap;
+    }
+  }
+
+  .discount-info {
+    font-size: 0.85rem;
+    color: #4caf50;
+    font-weight: 600;
+  }
+
+  .discount-error {
+    font-size: 0.85rem;
+    color: #e53935;
+  }
+}
+
+/* ===== ORDER SUMMARY / XÁC NHẬN ===== */
+.checkout-summary {
+  nb-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #555;
+
+    &.total {
+      margin-top: 4px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e53935;
+    }
+  }
+
+  .summary-products {
+    margin-top: 6px;
+    border-top: 1px dashed #e0e0e0;
+    padding-top: 6px;
+    font-size: 0.85rem;
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+  }
+
+  .summary-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    button {
+      flex: 1;
+    }
+  }
+}
+
+/* ===== THANK YOU PAGE (nếu dùng chung file) ===== */
+.checkout-success {
+  text-align: center;
+  padding: 24px 12px;
+
+  .icon {
+    font-size: 40px;
+    margin-bottom: 8px;
+    color: #4caf50;
+  }
+
+  .title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .desc {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .checkout-wrapper {
+    padding: 8px 4px;
+  }
+
+  .checkout-form .form-row {
+    flex-direction: column;
+  }
+
+  .discount-box .discount-input-row {
+    flex-direction: column;
+  }
+}

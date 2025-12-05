@@ -1,1 +1,75 @@
 <p>orders works!</p>
+<nb-layout>
+    <nb-layout-column class="p-0">
+        <div class="home-wrapper">
+            <!-- Sidebar (optional) -->
+            <aside class="categories-sidebar">
+                <nb-card>
+                    <nb-card-header>
+                        <div class="panel-title">Danh mục chính</div>
+                    </nb-card-header>
+                    <nb-card-body class="p-0">
+                        <nb-list>
+                            <nb-list-item *ngFor="let c of categories">
+                                <nb-user size="small" [name]="c" [title]="'Xem sản phẩm ' + c"></nb-user>
+                            </nb-list-item>
+                        </nb-list>
+                    </nb-card-body>
+                </nb-card>
+            </aside>
+
+            <!-- Content chính -->
+            <div class="content-main">
+                <!-- Lịch sử Đơn hàng -->
+                <section class="panel">
+                    <nb-card class="mb-3">
+                        <nb-card-header class="p-3">
+                            <div class="panel-title">Lịch sử Đơn hàng</div>
+                        </nb-card-header>
+                        <nb-card-body>
+                            <div class="orders-list">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã đơn hàng</th>
+                                            <th>Ngày mua</th>
+                                            <th>Tổng số tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngIf="orders && orders.length > 0; else empty">
+                                            <tr *ngFor="let order of orders; let i = index">
+                                                <td>{{ order.order_code }}</td>
+                                                <td>{{ order.order_date | date: 'short' }}</td>
+                                                <td>{{ order.total_amount | currency }}</td>
+                                                <td>
+                                                    <ngx-tag [TagStatus]="order.status === 'Pending' ? 'warning' : order.status === 'Confirmed' ? 'info' : order.status === 'Shipping' ? 'primary' : 'success'">
+                                                        {{ order.status }}
+                                                    </ngx-tag>
+                                                </td>
+                                                <td>
+                                                    <button nbButton size="tiny" status="info" (click)="viewOrderDetails(order)">
+                                                        Xem chi tiết
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                    <ng-template #empty>
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted fw-bold">
+                                                Không có đơn hàng
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </table>
+                            </div>
+                        </nb-card-body>
+                    </nb-card>
+                </section>
+            </div>
+        </div>
+    </nb-layout-column>
+</nb-layout>

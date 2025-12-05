@@ -16,6 +16,7 @@ import { DiscountsComponent } from './pages/admin/discounts/discounts.component'
 import { ProductsAdminComponent } from './pages/admin/products/products-admin.component';
 import { LoginComponent } from 'src/app/pages/account/auth/login/login.component';
 import { RegisterComponent } from 'src/app/pages/account/auth/register/register.component';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'catalog/products', component: ProductsComponent },
   { path: 'catalog/categories', component: CategoriesComponent },
   { path: 'catalog/brands', component: BrandsComponent },
+  { path: 'checkout', component: CheckoutComponent },
 
   { path: 'cart', component: CartComponent },
   { path: 'orders', component: OrdersComponent },

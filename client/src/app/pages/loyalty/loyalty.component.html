@@ -1,1 +1,72 @@
-<p>loyalty works!</p>
+<nb-layout>
+  <nb-layout-column class="p-0">
+    <div class="home-wrapper">
+
+      <!-- Sidebar danh mục (nếu cần thiết) -->
+      <aside class="categories-sidebar">
+        <nb-card>
+          <nb-card-header>
+            <div class="panel-title">Danh mục chính</div>
+          </nb-card-header>
+          <nb-card-body class="p-0">
+            <nb-list>
+              <nb-list-item *ngFor="let c of categories">
+                <nb-user size="small" [name]="c" [title]="'Xem sản phẩm ' + c"></nb-user>
+              </nb-list-item>
+            </nb-list>
+          </nb-card-body>
+        </nb-card>
+      </aside>
+
+      <!-- Content chính -->
+      <div class="content-main">
+
+        <!-- Điểm thưởng -->
+        <section class="panel">
+          <nb-card class="mb-3">
+            <nb-card-header class="p-3">
+              <div class="panel-title">Điểm Thưởng</div>
+            </nb-card-header>
+            <nb-card-body>
+              <div class="loyalty-info">
+                <div class="loyalty-points">
+                  <div class="points">
+                    <strong>Số điểm hiện tại: </strong>
+                    <span>{{ loyaltyPoints }} điểm</span>
+                  </div>
+                  <div class="value">
+                    <strong>Tỷ lệ quy đổi: </strong>
+                    <span>{{ pointsToVND }} VND (1 điểm = 1,000 VND)</span>
+                  </div>
+                </div>
+              </div>
+            </nb-card-body>
+          </nb-card>
+        </section>
+
+        <!-- Tùy chọn Sử dụng Điểm khi Thanh toán -->
+        <section class="panel">
+          <nb-card class="mb-3">
+            <nb-card-header class="p-3">
+              <div class="panel-title">Sử dụng Điểm Thưởng khi Thanh toán</div>
+            </nb-card-header>
+            <nb-card-body>
+              <div class="use-points-option">
+                <nb-checkbox [checked]="usePoints" (checkedChange)="onUsePointsChange($event)">
+                  <span>Sử dụng điểm thưởng cho đơn hàng này</span>
+                </nb-checkbox>
+
+                <div *ngIf="usePoints" class="points-amount">
+                  <label for="pointsAmount">Số điểm muốn sử dụng:</label>
+                  <input nbInput [(ngModel)]="pointsToUse" [max]="loyaltyPoints" id="pointsAmount" placeholder="Nhập số điểm">
+                  <div class="help-text">Giới hạn: {{ loyaltyPoints }} điểm</div>
+                </div>
+              </div>
+            </nb-card-body>
+          </nb-card>
+        </section>
+
+      </div>
+    </div>
+  </nb-layout-column>
+</nb-layout>

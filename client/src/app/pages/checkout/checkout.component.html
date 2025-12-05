@@ -1,0 +1,79 @@
+<nb-layout>
+  <nb-layout-column class="p-0">
+    <div class="checkout-wrapper">
+
+      <!-- Bước 1: Thông tin giao hàng -->
+      <section class="panel">
+        <nb-card class="mb-3">
+          <nb-card-header>
+            <div class="panel-title">Thông tin giao hàng</div>
+          </nb-card-header>
+          <nb-card-body>
+            <input nbInput placeholder="Tên đầy đủ" [(ngModel)]="shippingInfo.name" />
+            <input nbInput placeholder="Địa chỉ giao hàng" [(ngModel)]="shippingInfo.address" />
+            <input nbInput placeholder="Số điện thoại" [(ngModel)]="shippingInfo.phone" />
+          </nb-card-body>
+        </nb-card>
+      </section>
+
+      <!-- Bước 2: Phương thức thanh toán -->
+      <section class="panel">
+        <nb-card class="mb-3">
+          <nb-card-header>
+            <div class="panel-title">Phương thức thanh toán</div>
+          </nb-card-header>
+          <nb-card-body>
+            <nb-radio-group [(ngModel)]="paymentMethod">
+              <nb-radio value="credit-card">Thẻ tín dụng</nb-radio>
+              <nb-radio value="paypal">Paypal</nb-radio>
+              <nb-radio value="cash-on-delivery">Thanh toán khi nhận hàng</nb-radio>
+            </nb-radio-group>
+          </nb-card-body>
+        </nb-card>
+      </section>
+
+      <!-- Bước 3: Giảm giá -->
+      <section class="panel">
+        <nb-card class="mb-3">
+          <nb-card-header>
+            <div class="panel-title">Mã giảm giá</div>
+          </nb-card-header>
+          <nb-card-body>
+            <input nbInput placeholder="Nhập mã giảm giá" [(ngModel)]="discountCode" />
+            <button nbButton (click)="applyDiscount()">Áp dụng</button>
+            <div *ngIf="discountApplied">
+              <span>Mã giảm giá đã được áp dụng: {{ discountAmount | currency }}</span>
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </section>
+
+      <!-- Bước 4: Xác nhận đơn hàng -->
+      <section class="panel">
+        <nb-card class="mb-3">
+          <nb-card-header>
+            <div class="panel-title">Xác nhận đơn hàng</div>
+          </nb-card-header>
+          <nb-card-body>
+            <div class="confirmation-info">
+              <div>
+                <strong>Tổng tiền: </strong>
+                <span>{{ totalAmount | currency }}</span>
+              </div>
+              <div>
+                <strong>Thuế: </strong>
+                <span>{{ taxAmount | currency }}</span>
+              </div>
+              <div>
+                <strong>Phí vận chuyển: </strong>
+                <span>{{ shippingFee | currency }}</span>
+              </div>
+            </div>
+            <button nbButton status="success" (click)="placeOrder()">Đặt hàng</button>
+          </nb-card-body>
+        </nb-card>
+      </section>
+
+    </div>
+  </nb-layout-column>
+</nb-layout>

@@ -1,1 +1,58 @@
-<p>cart works!</p>
+<nb-layout>
+  <nb-layout-column class="p-0">
+    <div class="home-wrapper">
+
+      <!-- Sidebar giỏ hàng -->
+      <aside class="categories-sidebar">
+        <nb-card>
+          <nb-card-header>
+            <div class="panel-title">Giỏ hàng</div>
+          </nb-card-header>
+          <nb-card-body class="p-0">
+            <nb-list>
+              <nb-list-item *ngFor="let item of cartItems">
+                <div class="product-info">
+                  <img class="product-img" [src]="item.productImg" [alt]="item.productName" />
+                  <div class="product-details">
+                    <span>{{ item.productName }}</span>
+                    <span>Số lượng: {{ item.quantity }}</span>
+                    <span>{{ formatPrice(item.price) }} x {{ item.quantity }}</span>
+                  </div>
+                </div>
+              </nb-list-item>
+            </nb-list>
+          </nb-card-body>
+        </nb-card>
+      </aside>
+
+      <!-- Tóm tắt giỏ hàng -->
+      <div class="content-main">
+        <nb-card class="summary-card">
+          <nb-card-header>
+            <div class="panel-title">Tóm tắt Giỏ hàng</div>
+          </nb-card-header>
+          <nb-card-body>
+            <div class="summary-info">
+              <div class="total">
+                <strong>Tổng tiền: </strong>
+                <span>{{ totalPrice | currency }}</span>
+              </div>
+              <div class="tax">
+                <strong>Thuế: </strong>
+                <span>{{ taxAmount | currency }}</span>
+              </div>
+              <div class="shipping">
+                <strong>Phí vận chuyển: </strong>
+                <span>{{ shippingFee | currency }}</span>
+              </div>
+            </div>
+            <button nbButton status="success" (click)="goToCheckout()">
+                Thanh toán
+            </button>
+          </nb-card-body>
+        </nb-card>
+      </div>
+
+    </div>
+  </nb-layout-column>
+</nb-layout>

@@ -1,0 +1,114 @@
+/* Layout cho panel chính */
+.panel {
+  nb-card {
+    border-radius: 12px !important;
+    overflow: hidden;
+  }
+
+  /* Tiêu đề panel */
+  .panel-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #222;
+  }
+}
+
+/* Hiển thị thông tin điểm thưởng */
+.loyalty-info {
+  .loyalty-points {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .points, .value {
+      font-size: 1rem;
+      color: #333;
+      font-weight: 600;
+
+      span {
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+/* Tùy chọn sử dụng điểm */
+.use-points-option {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  /* Checkbox tùy chọn */
+  nb-checkbox {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  /* Input nhập số điểm */
+  .points-amount {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    label {
+      font-size: 0.95rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+
+      &:focus {
+        border-color: #5a9df9;
+      }
+    }
+
+    .help-text {
+      font-size: 0.85rem;
+      color: #888;
+    }
+  }
+}
+
+/* Styling cho các thông báo khi hiển thị điểm thưởng */
+.loyalty-points, .value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.loyalty-points span, .value span {
+  font-weight: 700;
+  color: #e53935;
+}
+
+/* Các nút trong phần panel */
+.panel-action a {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #3f51b5;
+}
+
+.panel-action a:hover {
+  color: #1e40af;
+}
+
+/* Giới hạn số điểm trong input */
+input[type="number"]::-webkit-outer-spin-button, 
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
