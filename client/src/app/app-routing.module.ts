@@ -16,6 +16,7 @@ import { DiscountsComponent } from './pages/admin/discounts/discounts.component'
 import { ProductsAdminComponent } from './pages/admin/products/products-admin.component';
 import { LoginComponent } from 'src/app/pages/account/auth/login/login.component';
 import { RegisterComponent } from 'src/app/pages/account/auth/register/register.component';
+import { AdminOrdersComponent } from './pages/admin/orders/admin-orders.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -45,7 +46,7 @@ const routes: Routes = [
   { path: 'admin/dashboard', component: DashboardComponent },
   { path: 'admin/users', component: UsersComponent },
   { path: 'admin/products', component: ProductsAdminComponent },
-  { path: 'admin/orders', component: OrdersComponent },
+  { path: 'admin/orders', component: AdminOrdersComponent },
   { path: 'admin/discounts', component: DiscountsComponent },
 
   { path: '**', redirectTo: '/home' },

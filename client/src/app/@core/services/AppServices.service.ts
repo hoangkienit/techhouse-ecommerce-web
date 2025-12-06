@@ -8,6 +8,7 @@ import { TranslationService } from './translate.service';
 import { ProductService } from './apis/product.service';
 import { NotificationService } from './notification.service';
 import { AddressService } from './apis/address.service';
+import { OrderService } from './apis/order.service';
 
 @Injectable({
     providedIn: 'root'
@@ -28,5 +29,6 @@ export class AppServices {
         public UploadService: UploadService,
         public UserService: UserService,
         public AddressService: AddressService,
+        public OrderService: OrderService,
     ) { }
 }
