@@ -57,17 +57,18 @@ export class ViewOrderComponent {
 
   updateStatus() {
     if (!this.selectedStatus) return;
-
-    this.order.status = this.selectedStatus;
-
-    // this.dialogRef.close({
-    //   updated: true,
-    //   status: this.selectedStatus
-    // });
+    this._appServices.ModalService.createConfirmDialog(
+      "Bạn có muốn thay đổi trạng thái đơn hàng này không?",
+      "Xác nhận",
+      "Xác nhận",
+      "Thoát",
+      () => this.updateOrderStatus()
+    )
   }
 
-  updateOrderStatus(orderId: string, status: string) {
-    this._appServices.OrderService.updateOrderStatus(orderId, status).subscribe(() => {
+  updateOrderStatus() {
+    this.order.status = this.selectedStatus;
+    this._appServices.OrderService.updateOrderStatus(this.order._id, this.order.status).subscribe(() => {
     });
   }
 
