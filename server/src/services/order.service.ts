@@ -1,6 +1,6 @@
 import { IOrder, IOrderQueryOptions } from "../interfaces/order.interface";
 import OrderRepo from "../repositories/order.repository";
-import { ClientSession } from "mongoose";
+import mongoose, { ClientSession } from "mongoose";
 import LoyaltyService from "./loyalty.service";
 import { BadRequestError } from "../core/error.response";
 
@@ -11,6 +11,8 @@ class OrderService {
 
   static async GetOrders(options: IOrderQueryOptions) {
     const {
+      q,
+      orderCode,
       userId,
       guestId,
       status,
@@ -31,6 +33,33 @@ class OrderService {
       }
     }
 
+    if (q && orderCode && orderCode.trim() && q.trim()) {
+      const orFilter: any[] = [
+        { contactEmail: { $regex: q, $options: "i" } },
+        { orderCode: { $regex: orderCode, $options: "i" } },
+        {
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$user" }, // ép ObjectId về string
+              regex: q,
+              options: "i"
+            }
+          }
+        },
+        {
+          $expr: {
+            $regexMatch: {
+              input: { $toString: "$guestId" }, // ép ObjectId về string
+              regex: q,
+              options: "i"
+            }
+          }
+        }
+      ];
+
+      filter.$or = orFilter;
+    }
+
     const currentPage = Math.max(1, Number(page) || 1);
     const currentLimit = Math.min(100, Math.max(1, Number(limit) || 10));
 
@@ -41,9 +70,9 @@ class OrderService {
       orders,
       pagination: {
         total,
-        page: currentPage,
-        limit: currentLimit,
-        totalPages
+        pageIndex: currentPage,
+        pageSize: currentLimit,
+        totalItems: total
       }
     };
   }
@@ -72,7 +101,7 @@ class OrderService {
   }
 
   static async DeleteOrder(orderId: string) {
-    if(!await OrderRepo.findById(orderId)) throw new BadRequestError("Order not found");
+    if (!await OrderRepo.findById(orderId)) throw new BadRequestError("Order not found");
     await LoyaltyService.DeleteByOrder(orderId);
 
     await OrderRepo.delete(orderId);

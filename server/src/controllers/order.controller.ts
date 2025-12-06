@@ -9,45 +9,27 @@ class OrderController {
   static async GetOrders(req: Request, res: Response) {
     const isAdmin = req.user?.role === "admin" || req.user?.role === "manager";
 
-    const {
-      status,
-      sort,
-      page,
-      limit,
-      userId: queryUserId,
-      guestId
-    } = req.query;
+    const { orderCode, status, sort, pageIndex, pageSize, userId, guestId, q } = req.query;
 
     const options: IOrderQueryOptions = {};
-
     options.sort = sort === "oldest" ? "oldest" : "newest";
+    if (typeof pageIndex === "string" && pageIndex.trim()) options.page = Number(pageIndex);
+    if (typeof pageSize === "string" && pageSize.trim()) options.limit = Number(pageSize);
+    if (typeof orderCode === "string" && orderCode.trim()) options.orderCode = orderCode;
 
-    if (typeof page === "string" && page.trim()) {
-      options.page = Number(page);
+    if (typeof status === "string" && status.trim()) {
+      const statuses = status.split(",").map(s => s.trim()).filter(Boolean) as IOrder["status"][];
+      if (statuses.length) options.status = statuses;
     }
 
-    if (typeof limit === "string" && limit.trim()) {
-      options.limit = Number(limit);
-    }
+    if (typeof guestId === "string" && guestId.trim()) options.guestId = guestId.trim();
+    if (typeof q === "string" && q.trim()) options.q = q.trim(); // search orderCode hoặc email khách
 
-    if (typeof status === "string" && status.trim().length > 0) {
-      const statuses = status
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean) as IOrder["status"][];
-
-      if (statuses.length) {
-        options.status = statuses;
-      }
-    }
-
-    if (typeof guestId === "string" && guestId.trim()) {
-      options.guestId = guestId.trim();
-    }
-
-    if (isAdmin && typeof queryUserId === "string" && queryUserId.trim()) {
-      options.userId = queryUserId.trim();
+    if (isAdmin) {
+      // Admin: filter theo userId query nếu có, hoặc lấy toàn bộ nếu không
+      if (typeof userId === "string" && userId.trim()) options.userId = userId.trim();
     } else if (req.user?.userId) {
+      // Người thường: luôn filter theo chính họ
       options.userId = req.user.userId;
     }
 
