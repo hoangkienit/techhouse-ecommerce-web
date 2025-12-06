@@ -111,6 +111,21 @@ export class UsersComponent {
     this.loadUsers();
   }
 
+  confirmCheck(u: any) {
+    const msg = [
+      'Bạn có chắc muốn muốn khóa tài khoản này không?',
+      'Bạn có chắc muốn muốn mở khóa tài khoản này không?'
+    ]
+    this._appService.ModalService.createConfirmDialog(
+      u.isBanned ? msg[1] : msg[0],
+      'Xác nhận',
+      'Xác nhận',
+      'Thoát',
+      () => this.bandAccHandle(u),
+      () => { }
+    );
+  }
+
   bandAccHandle(u: any) {
     this.isLoading = true;
     const params = {
