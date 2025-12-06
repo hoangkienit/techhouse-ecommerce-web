@@ -4,6 +4,7 @@ import OrderService from "../services/order.service";
 import { OK } from "../core/success.response";
 import { IOrderQueryOptions, IOrder } from "../interfaces/order.interface";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../core/error.response";
+import { Forbidden } from "../utils/error.helper";
 
 class OrderController {
   static async GetOrders(req: Request, res: Response) {
@@ -81,6 +82,48 @@ class OrderController {
       message: "Cập nhật trạng thái đơn hàng thành công",
       data: { order }
     }).send(res);
+  }
+
+
+  // Admin board tổng quát
+  static async GetDashboard(req: Request, res: Response) {
+    if (!["admin", "manager"].includes(req.user?.role || "")) {
+      return new Forbidden({ message: "Bạn không có quyền truy cập dashboard" }).send(res);
+    }
+    const data = await OrderService.GetDashboard();
+    new OK({ message: "Dashboard data", data }).send(res);
+  }
+
+  static async GetRevenueBoard(req: Request, res: Response) {
+    if (!["admin", "manager"].includes(req.user?.role || "")) {
+      return new Forbidden({ message: "Bạn không có quyền truy cập dashboard" }).send(res);
+    }
+    const data = await OrderService.GetRevenueBoard();
+    new OK({ message: "Revenue board", data }).send(res);
+  }
+
+  static async GetTopProductsBoard(req: Request, res: Response) {
+    if (!["admin", "manager"].includes(req.user?.role || "")) {
+      return new Forbidden({ message: "Bạn không có quyền truy cập dashboard" }).send(res);
+    }
+    const data = await OrderService.GetTopProductsBoard();
+    new OK({ message: "Top products", data }).send(res);
+  }
+
+  static async GetCustomerBoard(req: Request, res: Response) {
+    if (!["admin", "manager"].includes(req.user?.role || "")) {
+      return new Forbidden({ message: "Bạn không có quyền truy cập dashboard" }).send(res);
+    }
+    const data = await OrderService.GetCustomerBoard();
+    new OK({ message: "Customer board", data }).send(res);
+  }
+
+  static async GetPaymentMethodBoard(req: Request, res: Response) {
+    if (!["admin", "manager"].includes(req.user?.role || "")) {
+      return new Forbidden({ message: "Bạn không có quyền truy cập dashboard" }).send(res);
+    }
+    const data = await OrderService.GetPaymentMethodBoard();
+    new OK({ message: "Payment method board", data }).send(res);
   }
 }
 
