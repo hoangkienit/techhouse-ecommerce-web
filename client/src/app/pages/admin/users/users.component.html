@@ -102,7 +102,7 @@
                                     [status]="!u?.isBanned ? 'success' : 'warning'" class="ms-1" [nbTooltip]="!u?.isBanned 
                                     ? ('tooltips.user-page.unban' | translate)
                                     : ('tooltips.user-page.ban' | translate)" nbTooltipStatus="primary"
-                                    (click)="bandAccHandle(u)">
+                                    (click)="confirmCheck(u)">
                                     <nb-icon [icon]="!u?.isBanned ?  'unlock' : 'lock-outline'">
                                     </nb-icon>
                                 </button>
