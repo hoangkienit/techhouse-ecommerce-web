@@ -45,6 +45,8 @@ import { UpdateLoyaltyModalComponent } from './pages/admin/users/update-loyalty/
 import { EditRoleModalComponent } from './pages/admin/users/role-user/edit-role-modal/edit-role-modal.component';
 import { ConfirmDialogBaseBodyComponent } from './@core/services-components/confirm-dialog-base-body/confirm-dialog-base-body.component';
 import { NgxGaugeDashBoardComponent } from './@core/services-components/ngx-gauge-dash-board/ngx-gauge-dash-board.component';
+import { AdminOrdersComponent } from './pages/admin/orders/admin-orders.component';
+import { ViewOrderComponent } from './pages/admin/orders/view-order/view-order.component';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -84,7 +86,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     UpdateLoyaltyModalComponent,
     EditRoleModalComponent,
     ConfirmDialogBaseBodyComponent,
-    NgxGaugeDashBoardComponent
+    NgxGaugeDashBoardComponent,
+    AdminOrdersComponent,
+    ViewOrderComponent
   ],
   imports: [
     BrowserModule,
