@@ -1,1 +1,47 @@
-<p>brands works!</p>
+<nb-layout>
+  <nb-layout-column class="p-0">
+    <div class="brands-wrapper">
+
+      <!-- Sidebar lọc -->
+      <aside class="categories-sidebar">
+        <nb-card>
+          <nb-card-header>
+            <div class="panel-title">Bộ lọc Thương hiệu</div>
+          </nb-card-header>
+          <nb-card-body>
+            <!-- Lọc theo thương hiệu -->
+            <div class="filter-item">
+              <label class="filter-label">Thương hiệu</label>
+              <nb-select [(selected)]="selectedBrand" placeholder="Chọn thương hiệu" (selectedChange)="onFilterChange()">
+                <nb-option value="">Tất cả</nb-option>
+                <nb-option *ngFor="let brand of brands" [value]="brand.label">{{ brand.label }}</nb-option>
+              </nb-select>
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </aside>
+
+      <!-- Danh sách thương hiệu -->
+      <div class="content-main">
+        <section class="panel">
+          <nb-card>
+            <nb-card-body>
+              <div class="brands-list">
+                <nb-card class="brand-card" *ngFor="let brand of brands">
+                  <nb-card-body (click)="goToBrandDetail(brand.id)">
+                    <div class="brand-name">{{ brand.label }}</div>
+                  </nb-card-body>
+                </nb-card>
+              </div>
+
+              <!-- Pagination -->
+              <ngx-paging [pageIndex]="_paging.pageIndex" [pageSize]="_paging.pageSize" [totalItems]="_paging.totalItems"
+                          (onPageChange)="onPageChange($event)">
+              </ngx-paging>
+            </nb-card-body>
+          </nb-card>
+        </section>
+      </div>
+    </div>
+  </nb-layout-column>
+</nb-layout>

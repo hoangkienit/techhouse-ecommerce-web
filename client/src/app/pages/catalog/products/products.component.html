@@ -1,1 +1,59 @@
-<p>products works!</p>
+<nb-layout>
+  <nb-layout-column class="p-0">
+    <div class="filter-wrapper">
+      <!-- Search Filter -->
+      <div class="filter-item">
+        <label class="filter-label">Tìm kiếm</label>
+        <input nbInput [(ngModel)]="searchKeyword" placeholder="Tìm sản phẩm..." (input)="onFilterChange()">
+      </div>
+
+      <!-- Brand Filter -->
+      <div class="filter-item">
+        <label class="filter-label">Thương hiệu</label>
+        <nb-select [(selected)]="selectedBrand" placeholder="Chọn thương hiệu" (selectedChange)="onFilterChange()">
+          <nb-option value="">Tất cả</nb-option>
+          <nb-option *ngFor="let brand of brandList" [value]="brand.label">{{ brand.label }}</nb-option>
+        </nb-select>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="filter-item">
+        <label class="filter-label">Danh mục</label>
+        <nb-select [(selected)]="selectedCategory" placeholder="Chọn danh mục" (selectedChange)="onFilterChange()">
+          <nb-option value="">Tất cả</nb-option>
+          <nb-option *ngFor="let category of categoryList" [value]="category.label">{{ category.label }}</nb-option>
+        </nb-select>
+      </div>
+
+      <!-- Price Range Filter -->
+      <div class="filter-item">
+        <label class="filter-label">Khoảng giá</label>
+        <div class="price-range-input">
+          <input nbInput [(ngModel)]="minPrice" placeholder="Từ" (input)="onFilterChange()">
+          <input nbInput [(ngModel)]="maxPrice" placeholder="Đến" (input)="onFilterChange()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Product List -->
+    <div class="products-list" [ngClass]="{'grid-view': viewMode === 'grid', 'list-view': viewMode === 'list'}">
+      <div class="product-card" *ngFor="let product of products">
+        <nb-card (click)="goToDetail(product.product_id)">
+          <nb-card-header>
+            <img [src]="product.product_imgs[0]" alt="product-image">
+          </nb-card-header>
+          <nb-card-body>
+            <div class="product-name">{{ product.product_name }}</div>
+            <div class="product-brand">{{ product.product_brand }}</div>
+            <div class="product-price">{{ formatPrice(product.product_price) }}</div>
+            <div class="product-description">{{ product.product_description }}</div>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <ngx-paging [pageIndex]="_paging.pageIndex" [pageSize]="_paging.pageSize" [totalItems]="_paging.totalItems" (onPageChange)="onPageChange($event)">
+    </ngx-paging>
+  </nb-layout-column>
+</nb-layout>

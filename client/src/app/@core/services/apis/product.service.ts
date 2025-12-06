@@ -25,6 +25,10 @@ export class ProductService {
     return this.http.get<any>(`${this.baseUrl}/list`, { params: buildHttpParams(params), ...this.credentials });
   }
 
+  getProductById(productId: number): Observable<Product> {
+    return this.http.get<Product>(`${this.baseUrl}/${productId}`, this.credentials);
+  }
+
   updateProducts(formData: FormData): Observable<any> {
     const productId = formData.get('productId');
 

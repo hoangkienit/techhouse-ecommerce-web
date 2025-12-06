@@ -17,6 +17,7 @@ import { ProductsAdminComponent } from './pages/admin/products/products-admin.co
 import { LoginComponent } from 'src/app/pages/account/auth/login/login.component';
 import { RegisterComponent } from 'src/app/pages/account/auth/register/register.component';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { ProductDetailComponent } from './pages/catalog/products/product-detail/product-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
 
   { path: 'catalog/products', component: ProductsComponent },
+  { path: 'catalog/products/:id', component: ProductDetailComponent },
   { path: 'catalog/categories', component: CategoriesComponent },
   { path: 'catalog/brands', component: BrandsComponent },
   { path: 'checkout', component: CheckoutComponent },

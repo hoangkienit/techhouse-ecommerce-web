@@ -1,0 +1,80 @@
+<nb-layout>
+  <nb-layout-column class="product-detail-container">
+    <!-- Product details -->
+    <nb-card class="product-detail-card">
+      <nb-card-header>
+        <h2>{{ product?.product_name }}</h2>
+        <p>{{ product?.product_brand }} - {{ formatPrice(product?.product_price || 0) }}</p>
+      </nb-card-header>
+
+      <nb-card-body>
+        <div class="product-images">
+          <img *ngFor="let img of (product?.product_imgs || [])" [src]="img" alt="{{ product?.product_name }}">
+        </div>
+
+        <div class="product-description">
+          <p>{{ product?.product_description }}</p>
+        </div>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- Product variants -->
+    <nb-card class="product-variants">
+      <nb-card-header>
+        <h3>Chọn biến thể</h3>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="variant-options">
+          <div *ngFor="let variant of variants">
+            <label>{{ variant.name }}</label>
+            <nb-select [(selected)]="selectedVariant[variant.key]" (selectedChange)="onVariantChange()">
+              <nb-option *ngFor="let option of variant.options" [value]="option">{{ option }}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- Product reviews -->
+    <nb-card class="product-reviews">
+      <nb-card-header>
+        <h3>Đánh giá sản phẩm</h3>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="reviews-list">
+          <div *ngFor="let review of reviews" class="review">
+            <strong>{{ review.userName }}</strong> - <span>{{ review.rating }} sao</span>
+            <p>{{ review.comment }}</p>
+            <small>{{ review.createdAt | date: 'short' }}</small>
+          </div>
+        </div>
+
+        <div class="add-review">
+          <h4>Viết đánh giá</h4>
+          <input nbInput [(ngModel)]="newReview.comment" placeholder="Nhập nhận xét" />
+          <button nbButton (click)="submitReview()">Gửi đánh giá</button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- Product rating -->
+    <nb-card class="product-rating">
+      <nb-card-header>
+        <h3>Đánh giá sản phẩm</h3>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="rating-section">
+          <div class="rating-stars">
+            <nb-icon *ngFor="let star of [1, 2, 3, 4, 5]" icon="star-outline" [ngClass]="{'filled': rating >= star}" (click)="setRating(star)"></nb-icon>
+          </div>
+          <div class="rating-value">{{ rating }} sao</div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+
+    <!-- Pagination -->
+    <ngx-paging [pageIndex]="_paging.pageIndex" [pageSize]="_paging.pageSize" [totalItems]="_paging.totalItems"
+                (onPageChange)="onPageChange($event)">
+    </ngx-paging>
+  </nb-layout-column>
+</nb-layout>

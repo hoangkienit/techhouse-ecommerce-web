@@ -41,6 +41,7 @@ import { NgxImgUploadComponent } from './@core/services-components/ngx-img-uploa
 import { NgxPagingComponent } from './@core/services-components/ngx-paging/ngx-paging.component';
 import { SortLabelPipe } from './@core/pipe/sort-label.pipe';
 import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { ProductDetailComponent } from './pages/catalog/products/product-detail/product-detail.component';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -76,7 +77,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     NgxImgUploadComponent,
     NgxPagingComponent,
     SortLabelPipe,
-    CheckoutComponent
+    CheckoutComponent,
+    ProductDetailComponent
   ],
   imports: [
     BrowserModule,

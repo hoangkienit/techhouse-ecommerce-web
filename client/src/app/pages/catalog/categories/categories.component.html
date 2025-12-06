@@ -1,1 +1,47 @@
-<p>categories works!</p>
+<nb-layout>
+  <nb-layout-column class="p-0">
+    <div class="categories-wrapper">
+
+      <!-- Sidebar lọc -->
+      <aside class="categories-sidebar">
+        <nb-card>
+          <nb-card-header>
+            <div class="panel-title">Bộ lọc Danh mục</div>
+          </nb-card-header>
+          <nb-card-body>
+            <!-- Lọc theo danh mục -->
+            <div class="filter-item">
+              <label class="filter-label">Danh mục</label>
+              <nb-select [(selected)]="selectedCategory" placeholder="Chọn danh mục" (selectedChange)="onFilterChange()">
+                <nb-option value="">Tất cả</nb-option>
+                <nb-option *ngFor="let category of categories" [value]="category.label">{{ category.label }}</nb-option>
+              </nb-select>
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </aside>
+
+      <!-- Danh sách danh mục -->
+      <div class="content-main">
+        <section class="panel">
+          <nb-card>
+            <nb-card-body>
+              <div class="categories-list">
+                <nb-card class="category-card" *ngFor="let category of categories">
+                  <nb-card-body (click)="goToCategoryDetail(category.id)">
+                    <div class="category-name">{{ category.label }}</div>
+                  </nb-card-body>
+                </nb-card>
+              </div>
+
+              <!-- Pagination -->
+              <ngx-paging [pageIndex]="_paging.pageIndex" [pageSize]="_paging.pageSize" [totalItems]="_paging.totalItems"
+                          (onPageChange)="onPageChange($event)">
+              </ngx-paging>
+            </nb-card-body>
+          </nb-card>
+        </section>
+      </div>
+    </div>
+  </nb-layout-column>
+</nb-layout>
