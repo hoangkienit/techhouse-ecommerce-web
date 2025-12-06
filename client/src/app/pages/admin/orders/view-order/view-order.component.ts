@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { NbDialogRef } from '@nebular/theme';
 import { OrderStatusEnum } from 'src/app/@core/models/order.model';
+import { AppServices } from 'src/app/@core/services/AppServices.service';
 
 @Component({
   selector: 'app-view-order',
@@ -21,7 +22,7 @@ export class ViewOrderComponent {
   selectedStatus: OrderStatusEnum | null = null;
   showStatusSelect = false;
 
-  constructor(private dialogRef: NbDialogRef<ViewOrderComponent>) { }
+  constructor(private dialogRef: NbDialogRef<ViewOrderComponent>, private _appServices: AppServices) { }
 
   get currentStatusIndex() {
     return this.orderStatusSteps.indexOf(this.order.status);
@@ -59,9 +60,14 @@ export class ViewOrderComponent {
 
     this.order.status = this.selectedStatus;
 
-    this.dialogRef.close({
-      updated: true,
-      status: this.selectedStatus
+    // this.dialogRef.close({
+    //   updated: true,
+    //   status: this.selectedStatus
+    // });
+  }
+
+  updateOrderStatus(orderId: string, status: string) {
+    this._appServices.OrderService.updateOrderStatus(orderId, status).subscribe(() => {
     });
   }
 

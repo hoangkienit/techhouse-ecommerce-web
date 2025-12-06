@@ -86,12 +86,6 @@ export class AdminOrdersComponent implements OnInit {
     });
   }
 
-  updateOrderStatus(orderId: string, status: string) {
-    this._appService.OrderService.updateOrderStatus(orderId, status).subscribe(() => {
-      this.loadOrders();
-    });
-  }
-
   deleteOrder(orderId: string) {
     this._appService.OrderService.deleteOrder(orderId).subscribe(() => {
       this.loadOrders();
