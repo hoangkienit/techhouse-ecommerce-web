@@ -69,7 +69,6 @@ export class UsersComponent {
   }
 
   loadUsers() {
-    console.log('bbb')
     this.isLoading = true;
     this.params = {
       ...this.filter,

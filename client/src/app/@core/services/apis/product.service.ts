@@ -18,7 +18,7 @@ export class ProductService {
       console.log(key, value);
     }
 
-    return this.http.post<{}>(`${this.baseUrl}/add`, product, this.credentials);
+    return this.http.post<any>(`${this.baseUrl}/add`, product, this.credentials);
   }
 
   getAllProducts(params: any): Observable<any> {
@@ -34,5 +34,9 @@ export class ProductService {
         withCredentials: true
       }
     );
+  }
+
+  deleteProduct(productId: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/delete/${productId}`, null, this.credentials);
   }
 }

@@ -50,4 +50,11 @@ router.patch(
  */
 router.delete("/:orderId", Authenticate, AuthorizeAdmin, AsyncHandler(OrderController.DeleteOrder));
 
+router.get("/dashboard", Authenticate, AsyncHandler(OrderController.GetDashboard));
+router.get("/revenue", Authenticate, AsyncHandler(OrderController.GetRevenueBoard));
+router.get("/top-products", Authenticate, AsyncHandler(OrderController.GetTopProductsBoard));
+router.get("/customers", Authenticate, AsyncHandler(OrderController.GetCustomerBoard));
+router.get("/payment-methods", Authenticate, AsyncHandler(OrderController.GetPaymentMethodBoard));
+
+
 export default router;

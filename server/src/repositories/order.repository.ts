@@ -43,6 +43,52 @@ class OrderRepo {
       .populate("user", "fullname email profile_img")
       .lean();
   }
+
+  static async countAll() {
+    return Order.countDocuments();
+  }
+
+  static async countByAllStatuses() {
+    const statuses = ["pending", "confirmed", "paid", "fulfilled", "cancelled"];
+    const result: Record<string, number> = {};
+    await Promise.all(statuses.map(async s => {
+      result[s] = await Order.countDocuments({ status: s });
+    }));
+    return result;
+  }
+
+  static async findLatest(limit: number) {
+    return Order.find().sort({ placedAt: -1 }).limit(limit).lean();
+  }
+
+  static async findPaidOrders() {
+    return Order.find({ status: { $in: ["paid", "fulfilled"] } }).lean();
+  }
+
+  static async findTopProducts(limit = 5) {
+    return Order.aggregate([
+      { $unwind: "$items" },
+      { $group: { _id: "$items.product_name", qty: { $sum: "$items.quantity" }, revenue: { $sum: "$items.lineTotal" } } },
+      { $sort: { qty: -1 } },
+      { $limit: limit }
+    ]);
+  }
+
+  static async aggregateCustomers() {
+    return Order.aggregate([
+      { $match: { user: { $ne: null } } },
+      { $group: { _id: "$user", totalOrders: { $sum: 1 }, totalSpent: { $sum: "$total" } } },
+      { $sort: { totalSpent: -1 } },
+      { $limit: 10 }
+    ]);
+  }
+
+  static async aggregatePaymentMethods() {
+    return Order.aggregate([
+      { $group: { _id: "$paymentMethod.type", totalOrders: { $sum: 1 }, totalRevenue: { $sum: "$total" } } },
+      { $sort: { totalOrders: -1 } }
+    ]);
+  }
 }
 
 export default OrderRepo;
