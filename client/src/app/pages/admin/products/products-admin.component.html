@@ -102,7 +102,7 @@
                 <button nbButton size="tiny" status="info" (click)="openEditModalProduct(product)">
                   <nb-icon icon="edit-2-outline"></nb-icon>
                 </button>
-                <button nbButton size="tiny" status="danger" class="ms-1">
+                <button nbButton size="tiny" status="danger" class="ms-1" (click)="delProduct(product._id)">
                   <nb-icon icon="trash-2-outline"></nb-icon>
                 </button>
               </td>

@@ -39,7 +39,7 @@ router.patch('/update/:productId',
  * @body productId: string
  * @access Admin
  */
-router.post('/delete',
+router.post('/delete/:productId',
     Authenticate,
     AuthorizeAdmin,
     AsyncHandler(ProductController.DeleteProduct));

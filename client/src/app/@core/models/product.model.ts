@@ -1,6 +1,7 @@
 import { ProductStatus } from "../enums/products/product.enum";
 
 export interface Product {
+    _id?: string;
     product_name: string;               // Tên sản phẩm
     product_description: string;        // Mô tả chi tiết sản phẩm
     product_slug: string;               // Slug dùng cho URL

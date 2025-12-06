@@ -119,4 +119,33 @@ export class ProductsAdminComponent {
     this._currencyHelper.setMaxValue(val);
     this.maxPrice = Number(this._currencyHelper.maxValue.replace(/\./g, ''));
   }
+
+  delProduct(productId: any) {
+    this._appService.ModalService.createConfirmDialog(
+      'Bạn có chắc muốn xóa sản phẩm này không?',
+      'Xác nhận',
+      'Xác nhận',
+      'Thoát',
+      () => this.DeleteProdAction(productId)
+    )
+  }
+
+  DeleteProdAction(prodId: any) {
+    this.isLoading = true;
+    this._appService.ProductService.deleteProduct(prodId).subscribe({
+      next: res => {
+        this._appService.NotificationService.createNotification(
+          'Xóa sản phẩm thành công',
+        )
+        this.isLoading = false;
+      },
+      error: e => {
+        this._appService.NotificationService.createNotification(
+          'Có lỗi sảy ra khi xóa sản phẩm!!',
+          'error'
+        );
+        this.isLoading = false;
+      }
+    })
+  }
 }

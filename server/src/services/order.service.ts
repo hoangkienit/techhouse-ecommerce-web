@@ -114,6 +114,33 @@ class OrderService {
     if (!order) throw new BadRequestError("Order not found");
     return order;
   }
+
+  static async GetDashboard() {
+    const totalOrders = await OrderRepo.countAll();
+    const statusCounts = await OrderRepo.countByAllStatuses();
+    const latestOrders = await OrderRepo.findLatest(5);
+    return { totalOrders, statusCounts, latestOrders };
+  }
+
+  static async GetRevenueBoard() {
+    const orders = await OrderRepo.findPaidOrders();
+    const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
+    const totalDiscount = orders.reduce((sum, o) => sum + (o.discountAmount || 0), 0);
+    const totalOrders = orders.length;
+    return { totalRevenue, totalDiscount, totalOrders };
+  }
+
+  static async GetTopProductsBoard(limit = 5) {
+    return OrderRepo.findTopProducts(limit);
+  }
+
+  static async GetCustomerBoard() {
+    return OrderRepo.aggregateCustomers();
+  }
+
+  static async GetPaymentMethodBoard() {
+    return OrderRepo.aggregatePaymentMethods();
+  }
 }
 
 export default OrderService;
