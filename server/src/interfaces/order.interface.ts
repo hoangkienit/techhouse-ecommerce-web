@@ -29,7 +29,9 @@ export interface IOrder {
 }
 
 export interface IOrderQueryOptions {
-  userId?: string;
+  orderCode?: string | undefined;
+  q?: string | undefined;
+  userId?: string | undefined;
   guestId?: string;
   status?: Array<IOrder["status"]> | IOrder["status"];
   sort?: "newest" | "oldest";

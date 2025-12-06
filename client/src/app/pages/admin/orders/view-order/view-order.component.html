@@ -1,0 +1,103 @@
+<nb-card class="order-detail-dialog">
+
+    <nb-card-header class="d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="m-0 fw-bold">Chi tiết đơn hàng {{ order?.orderCode }}</h5>
+            <small class="text-muted">Mã khách: {{ order?.user }}</small>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body>
+
+        <!-- ===== ORDER TIMELINE ===== -->
+        <div class="status-timeline mb-4">
+            <div class="timeline-track"></div>
+
+            <div *ngFor="let s of orderStatusSteps; let i = index" class="timeline-step"
+                [class.active]="i <= currentStatusIndex">
+                <div class="circle">
+                    <nb-icon [icon]="getStepIcon(s)"></nb-icon>
+                </div>
+                <span class="label">{{ getStepLabel(s) }}</span>
+            </div>
+        </div>
+
+        <!-- ===== ORDER SUMMARY ===== -->
+        <div class="row mb-4">
+            <div class="col-md-6 mb-2">
+                <nb-card>
+                    <nb-card-header>Thông tin giao hàng</nb-card-header>
+                    <nb-card-body>
+                        <p><strong>Tên:</strong> {{ order?.shippingAddress.fullName }}</p>
+                        <p><strong>Địa chỉ:</strong> {{ order?.shippingAddress.line1 }}, {{ order?.shippingAddress.city
+                            }}</p>
+                        <p><strong>SĐT:</strong> {{ order?.shippingAddress.phone }}</p>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+
+            <div class="col-md-6 mb-2">
+                <nb-card>
+                    <nb-card-header>Thanh toán</nb-card-header>
+                    <nb-card-body>
+                        <p><strong>Phương thức:</strong> {{ order?.paymentMethod?.type }}</p>
+                        <p><strong>Tổng tiền:</strong> {{ order?.total | number }} VND</p>
+                        <p><strong>Điểm thưởng:</strong> {{ order?.points_earned }}</p>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+
+        <!-- ===== ITEMS TABLE ===== -->
+        <nb-card>
+            <nb-card-header>Sản phẩm</nb-card-header>
+            <nb-card-body>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>Sản phẩm</th>
+                            <th>Giá</th>
+                            <th>SL</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of order?.items">
+                            <td><img [src]="item.product_img" width="60"></td>
+                            <td>{{ item.product_name }}</td>
+                            <td>{{ item.unitPrice | number }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.lineTotal | number }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </nb-card-body>
+        </nb-card>
+
+    </nb-card-body>
+
+    <nb-card-footer class="d-flex justify-content-between align-items-center">
+
+        <div>
+            <strong>Trạng thái hiện tại:</strong>
+            <ngx-tag [TagStatus]="order.status">{{ order.status }}</ngx-tag>
+        </div>
+
+        <button nbButton status="primary" (click)="openStatusMenu()">
+            <nb-icon icon="refresh-outline"></nb-icon> Cập nhật trạng thái
+        </button>
+
+    </nb-card-footer>
+
+</nb-card>
+
+<!-- ===== MENU CHỌN TRẠNG THÁI ===== -->
+<nb-select *ngIf="showStatusSelect" placeholder="Chọn trạng thái mới" [(selected)]="selectedStatus"
+    (selectedChange)="updateStatus()">
+
+    <nb-option *ngFor="let s of orderStatusSteps" [value]="s">
+        {{ getStepLabel(s) }}
+    </nb-option>
+
+</nb-select>
