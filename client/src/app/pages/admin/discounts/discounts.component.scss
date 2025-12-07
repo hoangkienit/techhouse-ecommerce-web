@@ -1,0 +1,131 @@
+.discounts-dashboard {
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f7fa;
+
+    h2 {
+        font-size: 26px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #222;
+    }
+
+    .cards-overview {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+
+        .overview-card {
+            flex: 1;
+            border-radius: 16px;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+
+            &:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            }
+
+            &.active {
+                background: linear-gradient(135deg, #42a5f5, #478ed1); // xanh pastel
+            }
+
+            &.inactive {
+                background: linear-gradient(135deg, #ff8a65, #ff7043); // cam nhạt
+            }
+
+            nb-card-header {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                font-weight: 600;
+            }
+
+            nb-card-body {
+                font-size: 28px;
+                font-weight: 700;
+                margin-top: 10px;
+            }
+        }
+    }
+
+    .create-card {
+        margin-bottom: 20px;
+        padding: 15px;
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+
+            input[nbInput] {
+                flex: 1;
+            }
+
+            nb-icon {
+                color: #2575fc;
+                font-size: 20px;
+            }
+        }
+
+        button[nbButton] {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    }
+
+    .list-card {
+        .discount-row {
+            display: grid;
+            grid-template-columns: 1.5fr 2fr 1fr 1fr 1.5fr 1fr;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            gap: 5px;
+
+            span {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .active {
+                color: green;
+                font-weight: 600;
+            }
+
+            .inactive {
+                color: red;
+                font-weight: 600;
+            }
+
+            button[nbButton] {
+                margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+        }
+    }
+}
+
+.no-discounts {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    margin: 15px 0;
+
+    nb-icon {
+        vertical-align: middle;
+        margin-right: 5px;
+        color: #ffb74d;
+    }
+}

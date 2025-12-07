@@ -1,1 +1,93 @@
-<p>discounts works!</p>
+<nb-card>
+    <nb-card-header>
+        <nb-icon icon="pricetag-outline"></nb-icon>Mã giảm giá
+    </nb-card-header>
+    <nb-card-body>
+        <div class="discounts-dashboard">
+            <!-- Tổng số mã -->
+            <div class="cards-overview">
+                <nb-card class="overview-card active">
+                    <nb-card-header>
+                        <nb-icon icon="checkmark-circle-2-outline"></nb-icon>
+                        Mã còn hiệu lực
+                    </nb-card-header>
+                    <nb-card-body>
+                        {{ activeDiscountsCount }}
+                    </nb-card-body>
+                </nb-card>
+
+                <nb-card class="overview-card inactive">
+                    <nb-card-header>
+                        <nb-icon icon="close-circle-outline"></nb-icon>
+                        Mã đã vô hiệu
+                    </nb-card-header>
+                    <nb-card-body>
+                        {{ inactiveDiscountsCount }}
+                    </nb-card-body>
+                </nb-card>
+            </div>
+
+            <!-- Tạo mã mới -->
+            <nb-card class="create-card mb-2" *ngIf="showCreateForm">
+                <form [formGroup]="createForm" (ngSubmit)="createDiscount()">
+                    <div class="form-row">
+                        <nb-icon icon="key-outline"></nb-icon>
+                        <input nbInput placeholder="Code (5 ký tự)" formControlName="code" />
+                    </div>
+                    <div class="form-row">
+                        <nb-icon icon="text-outline"></nb-icon>
+                        <input nbInput placeholder="Mô tả" formControlName="description" />
+                    </div>
+                    <div class="form-row">
+                        <nb-icon icon="percent-outline"></nb-icon>
+                        <input nbInput type="number" placeholder="Phần trăm (%)" formControlName="percentage" />
+                    </div>
+                    <div class="form-row">
+                        <nb-icon icon="repeat-outline"></nb-icon>
+                        <input nbInput type="number" placeholder="Số lượt sử dụng" formControlName="usageLimit" />
+                    </div>
+                    <button nbButton status="success" type="submit" [disabled]="createForm.invalid">
+                        <nb-icon icon="plus-outline"></nb-icon> Tạo
+                    </button>
+                </form>
+            </nb-card>
+
+            <button nbButton status="primary" (click)="toggleCreateForm()">
+                {{ showCreateForm ? 'Huỷ' : 'Tạo mã mới' }}
+            </button>
+
+            <!-- Bảng chi tiết -->
+            <nb-card class="list-card mt-3">
+                <nb-card-header>
+                    Danh sách mã
+                </nb-card-header>
+                <nb-card-body>
+                    <ng-container *ngIf="discounts.length; else noDiscounts">
+                        <div *ngFor="let d of discounts" class="discount-row">
+                            <span><nb-icon icon="key-outline"></nb-icon> {{ d.code }}</span>
+                            <span><nb-icon icon="text-outline"></nb-icon> {{ d.description || '-' }}</span>
+                            <span><nb-icon icon="percent-outline"></nb-icon> {{ d.percentage }}%</span>
+                            <span><nb-icon icon="repeat-outline"></nb-icon> {{ d.usageLimit }}</span>
+                            <span [ngClass]="{ active: d.isActive, inactive: !d.isActive }">
+                                <nb-icon
+                                    [icon]="d.isActive ? 'checkmark-circle-2-outline' : 'close-circle-outline'"></nb-icon>
+                                {{ d.isActive ? 'Hoạt động' : 'Vô hiệu' }}
+                            </span>
+                            <button nbButton size="tiny" status="danger" *ngIf="d.isActive"
+                                (click)="deactivate(d.code)">
+                                <nb-icon icon="slash-outline"></nb-icon> Vô hiệu
+                            </button>
+                        </div>
+                    </ng-container>
+                    <ng-template #noDiscounts>
+                        <div class="no-discounts">
+                            <nb-icon icon="alert-circle-outline"></nb-icon>
+                            Chưa có mã giảm giá nào.
+                        </div>
+                    </ng-template>
+                </nb-card-body>
+            </nb-card>
+
+        </div>
+    </nb-card-body>
+</nb-card>
