@@ -62,6 +62,7 @@ export class ResetPasswordComponent {
       error: err => {
         console.error(err);
         this._appServices.NotificationService.createNotification(err.error?.message || 'Không thể đặt lại mật khẩu', NotificationStatus.ERROR);
+        this.isLoading = false
       },
       complete: () => this.isLoading = false
     });
