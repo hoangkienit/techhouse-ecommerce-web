@@ -47,6 +47,7 @@ import { ConfirmDialogBaseBodyComponent } from './@core/services-components/conf
 import { NgxGaugeDashBoardComponent } from './@core/services-components/ngx-gauge-dash-board/ngx-gauge-dash-board.component';
 import { AdminOrdersComponent } from './pages/admin/orders/admin-orders.component';
 import { ViewOrderComponent } from './pages/admin/orders/view-order/view-order.component';
+import { NgChartsModule } from 'ng2-charts';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -116,6 +117,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     NbTabsetModule,
     NbListModule,
     MatSnackBarModule,
+    NgChartsModule,
     NbDialogModule.forRoot(),
     NbToastrModule.forRoot(),
     TranslateModule.forRoot({
