@@ -2,7 +2,7 @@
     <div class="header-container d-flex w-100">
         <!-- Bên trái -->
         <div class="left-section">
-            <img src="assets/images/logo/logo.png" alt="Logo" class="logo" />
+            <img src="assets/images/logo.png" alt="Logo">
             <span class="title">DKD {{ 'headerLayout.title' | translate }}</span>
         </div>
 
@@ -25,7 +25,7 @@
             <button nbButton ghost size="small" nbTooltip="Cart" class="cart-btn">
                 <nb-icon icon="shopping-cart-outline"
                     [style.color]="currentTheme === 'dark' ? '#fff' : 'black'"></nb-icon>
-                <span class="cart-count" [style.color]="currentTheme === 'dark' ? '#fff' : 'red'">3</span>
+                <span class="cart-count" [style.color]="currentTheme === 'dark' ? '#fff' : 'red'">{{cartCount}}</span>
             </button>
 
             <!-- Profile -->

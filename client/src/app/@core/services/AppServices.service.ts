@@ -1,3 +1,4 @@
+import { CartService } from './apis/cart.service';
 import { UserService } from './apis/user.service';
 import { UploadService } from './UploadService.service';
 import { AuthService } from './apis/auth.service';
@@ -30,5 +31,6 @@ export class AppServices {
         public UserService: UserService,
         public AddressService: AddressService,
         public OrderService: OrderService,
+        public CartService: CartService,
     ) { }
 }
