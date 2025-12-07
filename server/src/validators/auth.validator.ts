@@ -110,6 +110,7 @@ export const registerSchema = () =>
         .messages({
           "string.pattern.base": "Số điện thoại phải có từ 9 đến 11 chữ số",
         }),
+        isDefault: Joi.boolean().optional()
     }).required()
       .messages({
         "any.required": "Địa chỉ là bắt buộc",
