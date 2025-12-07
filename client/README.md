@@ -30,5 +30,6 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ******DOCKER***********
 cmd:
-- docker build -t uiweb .
+- docker build --no-cache -t uiweb .
+- docker ps -a        
 - docker run -d -p 8080:80 uiweb
