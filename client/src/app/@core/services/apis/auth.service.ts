@@ -13,12 +13,30 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
+  getUserFromCookie(): any | null {
+    const cookie = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('currentUser='));
+    if (!cookie) return null;
+
+    try {
+      return JSON.parse(decodeURIComponent(cookie.split('=')[1]));
+    } catch {
+      return null;
+    }
+  }
+
   RegisterAccount(params: AuthDtos) {
     return this.http.post<AuthDtos>(`${this.baseUrl}/register`, params, this.credentials);
   }
 
   Login(params: AuthDtos) {
     return this.http.post<any>(`${this.baseUrl}/login`, params, this.credentials);
+  }
+
+
+  Logout() {
+    return this.http.get<{}>(`${this.baseUrl}/logout`, this.credentials);
   }
 
   // AssignRoleToUser(userId: string, role: string) {
@@ -69,9 +87,6 @@ export class AuthService {
   //   return this.http.get<{}>(`${this.baseUrl}/google`, this.credentials);
   // }
 
-  // Logout() {
-  //   return this.http.post<{}>(`${this.baseUrl}/logout`, {}, this.credentials);
-  // }
 
   // GetProfile() {
   //   return this.http.get<{}>(`${this.baseUrl}/profile`, this.credentials);
