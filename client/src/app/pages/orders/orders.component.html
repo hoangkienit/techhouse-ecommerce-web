@@ -1,1 +1,80 @@
-<p>orders works!</p>
+<nb-card [isLoading]="isLoading">
+  <nb-card-header class="d-flex justify-content-between align-items-center">
+    <div class="fw-bold">Đơn hàng của tôi</div>
+    <div class="d-flex gap-2 align-items-center">
+      <input nbInput placeholder="Mã đơn / email" [(ngModel)]="searchCode" (keyup.enter)="onFilterChange()">
+      <nb-select placeholder="Trạng thái" [(selected)]="selectedStatus" (selectedChange)="onFilterChange()">
+        <nb-option value="">Tất cả</nb-option>
+        <nb-option *ngFor="let s of statusList" [value]="s.value">{{ s.value | uppercase }}</nb-option>
+      </nb-select>
+      <button nbButton status="primary" (click)="onFilterChange()">Lọc</button>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Mã đơn</th>
+            <th>Ngày đặt</th>
+            <th>Sản phẩm</th>
+            <th class="text-end">Tổng</th>
+            <th>Trạng thái</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="orders?.length; else empty">
+            <tr *ngFor="let order of orders">
+              <td class="fw-bold">{{ order.orderCode || order._id }}</td>
+              <td>{{ order.placedAt | date:'short' }}</td>
+              <td>
+                <div *ngFor="let item of order.items | slice:0:2" class="d-flex gap-2 align-items-center">
+                  <img [src]="item.product_img || 'assets/images/default-product.png'" (error)="onImgError($event)" width="36" height="36" class="rounded">
+                  <span class="text-truncate" style="max-width: 220px">{{ item.product_name }} x{{ item.quantity }}</span>
+                </div>
+                <small *ngIf="order.items.length > 2" class="text-muted">+{{ order.items.length - 2 }} sản phẩm khác</small>
+              </td>
+              <td class="text-end text-danger fw-bold">{{ formatPrice(order.total) }}</td>
+              <td><ngx-tag [TagStatus]="order.status">{{ getOrderStatusLabel(order.status) }}</ngx-tag></td>
+              <td class="text-end">
+                <button nbButton size="small" status="success" *ngIf="order.status === 'fulfilled'" (click)="openRating(order)">
+                  Đánh giá
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <ngx-paging [pageIndex]="_paging.pageIndex" [pageSize]="_paging.pageSize" [totalItems]="_paging.totalItems"
+      (onPageChange)="onPageChange($event)"></ngx-paging>
+  </nb-card-body>
+</nb-card>
+
+<nb-card *ngIf="ratingTarget">
+  <nb-card-header>Đánh giá đơn {{ ratingTarget.orderCode || ratingTarget._id }}</nb-card-header>
+  <nb-card-body>
+    <div class="mb-2">
+      <label class="form-label">Điểm (1-5)</label>
+      <nb-select [(selected)]="ratingValue">
+        <nb-option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }}</nb-option>
+      </nb-select>
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Nhận xét</label>
+      <textarea nbInput fullWidth placeholder="Chia sẻ trải nghiệm" [(ngModel)]="ratingComment" rows="3"></textarea>
+    </div>
+  </nb-card-body>
+  <nb-card-footer class="text-end">
+    <button nbButton status="basic" class="me-2" (click)="ratingTarget=null">Hủy</button>
+    <button nbButton status="primary" (click)="submitRating()" [disabled]="isSubmittingRating">Gửi</button>
+  </nb-card-footer>
+</nb-card>
+
+<ng-template #empty>
+  <tr>
+    <td colspan="5" class="text-center text-muted fw-bold py-3">Không có đơn hàng</td>
+  </tr>
+</ng-template>

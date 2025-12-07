@@ -5,6 +5,7 @@ import { validate } from '../middlewares/validate.middleware';
 import { loginSchema, registerSchema } from '../validators/auth.validator';
 import { AsyncHandler } from '../utils/async.handler';
 import passport from 'passport';
+import { validate } from '../middlewares/validate.middleware';
 
 const router = express.Router();
 
@@ -46,6 +47,9 @@ router.get('/google', passport.authenticate("google", { scope: ["email", "profil
  * @description Callback từ Google OAuth, trả về access/refresh token
  */
 router.get('/google/callback', passport.authenticate("google", { session: false }), AsyncHandler(AuthController.GoogleCallback));
+
+router.post('/request-reset', AsyncHandler(AuthController.RequestResetPassword));
+router.post('/reset-password', AsyncHandler(AuthController.ResetPassword));
 
 // FACEBOOK
 

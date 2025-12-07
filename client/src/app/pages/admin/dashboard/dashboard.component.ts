@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   topProducts: any[] = [];
   topCustomers: any[] = [];
   paymentMethods: any[] = [];
+  statusCounts: { label: string; value: number }[] = [];
 
   isLoadingDashboard = false;
   isLoadingRevenue = false;
@@ -50,6 +51,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.orderService.getDashboard().subscribe(res => {
         const counts = res.data?.statusCounts || {};
         this.dashboard = res.data || {};
+        this.statusCounts = Object.keys(counts).map(k => ({ label: k, value: counts[k] }));
 
         this.statusChartData = {
           labels: Object.keys(counts),
@@ -65,17 +67,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           responsive: true,
           cutout: '50%',
           plugins: {
-            legend: {
-              position: 'bottom',
-              display: false,
-              labels: { color: '#555', font: { size: 14 } }
-            },
-            tooltip: {
-              enabled: true,
-              backgroundColor: '#333',
-              titleColor: '#fff',
-              bodyColor: '#fff'
-            }
+            legend: { position: 'bottom', display: false },
+            tooltip: { enabled: true }
           }
         };
 

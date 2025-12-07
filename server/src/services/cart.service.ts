@@ -340,7 +340,8 @@ class CartService {
           cart.total = adjustedTotal;
           orderPayload.total = adjustedTotal;
 
-          const earnedPoints = Math.floor(adjustedTotal * 0.001); // Because 1.000 VND is 1 point
+          // Earn 1 point per 10.000 VND
+          const earnedPoints = Math.floor(adjustedTotal * 0.0001);
 
           loyaltyUser.loyalty_points = availablePoints - redeemedPoints + earnedPoints;
           await loyaltyUser.save({ session });

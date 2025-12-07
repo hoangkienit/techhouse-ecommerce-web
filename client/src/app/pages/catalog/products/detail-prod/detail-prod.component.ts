@@ -15,6 +15,8 @@ export class DetailProdComponent implements OnInit {
   product: any = null;
   _currencyHelper: any;
   currentImg = 0; // slide show hiện tại
+  cartId: string | undefined;
+  private retryAddOnce = false;
 
   constructor(
     private _appServices: AppServices,
@@ -25,6 +27,7 @@ export class DetailProdComponent implements OnInit {
 
   ngOnInit(): void {
     this._currencyHelper = new CurrencyHelper();
+    this.cartId = localStorage.getItem('guest_cart_id') || undefined;
 
     this.routerActivated.queryParams.subscribe(params => {
       if (params['productId']) {
@@ -91,12 +94,35 @@ export class DetailProdComponent implements OnInit {
   }
 
   addToCart() {
-    // Gửi dữ liệu vào cart service
-    console.log('Added to cart: ', {
-      product_id: this.product._id,
-      qty: this.quantity
+    const cartId = localStorage.getItem('guest_cart_id') || undefined;
+    this.isLoading = true;
+    this._appServices.CartService.AddToCart(this.product._id, this.quantity, cartId).subscribe({
+      next: res => {
+        this._appServices.GlobalStateService.setCart(res.data);
+        if (res.data?.cartId) {
+          localStorage.setItem('guest_cart_id', res.data.cartId);
+          this.cartId = res.data.cartId;
+        }
+        this.toastrService.success(`Đã thêm ${this.quantity} sản phẩm vào giỏ`, 'Thành công');
+        this.retryAddOnce = false;
+      },
+      error: err => {
+        const msg = err?.error?.message || '';
+        if (msg.toLowerCase().includes('duplicate key') && !this.retryAddOnce) {
+          // stale guest cart id, reset and retry once
+          localStorage.removeItem('guest_cart_id');
+          this.cartId = undefined;
+          this.retryAddOnce = true;
+          this.addToCart();
+          return;
+        }
+        console.error('Error add to cart:', err);
+        this.toastrService.danger('Không thể thêm vào giỏ', 'Lỗi');
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
     });
 
-    this.toastrService.success(`Đã thêm ${this.quantity} sản phẩm vào giỏ`, 'Thành công');
   }
 }

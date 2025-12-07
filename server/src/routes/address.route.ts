@@ -12,7 +12,7 @@ const router = express.Router();
  * @description Lấy danh sách địa chỉ đã lưu của người dùng
  * @access Authenticated
  */
-router.post("/", Authenticate, AsyncHandler(AddressController.List));
+router.get("/", Authenticate, AsyncHandler(AddressController.List));
 router.get("/:userId", Authenticate, AsyncHandler(AddressController.ListAddressByUserId));
 
 /**

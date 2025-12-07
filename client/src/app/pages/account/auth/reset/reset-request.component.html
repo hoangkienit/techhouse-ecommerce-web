@@ -1,0 +1,19 @@
+<nb-card [isLoading]="isLoading">
+  <nb-card-header>Yêu cầu đặt lại mật khẩu</nb-card-header>
+  <nb-card-body>
+    <form [formGroup]="form" class="d-grid gap-2">
+      <div>
+        <label class="form-label">Email</label>
+        <input nbInput fullWidth formControlName="email" placeholder="you@example.com">
+        <small class="text-danger" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">Nhập email hợp lệ</small>
+      </div>
+      <button nbButton status="primary" (click)="submit()" [disabled]="isLoading">Gửi yêu cầu</button>
+    </form>
+
+    <div *ngIf="token" class="mt-3 alert alert-info">
+      <div class="fw-bold">Token:</div>
+      <code>{{ token }}</code>
+      <div *ngIf="expires">Hết hạn: {{ expires | date:'short' }}</div>
+    </div>
+  </nb-card-body>
+</nb-card>

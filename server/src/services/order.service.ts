@@ -2,7 +2,8 @@ import { IOrder, IOrderQueryOptions } from "../interfaces/order.interface";
 import OrderRepo from "../repositories/order.repository";
 import mongoose, { ClientSession } from "mongoose";
 import LoyaltyService from "./loyalty.service";
-import { BadRequestError } from "../core/error.response";
+import { BadRequestError, NotFoundError } from "../core/error.response";
+import OrderFeedbackRepo from "../repositories/order-feedback.repository";
 
 class OrderService {
   static async CreateOrder(data: Partial<IOrder>, options?: { session?: ClientSession }) {
@@ -140,6 +141,56 @@ class OrderService {
 
   static async GetPaymentMethodBoard() {
     return OrderRepo.aggregatePaymentMethods();
+  }
+
+  static async AddFeedback(params: { orderId: string; userId?: string; guestId?: string; rating: number; comment?: string; isAdmin?: boolean }) {
+    const { orderId, userId, guestId, rating, comment, isAdmin } = params;
+    const order = await OrderRepo.findById(orderId);
+    if (!order) throw new NotFoundError("Order not found");
+    if (order.status !== "fulfilled") throw new BadRequestError("Order is not completed yet");
+
+    const ownerId =
+      order.user && typeof order.user === "object" && (order.user as any)._id
+        ? String((order.user as any)._id)
+        : order.user
+          ? String(order.user)
+          : null;
+
+    if (!isAdmin) {
+      if (ownerId) {
+        if (!userId || ownerId !== String(userId)) {
+          throw new BadRequestError("Bạn không thể đánh giá đơn hàng này");
+        }
+      } else if (order.guestId) {
+        if (!guestId || order.guestId !== guestId) {
+          throw new BadRequestError("Bạn không thể đánh giá đơn hàng này");
+        }
+      }
+    }
+
+    const existed = await OrderFeedbackRepo.findExisting(orderId, userId, guestId);
+    if (existed) throw new BadRequestError("Bạn đã đánh giá đơn hàng này");
+
+    return OrderFeedbackRepo.create({
+      order: orderId,
+      user: userId ?? "",
+      guestId: guestId || null,
+      rating: rating ?? 0,
+      comment: comment || ""
+    });
+  }
+
+  static async ListFeedback(orderId: string, requester?: { userId?: string; isAdmin?: boolean }) {
+    const order = await OrderRepo.findById(orderId);
+    if (!order) throw new NotFoundError("Order not found");
+
+    if (!requester?.isAdmin) {
+      if (order.user && requester?.userId && String(order.user) !== String(requester.userId)) {
+        throw new BadRequestError("Không được phép xem");
+      }
+    }
+
+    return OrderFeedbackRepo.findByOrder(orderId);
   }
 }
 

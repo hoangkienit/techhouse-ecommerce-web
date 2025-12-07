@@ -1,67 +1,118 @@
-<nb-card>
+<div class="dashboard-grid">
+  <nb-card class="summary-card" [isLoading]="isLoadingDashboard">
     <nb-card-body>
-        <div class="dashboard">
-            <h2>Dashboard Admin</h2>
-
-            <!-- Tổng đơn & trạng thái -->
-            <div class="cards">
-                <div class="card">
-                    <h3>Tổng đơn</h3>
-                    <p>{{dashboard.totalOrders}}</p>
-                </div>
-                <div class="card" *ngFor="let status of statusChartData.labels; let i = index">
-                    <h3>{{status}}</h3>
-                    <p>{{statusChartData.datasets[0].data[i]}}</p>
-                </div>
-            </div>
-
-            <!-- Biểu đồ trạng thái đơn -->
-            <div style="max-width: 400px; margin-bottom: 20px;">
-                <canvas baseChart [data]="statusChartData" [options]="statusChartOptions" chartType="doughnut">
-                </canvas>
-            </div>
-
-            <!-- Doanh thu -->
-            <div class="revenue">
-                <h3>Doanh thu</h3>
-                <p>Tổng: {{revenue.totalRevenue | currency:'VND'}}</p>
-                <p>Giảm giá: {{revenue.totalDiscount | currency:'VND'}}</p>
-                <p>Số đơn: {{revenue.totalOrders}}</p>
-            </div>
-
-            <!-- Top Products -->
-            <div class="top-products">
-                <h3>Top sản phẩm</h3>
-                <ul>
-                    <li *ngFor="let p of topProducts">
-                        {{p._id}} - {{p.qty}} đơn - {{p.revenue | currency:'VND'}}
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Top Customers -->
-            <div class="top-customers">
-                <h3>Top khách hàng</h3>
-                <ul>
-                    <li *ngFor="let c of topCustomers">
-                        User ID: {{c._id}} - Đơn: {{c.totalOrders}} - Chi tiêu: {{c.totalSpent | currency:'VND'}}
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Payment Methods -->
-            <div class="payment-methods">
-                <h3>Phương thức thanh toán</h3>
-                <ul>
-                    <li *ngFor="let p of paymentMethods">
-                        {{p._id.toUpperCase()}} - Đơn: {{p.totalOrders}} - Doanh thu: {{p.totalRevenue |
-                        currency:'VND'}}
-                    </li>
-                </ul>
-                <canvas baseChart [data]="paymentChartData" [options]="paymentChartOptions" chartType="pie"
-                    style="max-width: 400px;">
-                </canvas>
-            </div>
+      <div class="summary-header">
+        <div>
+          <p class="eyebrow">Tổng quan</p>
+          <h3>Đơn hàng</h3>
+          <div class="big-number">{{ dashboard.totalOrders || 0 }}</div>
         </div>
+        <div class="status-list">
+          <div class="status-item" *ngFor="let s of statusCounts">
+            <span class="label">{{ s.label }}</span>
+            <span class="value">{{ s.value }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart">
+        <canvas baseChart [data]="statusChartData" [options]="statusChartOptions" chartType="doughnut"></canvas>
+      </div>
     </nb-card-body>
-</nb-card>
+  </nb-card>
+
+  <nb-card class="summary-card" [isLoading]="isLoadingRevenue">
+    <nb-card-body>
+      <p class="eyebrow">Doanh thu</p>
+      <h3>Tháng này</h3>
+      <div class="stat-row">
+        <div>
+          <div class="label">Tổng doanh thu</div>
+          <div class="value text-success">{{ revenue.totalRevenue | currency:'VND' }}</div>
+        </div>
+        <div>
+          <div class="label">Giảm giá</div>
+          <div class="value text-danger">{{ revenue.totalDiscount | currency:'VND' }}</div>
+        </div>
+        <div>
+          <div class="label">Số đơn</div>
+          <div class="value">{{ revenue.totalOrders || 0 }}</div>
+        </div>
+      </div>
+    </nb-card-body>
+  </nb-card>
+
+  <nb-card class="wide-card" [isLoading]="isLoadingTopProducts">
+    <nb-card-header>Top sản phẩm</nb-card-header>
+    <nb-card-body>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th class="text-end">Số đơn</th>
+              <th class="text-end">Doanh thu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of topProducts">
+              <td>{{ p._id || 'Unknown' }}</td>
+              <td class="text-end">{{ p.qty || 0 }}</td>
+              <td class="text-end">{{ p.revenue | currency:'VND' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </nb-card-body>
+  </nb-card>
+
+  <nb-card class="wide-card" [isLoading]="isLoadingTopCustomers">
+    <nb-card-header>Top khách hàng</nb-card-header>
+    <nb-card-body>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Khách hàng</th>
+              <th class="text-end">Số đơn</th>
+              <th class="text-end">Chi tiêu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of topCustomers">
+              <td>{{ c._id }}</td>
+              <td class="text-end">{{ c.totalOrders }}</td>
+              <td class="text-end">{{ c.totalSpent | currency:'VND' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </nb-card-body>
+  </nb-card>
+
+  <nb-card class="wide-card" [isLoading]="isLoadingPaymentMethods">
+    <nb-card-header>Phương thức thanh toán</nb-card-header>
+    <nb-card-body class="d-flex flex-wrap gap-3 align-items-center">
+      <div class="table-responsive flex-grow-1">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Phương thức</th>
+              <th class="text-end">Số đơn</th>
+              <th class="text-end">Doanh thu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of paymentMethods">
+              <td>{{ p._id?.toUpperCase() || 'Khác' }}</td>
+              <td class="text-end">{{ p.totalOrders }}</td>
+              <td class="text-end">{{ p.totalRevenue | currency:'VND' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="width: 260px; min-width: 200px;">
+        <canvas baseChart [data]="paymentChartData" [options]="paymentChartOptions" chartType="pie"></canvas>
+      </div>
+    </nb-card-body>
+  </nb-card>
+</div>

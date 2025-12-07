@@ -24,6 +24,22 @@ export class UserService {
     UpdateLoyaltyPoint(userId: string, point: number) {
         return this.http.put<{}>(`${this.baseUrl}/loyalty-points/${userId}`, { point }, this.credentials);
     }
+
+    GetLoyaltyPoints() {
+        return this.http.post<any>(`${this.baseUrl}/loyalty-points`, {}, this.credentials);
+    }
+
+    ChangePassword(oldPassword: string, newPassword: string) {
+        return this.http.post<{}>(`${this.baseUrl}/change-password`, { oldPassword, newPassword }, this.credentials);
+    }
+
+    ResetPassword(email: string) {
+        return this.http.post<any>(`${this.baseUrl}/reset-password`, { email }, this.credentials);
+    }
+
+    ResetPasswordCallback(token: string, newPassword: string) {
+        return this.http.post<any>(`${this.baseUrl}/reset-password-callback?token=${encodeURIComponent(token)}`, { newPassword }, this.credentials);
+    }
     // UpdateUserById(userId: string, params: any) {
     //     return this.http.post<{}>(`${this.baseUrl}/${userId}`, params, this.credentials);
     // }

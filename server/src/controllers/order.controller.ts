@@ -84,6 +84,47 @@ class OrderController {
     }).send(res);
   }
 
+  static async CreateFeedback(req: Request, res: Response) {
+    const orderId = req.params.orderId as string;
+    const userId = req.user?.userId;
+    if (!orderId) throw new BadRequestError("Thiếu thông tin đơn hàng");
+
+    const { rating, comment, guestId } = req.body;
+    const ratingNum = Number(rating);
+    if (!Number.isFinite(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+      throw new BadRequestError("rating phải trong khoảng 1-5");
+    }
+
+    const feedback = await OrderService.AddFeedback({
+      orderId: orderId!,
+      userId: userId ?? "",
+      guestId,
+      isAdmin: ["admin", "manager"].includes(req.user?.role || ""),
+      rating: ratingNum,
+      comment
+    });
+
+    new OK({
+      message: "Gửi đánh giá thành công",
+      data: { feedback }
+    }).send(res);
+  }
+
+  static async ListFeedback(req: Request, res: Response) {
+    const orderId = req.params.orderId as string;
+    if (!orderId) throw new BadRequestError("orderId is required");
+
+    const isAdmin = ["admin", "manager"].includes(req.user?.role || "");
+    const userId = req.user?.userId;
+
+    const feedback = await OrderService.ListFeedback(orderId, { userId: userId ?? "", isAdmin });
+
+    new OK({
+      message: "Lấy đánh giá thành công",
+      data: { feedback }
+    }).send(res);
+  }
+
 
   // Admin board tổng quát
   static async GetDashboard(req: Request, res: Response) {

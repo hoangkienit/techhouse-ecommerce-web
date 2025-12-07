@@ -46,6 +46,10 @@ class DiscountService {
     return DiscountRepo.list();
   }
 
+  static async ListActiveCodes() {
+    return DiscountRepo.listActive();
+  }
+
   static async ValidateCode(code: string, session?: ClientSession) {
     const discount = await DiscountRepo.findByCode(code, session);
     if (!discount || !discount.isActive) {

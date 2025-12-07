@@ -8,6 +8,33 @@ export const Authenticate = async (req: Request, res: Response, next: NextFuncti
         const accessToken = req.cookies.accessToken;
 
         if (!accessToken) {
+            const refreshToken = req.cookies.refreshToken;
+            if (refreshToken) {
+                try {
+                    const isSameSite = IsSameSite(req.headers.origin);
+                    const refreshPayload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!) as IUserPayload;
+                    const newAccessToken = jwt.sign(
+                        {
+                            userId: refreshPayload.userId,
+                            fullname: refreshPayload.fullname,
+                            email: refreshPayload.email,
+                            role: refreshPayload.role,
+                        },
+                        process.env.JWT_ACCESS_SECRET!,
+                        { expiresIn: '30m' }
+                    );
+                    res.cookie('accessToken', newAccessToken, {
+                        httpOnly: true,
+                        sameSite: isSameSite ? 'lax' : 'none',
+                        secure: process.env.NODE_ENV === 'production',
+                    });
+                    req.user = refreshPayload;
+                    return next();
+                } catch (err: any) {
+                    console.warn('Refresh attempt failed when access token missing:', err?.message);
+                }
+            }
+
             console.log('No access token found in cookies');
             return res.status(401).json({
                 message: 'Unauthorized',

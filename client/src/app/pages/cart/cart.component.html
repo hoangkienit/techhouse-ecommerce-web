@@ -1,1 +1,91 @@
-<p>cart works!</p>
+<nb-card [isLoading]="isLoading">
+  <nb-card-header class="d-flex justify-content-between align-items-center">
+    <div class="fw-bold">Giỏ hàng của bạn</div>
+    <button nbButton status="basic" routerLink="/catalog/products">Tiếp tục mua sắm</button>
+  </nb-card-header>
+
+  <nb-card-body *ngIf="cart && cart.items?.length; else emptyCart">
+    <div class="table-responsive cart-table">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Sản phẩm</th>
+            <th>Đơn giá</th>
+            <th class="text-center">Số lượng</th>
+            <th class="text-end">Thành tiền</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cart.items">
+            <td class="product-cell">
+              <img [src]="item.product_img || 'assets/images/default-product.png'" alt="product"
+                (error)="onImgError($event)">
+              <div>
+                <div class="fw-bold">{{ item.product_name }}</div>
+                <small class="text-muted">{{ item.product_brand }}</small>
+              </div>
+            </td>
+            <td>{{ formatPrice(item.unitPrice) }}</td>
+            <td class="text-center">
+              <div class="qty-control">
+                <button nbButton size="tiny" status="basic" (click)="changeQty(item, -1)" [disabled]="updatingItem===item._id">-</button>
+                <input nbInput type="number" class="qty-input" [ngModel]="item.quantity"
+                  (ngModelChange)="updateQty(item, $event)" min="0">
+                <button nbButton size="tiny" status="basic" (click)="changeQty(item, 1)" [disabled]="updatingItem===item._id">+</button>
+              </div>
+            </td>
+            <td class="text-end">{{ formatPrice(item.lineTotal) }}</td>
+            <td class="text-end">
+              <button nbButton size="tiny" status="danger" (click)="removeItem(item)" [disabled]="updatingItem===item._id">
+                <nb-icon icon="trash-2-outline"></nb-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cart-actions d-flex flex-wrap gap-3">
+      <div class="discount-box">
+        <label class="form-label fw-bold">Mã giảm giá</label>
+        <div class="d-flex gap-2">
+          <input nbInput placeholder="Nhập mã" [(ngModel)]="discountCode">
+          <button nbButton status="primary" (click)="applyDiscount()">Áp dụng</button>
+          <button nbButton status="basic" ghost (click)="removeDiscount()" *ngIf="cart.discountCode">Bỏ mã</button>
+        </div>
+        <small class="text-muted" *ngIf="cart.discountCode">Đang áp dụng: {{ cart.discountCode }}</small>
+      </div>
+
+      <div class="summary-card ms-auto">
+        <div class="d-flex justify-content-between">
+          <span>Tạm tính</span>
+          <span>{{ formatPrice(cart.subtotal) }}</span>
+        </div>
+        <div class="d-flex justify-content-between" *ngIf="cart.discountAmount">
+          <span>Giảm giá</span>
+          <span class="text-success">- {{ formatPrice(cart.discountAmount) }}</span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span>Thuế</span>
+          <span>{{ formatPrice(cart.tax) }}</span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span>Phí giao hàng</span>
+          <span>{{ formatPrice(cart.shipping) }}</span>
+        </div>
+        <div class="d-flex justify-content-between total-line">
+          <span class="fw-bold">Tổng cộng</span>
+          <span class="fw-bold text-danger">{{ formatPrice(cart.total) }}</span>
+        </div>
+        <button nbButton status="success" fullWidth routerLink="/checkout">Thanh toán</button>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<ng-template #emptyCart>
+  <div class="text-center py-5 text-muted">
+    Giỏ hàng của bạn đang trống.
+  </div>
+</ng-template>

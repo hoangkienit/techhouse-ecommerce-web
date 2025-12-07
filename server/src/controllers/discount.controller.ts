@@ -27,6 +27,24 @@ class DiscountController {
     }).send(res);
   }
 
+  static async ListPublic(req: Request, res: Response): Promise<void> {
+    const discounts = await DiscountService.ListActiveCodes();
+    const formatted = discounts.map(d => ({
+      code: d.code,
+      description: d.description,
+      percentage: d.percentage,
+      usageLimit: d.usageLimit,
+      usageCount: d.usageCount,
+      remaining: Math.max(0, (d.usageLimit || 0) - (d.usageCount || 0)),
+      isActive: d.isActive
+    }));
+
+    new OK({
+      message: "Danh sách mã giảm giá đang hoạt động",
+      data: { discounts: formatted }
+    }).send(res);
+  }
+
   static async Deactivate(req: Request, res: Response): Promise<void> {
     const { code } = req.body;
     const admin = req.user;
