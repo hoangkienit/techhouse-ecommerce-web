@@ -12,41 +12,41 @@ import { NotificationStatus } from 'src/app/@core/enums/status.enum';
 export class ResetPasswordComponent {
   form!: FormGroup;
   isLoading = false;
-
+tokenGlob: string | null = null;
   constructor(private fb: FormBuilder, private _appServices: AppServices, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      token: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]]
-    });
+  this.form = this.fb.group({
+    token: ['', Validators.required],
+    newPassword: ['', [Validators.required, Validators.minLength(6)]]
+  });
 
-    this.prefillToken();
-  }
+  this.prefillTokenFromPath();
+  this.prefillTokenFromQuery(); // Optional vẫn giữ
+}
 
-  private prefillToken() {
-    let token = this.route.snapshot.paramMap.get('token') || this.route.snapshot.queryParamMap.get('token') || undefined;
+ private prefillTokenFromPath() {
+  let rawToken = this.route.snapshot.paramMap.get('token');
 
-    if (!token) {
-      const raw = window.location.href;
-      const match = raw.match(/token=([^&]+)/);
-      if (match && match[1]) {
-        token = match[1];
-      } else {
-        const afterReset = raw.split('reset-password/')[1] || '';
-        if (afterReset) {
-          token = afterReset.split('?')[0];
-        }
-      }
+  if (rawToken) {
+    if (rawToken.includes('=')) {
+      rawToken = rawToken.split('=')[1];
     }
 
+    this.form.patchValue({ token: rawToken });
+    this.tokenGlob = rawToken;
+  }
+}
+
+private prefillTokenFromQuery() {
+  this.route.queryParams.subscribe(params => {
+    const token = params['token'];
     if (token) {
-      if (token.startsWith('token=')) {
-        token = token.slice('token='.length);
-      }
       this.form.patchValue({ token });
+      this.tokenGlob = token;
     }
-  }
+  });
+}
 
   submit() {
     if (this.form.invalid) {

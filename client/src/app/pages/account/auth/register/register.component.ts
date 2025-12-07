@@ -60,9 +60,7 @@ export class RegisterComponent {
 
           this.signupForm.reset();
           this.isLoading = false;
-          // setTimeout(() => {
-          //   this.router.navigate(['/account/auth/login']);
-          // }, 1000)
+          this.router.navigate(['/account/auth/login']);
         },
         error: e => {
           this.registerMsg = e.error.errors;
