@@ -34,6 +34,7 @@ export class LoginComponent {
       this.appServices.AuthService.Login(this.loginForm.value).subscribe({
         next: response => {
           this.appServices.GlobalStateService.setUser(response.data.user._doc);
+          document.cookie = `currentUser=${encodeURIComponent(JSON.stringify(response.data.user._doc))}; path=/;`;
 
           this.appServices.NotificationService.createNotification(
             this.appServices.TranslateService.trans('auth.success-login'),

@@ -48,6 +48,7 @@ import { NgxGaugeDashBoardComponent } from './@core/services-components/ngx-gaug
 import { AdminOrdersComponent } from './pages/admin/orders/admin-orders.component';
 import { ViewOrderComponent } from './pages/admin/orders/view-order/view-order.component';
 import { NgChartsModule } from 'ng2-charts';
+import { LogoutComponent } from './pages/account/auth/logout/logout.component';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -89,7 +90,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     ConfirmDialogBaseBodyComponent,
     NgxGaugeDashBoardComponent,
     AdminOrdersComponent,
-    ViewOrderComponent
+    ViewOrderComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,
