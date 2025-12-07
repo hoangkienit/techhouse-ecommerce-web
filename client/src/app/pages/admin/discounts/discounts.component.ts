@@ -64,7 +64,7 @@ export class DiscountsComponent {
       'Xác nhận',
       'Xác nhận',
       'Thoát',
-      () => this.deactivate(code)
+      () => this.deactivateAction(code)
     )
   }
 

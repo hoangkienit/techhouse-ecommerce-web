@@ -44,7 +44,7 @@ const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'reset-password/:token', component: ResetPasswordComponent },
+{ path: 'reset-password/:token', component: ResetPasswordComponent },
       { path: 'reset-request', component: ResetRequestComponent },
       { path: 'reset-password', component: ResetPasswordComponent },
       { path: '', redirectTo: 'login', pathMatch: 'full' }
