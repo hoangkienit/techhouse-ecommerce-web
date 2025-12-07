@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppServices } from 'src/app/@core/services/AppServices.service';
 import { NotificationStatus } from 'src/app/@core/enums/status.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private appServices: AppServices
+    private appServices: AppServices,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -45,6 +47,7 @@ export class LoginComponent {
           this.loginMsg = null;
           this.loginForm.reset();
           this.isLoading = false;
+          this.router.navigate(['/']);
         },
         error: e => {
           this.loginMsg = e.error?.errors || e.error?.message || null;
