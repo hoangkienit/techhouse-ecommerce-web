@@ -41,20 +41,21 @@ export class AppComponent implements OnInit, OnDestroy {
       'sideBar.home', 'sideBar.catalog', 'sideBar.products', 'sideBar.categories', 'sideBar.brands',
       'sideBar.cart', 'sideBar.orders', 'sideBar.loyalty', 'sideBar.discount',
       'sideBar.auth', 'sideBar.login', 'sideBar.register', 'sideBar.profile', 'sideBar.logout',
-      'sideBar.admin', 'sideBar.users', 'sideBar.dashboard'
+      'sideBar.admin', 'sideBar.users', 'sideBar.dashboard', 'sideBar.account'
     ]).subscribe(trans => {
 
       const items: NbMenuItem[] = [
         { title: trans['sideBar.home'], icon: 'home-outline', link: '/home' },
 
         // Catalog menu
-        {
-          title: trans['sideBar.catalog'], icon: 'shopping-bag-outline', children: [
-            { title: trans['sideBar.products'], icon: 'cube-outline', link: '/catalog/products' },
-            { title: trans['sideBar.categories'], icon: 'grid-outline', link: '/catalog/categories' },
-            { title: trans['sideBar.brands'], icon: 'pricetags-outline', link: '/catalog/brands' },
-          ]
-        },
+        { title: trans['sideBar.products'], icon: 'cube-outline', link: '/catalog/products' },
+        // {
+        //   title: trans['sideBar.catalog'], icon: 'shopping-bag-outline', children: [
+        //     { title: trans['sideBar.products'], icon: 'cube-outline', link: '/catalog/products' },
+        //     { title: trans['sideBar.categories'], icon: 'grid-outline', link: '/catalog/categories' },
+        //     { title: trans['sideBar.brands'], icon: 'pricetags-outline', link: '/catalog/brands' },
+        //   ]
+        // },
 
         { title: trans['sideBar.cart'], icon: 'shopping-cart-outline', link: '/cart' },
         { title: trans['sideBar.orders'], icon: 'list-outline', link: '/orders' },

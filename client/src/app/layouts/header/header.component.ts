@@ -14,10 +14,10 @@ export class HeaderComponent {
   currentTheme = 'default';
 
   userFullDetails = this._appservices.GlobalStateService.currentUser;
-
+  cartCount = 0;
   user = {
     name: "Guest",
-    avatar: '',
+    avatar: 'assets/images/default-user.jpg',
   };
 
   constructor(private themeService: NbThemeService, private translate: TranslateService, private _appservices: AppServices) { }
@@ -26,9 +26,21 @@ export class HeaderComponent {
     this._appservices.GlobalStateService.currentUser$.subscribe(user => {
       this.user = {
         name: user?.fullname || 'Guest',
-        avatar: user?.profileImg || ''
+        avatar: user?.profileImg || 'assets/images/default-user.jpg'
       };
     });
+
+    this._appservices.CartService.GetCart().subscribe({
+      next: res => {
+        console.log(res);
+        if (res) {
+          this._appservices.GlobalStateService.setCart(res.data);
+          this.cartCount = res.data.items.length;
+        }
+      },
+      complete: () => {
+      }
+    })
   }
 
   toggleTheme() {

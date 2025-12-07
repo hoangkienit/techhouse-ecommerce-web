@@ -47,7 +47,7 @@ export class LoginComponent {
           this.isLoading = false;
         },
         error: e => {
-          this.loginMsg = e.error?.errors || null;
+          this.loginMsg = e.error?.errors || e.error?.message || null;
 
           if (this.loginMsg)
             this.isInvalidLogin = true;

@@ -24,6 +24,9 @@ export class ProductService {
   getAllProducts(params: any): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/list`, { params: buildHttpParams(params), ...this.credentials });
   }
+  getProductsById(productId: any): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/list/${productId}`, this.credentials);
+  }
 
   updateProducts(formData: FormData, productId: any): Observable<any> {
     return this.http.patch<any>(
