@@ -22,4 +22,25 @@ export class OrderService {
   deleteOrder(orderId: string): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/${orderId}`, this.credentials);
   }
+
+  /** Dashboard APIs */
+  getDashboard(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/board/dashboard`, this.credentials);
+  }
+
+  getRevenueBoard(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/board/revenue`, this.credentials);
+  }
+
+  getTopProductsBoard(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/board/top-products`, this.credentials);
+  }
+
+  getCustomerBoard(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/board/customers`, this.credentials);
+  }
+
+  getPaymentMethodBoard(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/board/payment-methods`, this.credentials);
+  }
 }

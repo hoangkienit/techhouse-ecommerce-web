@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NbSidebarService } from '@nebular/theme';
 import { AppServices } from './@core/services/AppServices.service';
 import { Subscription } from 'rxjs';
+import { NbMenuItem } from '@nebular/theme';
 
 @Component({
   selector: 'app-root',
@@ -26,85 +27,55 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 
+
   buildMenu() {
+    const roleUser = this.appServices.GlobalStateService.currentUser?.role;
+
     this.appServices.TranslateService.get([
-      'sideBar.home',
-      'sideBar.catalog',
-      'sideBar.products',
-      'sideBar.categories',
-      'sideBar.brands',
-      'sideBar.cart',
-      'sideBar.orders',
-      'sideBar.auth',
-      'sideBar.login',
-      'sideBar.register',
-      'sideBar.profile',
-      'sideBar.logout',
-      'sideBar.admin',
-      'sideBar.users'
-    ]).subscribe((trans: any) => {
-      this.menuItems = [
+      'sideBar.home', 'sideBar.catalog', 'sideBar.products', 'sideBar.categories', 'sideBar.brands',
+      'sideBar.cart', 'sideBar.orders', 'sideBar.loyalty', 'sideBar.discount',
+      'sideBar.auth', 'sideBar.login', 'sideBar.register', 'sideBar.profile', 'sideBar.logout',
+      'sideBar.admin', 'sideBar.users', 'sideBar.dashboard'
+    ]).subscribe(trans => {
+
+      const items: NbMenuItem[] = [
+        { title: trans['sideBar.home'], icon: 'home-outline', link: '/home' },
         {
-          title: this.appServices.TranslateService.trans('sideBar.home'),
-          icon: 'home-outline',
-          link: '/home'
+          title: trans['sideBar.catalog'], icon: 'shopping-bag-outline', children: [
+            { title: trans['sideBar.products'], icon: 'cube-outline', link: '/catalog/products' },
+            { title: trans['sideBar.categories'], icon: 'grid-outline', link: '/catalog/categories' },
+            { title: trans['sideBar.brands'], icon: 'pricetags-outline', link: '/catalog/brands' },
+          ]
+        },
+        { title: trans['sideBar.cart'], icon: 'shopping-cart-outline', link: '/cart' },
+        { title: trans['sideBar.orders'], icon: 'list-outline', link: '/orders' },
+        { title: trans['sideBar.loyalty'], icon: 'award-outline', link: '/loyalty' },
+        { title: trans['sideBar.discount'], icon: 'percent-outline', link: '/discount' },
+        {
+          title: trans['sideBar.account'], icon: 'person-outline', children: [
+            { title: trans['sideBar.register'], icon: 'person-add-outline', link: '/account/auth/register' },
+            { title: trans['sideBar.login'], icon: 'person-outline', link: '/account/auth/login' },
+            { title: trans['sideBar.profile'], icon: 'person-done-outline', link: '/account/profile' },
+            { title: trans['sideBar.logout'], icon: 'log-out-outline', link: '/account/logout' },
+          ]
         },
         {
-          title: this.appServices.TranslateService.trans('sideBar.catalog'),
-          icon: 'shopping-bag-outline',
-          children: [
-            { title: this.appServices.TranslateService.trans('sideBar.products'), icon: 'cube-outline', link: '/catalog/products' },
-            { title: this.appServices.TranslateService.trans('sideBar.categories'), icon: 'grid-outline', link: '/catalog/categories' },
-            { title: this.appServices.TranslateService.trans('sideBar.brands'), icon: 'pricetags-outline', link: '/catalog/brands' },
-          ],
-        },
-        {
-          title: this.appServices.TranslateService.trans('sideBar.cart'),
-          icon: 'shopping-cart-outline',
-          link: '/cart'
-        },
-        {
-          title: this.appServices.TranslateService.trans('sideBar.orders'),
-          icon: 'list-outline',
-          link: '/orders'
-        },
-        {
-          title: this.appServices.TranslateService.trans('sideBar.loyalty'),
-          icon: 'award-outline',
-          link: '/loyalty'
-        },
-        {
-          title: this.appServices.TranslateService.trans('sideBar.discount'),
-          icon: 'percent-outline',
-          link: '/discount'
-        },
-        {
-          title: this.appServices.TranslateService.trans('sideBar.account'),
-          icon: 'person-outline',
-          children: [
-            { title: this.appServices.TranslateService.trans('sideBar.register'), icon: 'person-add-outline', link: '/account/auth/register' },
-            { title: this.appServices.TranslateService.trans('sideBar.login'), icon: 'person-outline', link: '/account/auth/login' },
-            { title: this.appServices.TranslateService.trans('sideBar.profile'), icon: 'person-done-outline', link: '/account/profile' },
-            { title: this.appServices.TranslateService.trans('sideBar.logout'), icon: 'log-out-outline', link: '/account/logout' },
-          ],
-        },
-        {
-          title: this.appServices.TranslateService.trans('sideBar.admin'),
-          icon: 'settings-2-outline',
-          children: [
-            { title: this.appServices.TranslateService.trans('sideBar.dashboard'), icon: 'pie-chart-outline', link: '/admin/dashboard' },
-            { title: this.appServices.TranslateService.trans('sideBar.users'), icon: 'people-outline', link: '/admin/users' },
-            { title: this.appServices.TranslateService.trans('sideBar.products'), icon: 'cube-outline', link: '/admin/products' },
-            { title: this.appServices.TranslateService.trans('sideBar.orders'), icon: 'clipboard-outline', link: '/admin/orders' },
-            { title: this.appServices.TranslateService.trans('sideBar.discount'), icon: 'pricetags-outline', link: '/admin/discounts' },
-          ],
-        },
+          title: trans['sideBar.admin'], icon: 'settings-2-outline', children: [
+            { title: trans['sideBar.dashboard'], icon: 'pie-chart-outline', link: '/admin/dashboard', hidden: roleUser !== 'admin' && roleUser !== 'manager' },
+            { title: trans['sideBar.users'], icon: 'people-outline', link: '/admin/users', hidden: roleUser !== 'admin' },
+            { title: trans['sideBar.products'], icon: 'cube-outline', link: '/admin/products', hidden: roleUser !== 'admin' && roleUser !== 'manager' },
+            { title: trans['sideBar.orders'], icon: 'clipboard-outline', link: '/admin/orders', hidden: roleUser !== 'admin' && roleUser !== 'manager' },
+            { title: trans['sideBar.discount'], icon: 'pricetags-outline', link: '/admin/discounts', hidden: roleUser !== 'admin' },
+          ]
+        }
       ];
 
-
+      // NbMenu tự hiểu hidden nên không cần filter
+      this.menuItems = items;
       this.isLoading = false;
     });
   }
+
 
   switchLang(lang: string) {
     this.appServices.TranslateService.useLanguage(lang);
