@@ -54,7 +54,7 @@
                 <h3>Phương thức thanh toán</h3>
                 <ul>
                     <li *ngFor="let p of paymentMethods">
-                        {{p.method}} - Đơn: {{p.orders}} - Doanh thu: {{p.revenue | currency:'VND'}}
+                        {{p._id.toUpperCase()}} - Đơn: {{p.totalOrders}} - Doanh thu: {{p.totalRevenue | currency:'VND'}}
                     </li>
                 </ul>
                 <canvas baseChart [data]="paymentChartData" chartType="pie" style="max-width: 400px;">

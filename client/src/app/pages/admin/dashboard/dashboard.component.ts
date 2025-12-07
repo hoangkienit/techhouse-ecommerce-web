@@ -18,7 +18,7 @@ export class DashboardComponent implements OnInit {
   subs = new Subscription();
 
   // Chart data
-  statusChartData: ChartData<'doughnut'> = { labels: [], datasets: [{ data: [] }] };
+  statusChartData: ChartData<'doughnut'> = { labels: [], datasets: [{ data: [],label: 'Order Status' }] };
   paymentChartData: ChartData<'pie'> = { labels: [], datasets: [{ data: [] }] };
 
   constructor(private orderService: OrderService) { }
@@ -58,8 +58,8 @@ export class DashboardComponent implements OnInit {
   loadPaymentMethods() {
     this.subs.add(this.orderService.getPaymentMethodBoard().subscribe(res => {
       this.paymentMethods = res.data;
-      this.paymentChartData.labels = res.data.map((x: any) => x.method);
-      this.paymentChartData.datasets[0].data = res.data.map((x: any) => x.revenue);
+      this.paymentChartData.labels = res.data.map((x: any) => x._id);
+      this.paymentChartData.datasets[0].data = res.data.map((x: any) => x.totalRevenue);
     }))
   }
 }
