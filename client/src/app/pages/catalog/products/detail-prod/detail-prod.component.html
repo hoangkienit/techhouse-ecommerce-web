@@ -1,0 +1,112 @@
+<nb-card [isLoading]="isLoading" class="detail-prod-card">
+    <nb-card-header class="d-flex justify-content-between align-items-center">
+        <!-- <button nbButton size="tiny" status="primary" (click)="back()">
+            Quay lại
+        </button> -->
+        <span class="product-status-tag">
+            <ngx-tag [TagStatus]="product?.product_status">{{ product?.product_status }}</ngx-tag>
+        </span>
+    </nb-card-header>
+
+    <nb-card-body *ngIf="product; else noProduct">
+        <div class="detail-wrapper d-flex flex-wrap gap-4">
+
+            <!-- Slide show hình ảnh sản phẩm -->
+            <div class="product-carousel">
+                <div class="carousel-container">
+                    <img [src]="product.product_imgs[currentImg]" [alt]="product.product_name" class="main-img"
+                        (error)="onImgError($event)">
+                    <div class="carousel-controls">
+                        <button nbButton shape="round" status="primary" (click)="prevImg()">
+                            <nb-icon class="text-primary" icon="arrow-left-outline"></nb-icon>
+                        </button>
+                        <button nbButton shape="round" status="primary" (click)="nextImg()">
+                            <nb-icon class="text-primary" icon="arrow-right-outline"></nb-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="thumbnails mt-2 d-flex gap-2">
+                    <img *ngFor="let img of product.product_imgs; let i = index" [src]="img"
+                        [class.active]="i === currentImg" (click)="currentImg = i">
+                </div>
+            </div>
+
+            <!-- Thông tin sản phẩm -->
+            <div class="product-info flex-grow-1">
+                <h2 class="product-name">{{ product.product_name }}</h2>
+                <p class="product-category-brand mb-1">
+                    <span>Danh mục: {{ product.product_category }}</span> |
+                    <span>Thương hiệu: {{ product.product_brand }}</span>
+                </p>
+                <p class="product-price text-danger fw-bold mb-2">{{ formatPrice(product.product_price) }}</p>
+                <p class="product-stock mb-1">Tồn kho: {{ product.product_stock }}</p>
+                <p class="product-sold mb-2">Đã bán: {{ product.product_sold_amount }}</p>
+
+                <!-- Thuộc tính sản phẩm -->
+                <div class="product-attributes mb-3" *ngIf="product.product_attributes">
+                    <h5>Thuộc tính:</h5>
+                    <ul>
+                        <li *ngFor="let attr of product.product_attributes | keyvalue">
+                            {{ attr.key }}: {{ attr.value }}
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Mô tả sản phẩm -->
+                <div class="product-description mb-3">
+                    <h5>Mô tả sản phẩm:</h5>
+                    <p>{{ product.product_description }}</p>
+                </div>
+
+                <!-- Đánh giá & comment -->
+                <div class="product-review mt-3">
+                    <h5>Đánh giá:</h5>
+                    <div class="stars mb-2">
+                        <nb-icon *ngFor="let s of [1,2,3,4,5]" icon="star-outline"
+                            [class.filled]="s <= (product.product_rating || 0)">
+                        </nb-icon>
+                        <span class="ms-2">{{ product.product_rating || 0 }}/5</span>
+                    </div>
+                    <div class="comments">
+                        <h6>Bình luận:</h6>
+                        <ul *ngIf="product.comments?.length; else noComments">
+                            <li *ngFor="let c of product.comments">
+                                <b>{{ c.user }}:</b> {{ c.content }}
+                            </li>
+                        </ul>
+                        <ng-template #noComments>
+                            <p class="text-muted">Chưa có bình luận nào.</p>
+                        </ng-template>
+                    </div>
+                </div>
+
+                <!-- Thêm vào giỏ hàng -->
+                <div class="product-cart mt-4">
+                    <h5>Giỏ hàng:</h5>
+
+                    <div class="d-flex align-items-center gap-2 mb-2 w-100">
+                        <button nbButton size="tiny" status="danger" (click)="decreaseQty()">-</button>
+
+                        <input nbInput type="number" [(ngModel)]="quantity" class="qty-input" min="1"
+                            [max]="product.product_stock">
+
+                        <button nbButton size="tiny" status="success" (click)="increaseQty()">+</button>
+                    </div>
+
+                    <button nbButton status="primary" class="w-100 fw-bold" (click)="addToCart()">
+                        <nb-icon icon="shopping-cart-outline"></nb-icon>
+                        Thêm vào giỏ hàng
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </nb-card-body>
+</nb-card>
+
+<ng-template #noProduct>
+    <div class="text-center text-muted fw-bold mt-3">
+        Không tìm thấy sản phẩm.
+    </div>
+</ng-template>

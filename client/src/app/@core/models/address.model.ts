@@ -6,5 +6,5 @@ export interface AddressDto {
     state?: string,
     postalCode?: string,
     country: string,
-    isDefault: boolean
+    isDefault?: boolean
 }

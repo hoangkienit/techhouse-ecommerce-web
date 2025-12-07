@@ -15,9 +15,9 @@
                 </div>
             </div>
 
-            <!-- Chart trạng thái đơn -->
-            <div style="max-width: 400px;">
-                <canvas baseChart [data]="statusChartData" chartType="doughnut">
+            <!-- Biểu đồ trạng thái đơn -->
+            <div style="max-width: 400px; margin-bottom: 20px;">
+                <canvas baseChart [data]="statusChartData" [options]="statusChartOptions" chartType="doughnut">
                 </canvas>
             </div>
 
@@ -54,10 +54,12 @@
                 <h3>Phương thức thanh toán</h3>
                 <ul>
                     <li *ngFor="let p of paymentMethods">
-                        {{p.method}} - Đơn: {{p.orders}} - Doanh thu: {{p.revenue | currency:'VND'}}
+                        {{p._id.toUpperCase()}} - Đơn: {{p.totalOrders}} - Doanh thu: {{p.totalRevenue |
+                        currency:'VND'}}
                     </li>
                 </ul>
-                <canvas baseChart [data]="paymentChartData" chartType="pie" style="max-width: 400px;">
+                <canvas baseChart [data]="paymentChartData" [options]="paymentChartOptions" chartType="pie"
+                    style="max-width: 400px;">
                 </canvas>
             </div>
         </div>
