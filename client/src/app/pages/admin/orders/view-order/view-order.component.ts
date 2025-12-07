@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { NbDialogRef } from '@nebular/theme';
 import { OrderStatusEnum } from 'src/app/@core/models/order.model';
 import { AppServices } from 'src/app/@core/services/AppServices.service';
+import { NotificationStatus } from 'src/app/@core/enums/status.enum';
 
 @Component({
   selector: 'app-view-order',
@@ -10,6 +11,8 @@ import { AppServices } from 'src/app/@core/services/AppServices.service';
 })
 export class ViewOrderComponent {
   @Input() order: any;
+  feedback: any[] = [];
+  isLoadingFeedback = false;
 
   orderStatusSteps = [
     OrderStatusEnum.PENDING,
@@ -23,6 +26,25 @@ export class ViewOrderComponent {
   showStatusSelect = false;
 
   constructor(private dialogRef: NbDialogRef<ViewOrderComponent>, private _appServices: AppServices) { }
+
+  ngOnInit() {
+    this.loadFeedback();
+  }
+
+  loadFeedback() {
+    if (!this.order?._id) return;
+    this.isLoadingFeedback = true;
+    this._appServices.OrderService.getOrderFeedback(this.order._id).subscribe({
+      next: res => {
+        this.feedback = res.data?.feedback || [];
+      },
+      error: err => {
+        console.error(err);
+        this._appServices.NotificationService.createNotification('Không thể tải đánh giá', NotificationStatus.ERROR);
+      },
+      complete: () => this.isLoadingFeedback = false
+    });
+  }
 
   get currentStatusIndex() {
     return this.orderStatusSteps.indexOf(this.order.status);

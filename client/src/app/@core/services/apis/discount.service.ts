@@ -26,6 +26,10 @@ export class DiscountService {
         return this.http.get<any>(`${this.baseUrl}/`, this.credentials);
     }
 
+    getPublicDiscounts(): Observable<any> {
+        return this.http.get<any>(`${this.baseUrl}/public`, this.credentials);
+    }
+
     /**
      * Vô hiệu hóa mã giảm giá
      * @param code mã cần vô hiệu

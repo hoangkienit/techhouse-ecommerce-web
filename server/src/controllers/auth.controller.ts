@@ -6,8 +6,11 @@ import { IUserPayload } from '../interfaces/jwt.interface';
 import { generateTokenPair } from '../utils/tokens.helper';
 import saveTokenToCookie from '../utils/cookie.helper';
 import { IsSameSite } from '../utils/setSamesite.helper';
+import crypto from 'crypto';
 
 class AuthController {
+    private static resetTokens: Map<string, { email: string, expires: number }> = new Map();
+
     static async Login(req: Request, res: Response): Promise<void> {
         const response = await AuthService.Login(req.body);
 
@@ -88,6 +91,36 @@ class AuthController {
             data: {}
         }).send(res);
 
+    }
+
+    static async RequestResetPassword(req: Request, res: Response): Promise<void> {
+        const { email } = req.body;
+        if (!email) throw new BadRequestError("Email is required");
+        const token = crypto.randomBytes(20).toString('hex');
+        const expires = Date.now() + 1000 * 60 * 15; // 15 minutes
+        AuthController.resetTokens.set(token, { email, expires });
+        new OK({
+            message: "Token reset created",
+            data: { token, expires }
+        }).send(res);
+    }
+
+    static async ResetPassword(req: Request, res: Response): Promise<void> {
+        const { token, newPassword } = req.body;
+        if (!token || !newPassword) throw new BadRequestError("Missing token or password");
+
+        const record = AuthController.resetTokens.get(token);
+        if (!record || record.expires < Date.now()) {
+            throw new BadRequestError("Reset token invalid or expired");
+        }
+
+        await AuthService.ResetPassword(record.email, newPassword);
+        AuthController.resetTokens.delete(token);
+
+        new OK({
+            message: "Reset password thành công",
+            data: {}
+        }).send(res);
     }
 }
 

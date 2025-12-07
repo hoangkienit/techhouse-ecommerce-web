@@ -80,7 +80,7 @@ class UserService {
         user.markModified("properties");
         await user.save();
 
-        const resetLink = `${process.env.CLIENT_URL}/reset?token=${token}`;
+        const resetLink = `http://localhost:4200/account/auth/reset-password/token=${token}`;
 
         const payload = {
             requestId: requestId,

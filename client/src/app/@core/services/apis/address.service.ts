@@ -13,11 +13,27 @@ export class AddressService {
 
     constructor(private http: HttpClient) { }
 
-    GetAddressesByUser(params: any) {
-        return this.http.post<any>(`${this.baseUrl}`, params, this.credentials);
+    GetAddressesByUser() {
+        return this.http.get<any>(`${this.baseUrl}`, this.credentials);
     }
 
     GetAddressesByUserId(userId: any) {
         return this.http.get<any>(`${this.baseUrl}/${userId}`, this.credentials);
+    }
+
+    CreateAddress(payload: any) {
+        return this.http.post<any>(`${this.baseUrl}`, payload, this.credentials);
+    }
+
+    UpdateAddress(addressId: string, payload: any) {
+        return this.http.put<any>(`${this.baseUrl}/${addressId}`, payload, this.credentials);
+    }
+
+    DeleteAddress(addressId: string) {
+        return this.http.delete<any>(`${this.baseUrl}/${addressId}`, this.credentials);
+    }
+
+    SetDefault(addressId: string) {
+        return this.http.patch<any>(`${this.baseUrl}/${addressId}/default`, {}, this.credentials);
     }
 }

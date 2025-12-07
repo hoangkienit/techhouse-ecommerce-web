@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule, NbIconModule, NbUserModule, NbSidebarModule, NbMenuModule, NbSelectModule, NbContextMenuModule, NbCardModule, NbInputModule, NbButtonModule, NbToast, NbToastrModule, NbDialogModule, NbBadgeModule, NbTagModule, NbStepperModule, NbTabsetModule, NbListModule, NbTooltipModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbIconModule, NbUserModule, NbSidebarModule, NbMenuModule, NbSelectModule, NbContextMenuModule, NbCardModule, NbInputModule, NbButtonModule, NbToast, NbToastrModule, NbDialogModule, NbBadgeModule, NbTagModule, NbStepperModule, NbTabsetModule, NbListModule, NbTooltipModule, NbCheckboxModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { HeaderComponent } from './layouts/header/header.component';
 import { FooterComponent } from './layouts/footer/footer.component';
@@ -50,6 +50,9 @@ import { ViewOrderComponent } from './pages/admin/orders/view-order/view-order.c
 import { NgChartsModule } from 'ng2-charts';
 import { LogoutComponent } from './pages/account/auth/logout/logout.component';
 import { DetailProdComponent } from './pages/catalog/products/detail-prod/detail-prod.component';
+import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { ResetRequestComponent } from './pages/account/auth/reset/reset-request.component';
+import { ResetPasswordComponent } from './pages/account/auth/reset/reset-password.component';
 
 // Hàm loader cho ngx-translate
 export function HttpLoaderFactory(http: HttpClient) {
@@ -93,7 +96,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     AdminOrdersComponent,
     ViewOrderComponent,
     LogoutComponent,
-    DetailProdComponent
+    DetailProdComponent,
+    CheckoutComponent,
+    ResetRequestComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -124,6 +130,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     NgChartsModule,
     NbDialogModule.forRoot(),
     NbToastrModule.forRoot(),
+    NbCheckboxModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

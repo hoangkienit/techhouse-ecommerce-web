@@ -12,6 +12,7 @@ import fs from 'fs';
 import { sendEmail } from "../utils/mail.helper";
 import { LOGIN_URL, LOGO_URL, PRIVACY_URL, SUPPORT_URL } from "../constants";
 import NotificationService from "./notification.service";
+import User from "../models/user.model";
 
 class AuthService {
     static async Login(
@@ -124,6 +125,16 @@ class AuthService {
             }
             throw new UnauthorizedError("Invalid or expired refresh token");
         }
+    }
+
+    static async ResetPassword(email: string, newPassword: string) {
+        const user = await User.findOne({ email });
+        if (!user) throw new NotFoundError("Email không tồn tại");
+
+        const hashed = await HashPassword(newPassword);
+        user.password = hashed;
+        await user.save();
+        return true;
     }
 }
 

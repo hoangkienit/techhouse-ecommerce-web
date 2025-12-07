@@ -23,6 +23,10 @@ class DiscountRepo {
     return DiscountCode.find({}).sort({ createdAt: -1 }).lean();
   }
 
+  static async listActive() {
+    return DiscountCode.find({ isActive: true }).sort({ createdAt: -1 }).lean();
+  }
+
   static async incrementUsage(id: string, session?: ClientSession) {
     const query = DiscountCode.findByIdAndUpdate(
       id,

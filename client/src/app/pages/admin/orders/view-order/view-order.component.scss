@@ -4,6 +4,11 @@
     overflow-y: auto;
 }
 
+.feedback-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
 /* ===== TIMELINE ===== */
 .status-timeline {
     position: relative;

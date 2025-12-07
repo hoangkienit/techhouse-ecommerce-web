@@ -1,1 +1,31 @@
-<p>discount works!</p>
+<nb-card [isLoading]="isLoading">
+  <nb-card-header class="d-flex justify-content-between align-items-center">
+    <div class="fw-bold">Mã giảm giá</div>
+    <button nbButton size="small" status="basic" (click)="load()">Làm mới</button>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Mã</th>
+            <th>Mô tả</th>
+            <th>Giảm (%)</th>
+            <th class="text-end">Còn lại</th>
+            <th class="text-end">Đã dùng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of discounts">
+            <td class="fw-bold">{{ d.code }}</td>
+            <td>{{ d.description || 'Không có mô tả' }}</td>
+            <td>{{ d.percentage }}%</td>
+            <td class="text-end">{{ d.remaining }}</td>
+            <td class="text-end">{{ d.usageCount || 0 }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!discounts.length" class="text-center text-muted py-3">Chưa có mã giảm giá khả dụng</div>
+    </div>
+  </nb-card-body>
+</nb-card>

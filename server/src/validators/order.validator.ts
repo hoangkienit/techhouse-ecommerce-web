@@ -13,3 +13,17 @@ export const updateOrderStatusSchema = () =>
         "any.required": "Trạng thái đơn hàng là bắt buộc"
       })
   });
+
+export const createOrderFeedbackSchema = () =>
+  Joi.object({
+    rating: Joi.number().integer().min(1).max(5).required().messages({
+      "any.required": "rating is required",
+      "number.base": "rating must be a number",
+      "number.min": "rating must be at least {#limit}",
+      "number.max": "rating must be at most {#limit}"
+    }),
+    comment: Joi.string().allow("", null).max(500).messages({
+      "string.max": "Bình luận quá dài"
+    }),
+    guestId: Joi.string().allow("", null)
+  });

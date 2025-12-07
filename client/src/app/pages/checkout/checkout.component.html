@@ -1,0 +1,155 @@
+<nb-card [isLoading]="isLoading">
+  <nb-card-header class="d-flex justify-content-between align-items-center">
+    <div class="fw-bold">Thanh toán</div>
+    <button nbButton status="basic" routerLink="/cart">Quay lại giỏ hàng</button>
+  </nb-card-header>
+
+  <nb-card-body *ngIf="cart && cart.items?.length; else emptyCart">
+    <div class="checkout-grid">
+      <div class="left">
+        <nb-card>
+          <nb-card-header>Thông tin giao hàng</nb-card-header>
+          <nb-card-body>
+            <form [formGroup]="shippingForm" class="shipping-form">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Họ và tên</label>
+                  <input nbInput fullWidth formControlName="fullName" placeholder="Nguyễn Văn A">
+                  <small class="text-danger" *ngIf="shippingForm.get('fullName')?.invalid && shippingForm.get('fullName')?.touched">Bắt buộc</small>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Email</label>
+                  <input nbInput fullWidth formControlName="email" placeholder="email@example.com">
+                  <small class="text-danger" *ngIf="shippingForm.get('email')?.invalid && shippingForm.get('email')?.touched">Email không hợp lệ</small>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Số điện thoại</label>
+                  <input nbInput fullWidth formControlName="phone" placeholder="090...">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Địa chỉ</label>
+                  <input nbInput fullWidth formControlName="line1" placeholder="Số nhà, đường...">
+                  <small class="text-danger" *ngIf="shippingForm.get('line1')?.invalid && shippingForm.get('line1')?.touched">Bắt buộc</small>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Địa chỉ bổ sung</label>
+                  <input nbInput fullWidth formControlName="line2" placeholder="Toà nhà, tầng (không bắt buộc)">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Thành phố</label>
+                  <input nbInput fullWidth formControlName="city" placeholder="Tp. Hồ Chí Minh">
+                  <small class="text-danger" *ngIf="shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched">Bắt buộc</small>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Tỉnh/Bang</label>
+                  <input nbInput fullWidth formControlName="state" placeholder="Quận/Huyện">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Mã bưu điện</label>
+                  <input nbInput fullWidth formControlName="postalCode" placeholder="700000">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Quốc gia</label>
+                  <input nbInput fullWidth formControlName="country">
+                </div>
+                <div class="col-md-6 d-flex align-items-center gap-3">
+                  <nb-checkbox formControlName="saveAsNew">Lưu địa chỉ</nb-checkbox>
+                  <nb-checkbox formControlName="setAsDefault">Đặt làm mặc định</nb-checkbox>
+                </div>
+              </div>
+            </form>
+          </nb-card-body>
+        </nb-card>
+
+        <nb-card class="mt-3">
+          <nb-card-header>Phương thức thanh toán</nb-card-header>
+          <nb-card-body>
+            <form [formGroup]="paymentForm" class="payment-form">
+              <div class="payment-options">
+                <label class="payment-option">
+                  <input type="radio" formControlName="type" value="cod"> Thanh toán khi nhận hàng (COD)
+                </label>
+                <label class="payment-option">
+                  <input type="radio" formControlName="type" value="bank_transfer"> Chuyển khoản ngân hàng
+                </label>
+                <label class="payment-option">
+                  <input type="radio" formControlName="type" value="paypal"> PayPal
+                </label>
+                <label class="payment-option">
+                  <input type="radio" formControlName="type" value="card"> Thẻ tín dụng/ghi nợ
+                </label>
+              </div>
+              <div class="row g-3 mt-2">
+                <div class="col-md-6">
+                  <label class="form-label">Nhà cung cấp / Ngân hàng</label>
+                  <input nbInput fullWidth formControlName="provider" placeholder="VD: Vietcombank, Visa...">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Ghi chú</label>
+                  <input nbInput fullWidth formControlName="note" placeholder="Yêu cầu giao hàng, lời nhắn...">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Dùng điểm Loyalty (x1000đ)</label>
+                  <input nbInput type="number" min="0" fullWidth formControlName="points">
+                </div>
+              </div>
+            </form>
+          </nb-card-body>
+        </nb-card>
+      </div>
+
+      <div class="right">
+        <nb-card>
+          <nb-card-header>Tóm tắt đơn hàng</nb-card-header>
+          <nb-card-body>
+            <div class="summary-items">
+              <div class="summary-item" *ngFor="let item of cart.items">
+                <div>
+                  <div class="fw-bold">{{ item.product_name }}</div>
+                  <small class="text-muted">x{{ item.quantity }}</small>
+                </div>
+                <div>{{ formatPrice(item.lineTotal) }}</div>
+              </div>
+            </div>
+
+            <div class="summary-line">
+              <span>Tạm tính</span>
+              <span>{{ formatPrice(cart.subtotal) }}</span>
+            </div>
+            <div class="summary-line" *ngIf="cart.discountAmount">
+              <span>Giảm giá</span>
+              <span class="text-success">- {{ formatPrice(cart.discountAmount) }}</span>
+            </div>
+            <div class="summary-line">
+              <span>Thuế</span>
+              <span>{{ formatPrice(cart.tax) }}</span>
+            </div>
+            <div class="summary-line">
+              <span>Phí giao hàng</span>
+              <span>{{ formatPrice(cart.shipping) }}</span>
+            </div>
+            <div class="summary-line total">
+              <span class="fw-bold">Tổng cộng</span>
+              <span class="fw-bold text-danger">{{ formatPrice(cart.total) }}</span>
+            </div>
+
+            <button nbButton status="success" fullWidth (click)="placeOrder()">Đặt hàng</button>
+          </nb-card-body>
+        </nb-card>
+
+        <nb-card *ngIf="orderResult" class="mt-3 order-result">
+          <nb-card-header>Đặt hàng thành công</nb-card-header>
+          <nb-card-body>
+            <p>Mã đơn: <strong>{{ orderResult?.orderCode || orderResult?._id }}</strong></p>
+            <p>Trạng thái: <strong>{{ orderResult?.status || 'placed' }}</strong></p>
+            <button nbButton status="primary" fullWidth routerLink="/">Về trang chủ</button>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<ng-template #emptyCart>
+  <div class="text-center text-muted py-5">Giỏ hàng trống. Vui lòng quay lại giỏ hàng.</div>
+</ng-template>

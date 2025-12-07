@@ -3,18 +3,10 @@ import { Authenticate, AuthorizeAdmin } from "../middlewares/verify.middleware";
 import { validate } from "../middlewares/validate.middleware";
 import { AsyncHandler } from "../utils/async.handler";
 import OrderController from "../controllers/order.controller";
-import { updateOrderStatusSchema } from "../validators/order.validator";
+import { createOrderFeedbackSchema, updateOrderStatusSchema } from "../validators/order.validator";
 
 const router = express.Router();
 
-
-/**
- * GET /api/v1/order/:orderId
- * @description Lấy chi tiết đơn hàng (kèm danh sách sản phẩm, địa chỉ, trạng thái)
- * @param orderId: string
- * @access Authenticated (chủ sở hữu hoặc admin)
- */
-router.get("/:orderId", Authenticate, AsyncHandler(OrderController.GetOrderDetail));
 
 /**
  * GET /api/v1/order
@@ -28,6 +20,42 @@ router.get("/:orderId", Authenticate, AsyncHandler(OrderController.GetOrderDetai
  * @access Authenticated
  */
 router.get("/", Authenticate, AsyncHandler(OrderController.GetOrders));
+
+router.get("/board/dashboard", Authenticate, AsyncHandler(OrderController.GetDashboard));
+router.get("/board/revenue", Authenticate, AsyncHandler(OrderController.GetRevenueBoard));
+router.get("/board/top-products", Authenticate, AsyncHandler(OrderController.GetTopProductsBoard));
+router.get("/board/customers", Authenticate, AsyncHandler(OrderController.GetCustomerBoard));
+router.get("/board/payment-methods", Authenticate, AsyncHandler(OrderController.GetPaymentMethodBoard));
+
+/**
+ * POST /api/v1/order/:orderId/feedback
+ * @description Người dùng gửi đánh giá/nhận xét cho đơn đã hoàn tất
+ * @access Authenticated (owner)
+ */
+router.post(
+  "/:orderId/feedback",
+  Authenticate,
+  validate(createOrderFeedbackSchema),
+  AsyncHandler(OrderController.CreateFeedback)
+);
+
+/**
+ * GET /api/v1/order/:orderId/feedback
+ * @description Lấy danh sách feedback đơn hàng (admin hoặc chủ sở hữu)
+ */
+router.get(
+  "/:orderId/feedback",
+  Authenticate,
+  AsyncHandler(OrderController.ListFeedback)
+);
+
+/**
+ * GET /api/v1/order/:orderId
+ * @description Lấy chi tiết đơn hàng (kèm danh sách sản phẩm, địa chỉ, trạng thái)
+ * @param orderId: string
+ * @access Authenticated (chủ sở hữu hoặc admin)
+ */
+router.get("/:orderId", Authenticate, AsyncHandler(OrderController.GetOrderDetail));
 
 /**
  * PATCH /api/v1/order/:orderId/status
@@ -49,12 +77,6 @@ router.patch(
  * @access Admin
  */
 router.delete("/:orderId", Authenticate, AuthorizeAdmin, AsyncHandler(OrderController.DeleteOrder));
-
-router.get("/board/dashboard", Authenticate, AsyncHandler(OrderController.GetDashboard));
-router.get("/board/revenue", Authenticate, AsyncHandler(OrderController.GetRevenueBoard));
-router.get("/board/top-products", Authenticate, AsyncHandler(OrderController.GetTopProductsBoard));
-router.get("/board/customers", Authenticate, AsyncHandler(OrderController.GetCustomerBoard));
-router.get("/board/payment-methods", Authenticate, AsyncHandler(OrderController.GetPaymentMethodBoard));
 
 
 export default router;

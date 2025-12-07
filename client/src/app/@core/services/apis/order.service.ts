@@ -15,8 +15,20 @@ export class OrderService {
     return this.http.get<any>(`${this.baseUrl}`, { params: buildHttpParams(params), ...this.credentials });
   }
 
+  getOrderDetail(orderId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${orderId}`, this.credentials);
+  }
+
   updateOrderStatus(orderId: string, status: string): Observable<any> {
     return this.http.patch<any>(`${this.baseUrl}/${orderId}/status`, { status }, this.credentials);
+  }
+
+  getOrderFeedback(orderId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${orderId}/feedback`, this.credentials);
+  }
+
+  createOrderFeedback(orderId: string, payload: { rating: number; comment?: string }): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/${orderId}/feedback`, payload, this.credentials);
   }
 
   deleteOrder(orderId: string): Observable<any> {

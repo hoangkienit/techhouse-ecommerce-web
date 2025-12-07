@@ -1,0 +1,96 @@
+.loyalty-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hero-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 60%, #4b6cb7 100%);
+  color: #f6f8fb;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.hero-card .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.hero-card h2 {
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+
+.hero-card .muted {
+  opacity: 0.9;
+}
+
+.points-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.points {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: inline-flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.points .value {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.points .label {
+  text-transform: uppercase;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.eq .money {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.bullet-list {
+  padding-left: 16px;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .hero-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-actions {
+    align-items: flex-start;
+  }
+}

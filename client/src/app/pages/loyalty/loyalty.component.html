@@ -1,1 +1,49 @@
-<p>loyalty works!</p>
+<div class="loyalty-page" [isLoading]="isLoading">
+  <div class="hero-card">
+    <div>
+      <p class="eyebrow">Tài khoản của bạn</p>
+      <h2>Điểm thưởng</h2>
+      <p class="muted">Tích lũy khi mua hàng, đổi ưu đãi ngay lúc thanh toán.</p>
+      <div class="points-row">
+        <div class="points">
+          <span class="value">{{ points | number }}</span>
+          <span class="label">điểm</span>
+        </div>
+        <div class="eq">
+          <small>Tương đương</small>
+          <div class="money">{{ equivalentMoney }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <button nbButton status="primary" size="small" (click)="loadPoints()">Làm mới</button>
+      <small class="muted">Điểm cập nhật sau mỗi đơn hàng thành công</small>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger py-2 mb-3">{{ error }}</div>
+
+  <div class="grid">
+    <nb-card>
+      <nb-card-header>Hướng dẫn sử dụng</nb-card-header>
+      <nb-card-body>
+        <ul class="bullet-list">
+          <li>1 điểm = 1.000₫ giảm trực tiếp trên đơn hàng.</li>
+          <li>Dùng tối đa đến mức giá trị đơn hiện tại.</li>
+          <li>Điểm cộng thêm sau khi đơn được giao thành công.</li>
+        </ul>
+      </nb-card-body>
+    </nb-card>
+
+    <nb-card>
+      <nb-card-header>Mẹo tích điểm nhanh</nb-card-header>
+      <nb-card-body>
+        <ul class="bullet-list">
+          <li>Mua sắm vào các chương trình nhân đôi điểm.</li>
+          <li>Đăng nhập trước khi thanh toán để ghi nhận điểm.</li>
+          <li>Giữ trạng thái đơn không bị hủy để không mất điểm.</li>
+        </ul>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

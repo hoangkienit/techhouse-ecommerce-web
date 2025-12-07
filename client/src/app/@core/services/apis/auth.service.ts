@@ -34,6 +34,14 @@ export class AuthService {
     return this.http.post<any>(`${this.baseUrl}/login`, params, this.credentials);
   }
 
+  RequestResetPassword(email: string) {
+    return this.http.post<any>(`${this.baseUrl}/request-reset`, { email });
+  }
+
+  ResetPassword(payload: { token: string; newPassword: string }) {
+    return this.http.post<any>(`${this.baseUrl}/reset-password`, payload);
+  }
+
 
   Logout() {
     return this.http.get<{}>(`${this.baseUrl}/logout`, this.credentials);

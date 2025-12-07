@@ -30,15 +30,25 @@ export class HeaderComponent {
       };
     });
 
-    this._appservices.CartService.GetCart().subscribe({
+    this._appservices.GlobalStateService.currentCart$.subscribe(cart => {
+      this.cartCount = cart?.items?.length || 0;
+    });
+
+    const cachedCartId = localStorage.getItem('guest_cart_id') || undefined;
+    this._appservices.CartService.GetCart(cachedCartId).subscribe({
       next: res => {
-        console.log(res);
-        if (res) {
+        if (res?.data) {
           this._appservices.GlobalStateService.setCart(res.data);
-          this.cartCount = res.data.items.length;
+          if (res.data.cartId) {
+            localStorage.setItem('guest_cart_id', res.data.cartId);
+          }
         }
       },
-      complete: () => {
+      error: err => {
+        const msg = err?.error?.message || '';
+        if (msg.toLowerCase().includes('duplicate key')) {
+          localStorage.removeItem('guest_cart_id');
+        }
       }
     })
   }

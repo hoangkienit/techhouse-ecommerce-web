@@ -1,0 +1,50 @@
+.cart-table img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qty-input {
+  width: 70px;
+  text-align: center;
+}
+
+.cart-actions {
+  margin-top: 16px;
+  align-items: flex-start;
+}
+
+.discount-box {
+  min-width: 280px;
+}
+
+.summary-card {
+  min-width: 280px;
+  max-width: 360px;
+  padding: 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.total-line {
+  border-top: 1px solid #e5e5e5;
+  padding-top: 10px;
+}

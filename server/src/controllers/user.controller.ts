@@ -151,7 +151,8 @@ class UserController {
         const userId = req.user?.userId;
         if (!userId) throw new NotFoundError("User not found");
 
-        const points = await UserService.GetUserLoyaltyPoints(userId);
+        const user = await UserService.GetUserLoyaltyPoints(userId);
+        const points = user?.loyalty_points ?? 0;
 
         new OK({
             message: "Lấy điểm tích luỹ thành công",
@@ -170,7 +171,7 @@ class UserController {
         new OK({
             message: "Lấy điểm tích luỹ thành công",
             data: {
-                points: points
+                points: points?.loyalty_points ?? 0
             }
         }).send(res);
     }

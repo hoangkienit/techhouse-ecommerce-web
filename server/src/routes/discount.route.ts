@@ -38,6 +38,17 @@ router.get(
 );
 
 /**
+ * GET /api/v1/discount/public
+ * @description Lấy danh sách mã giảm giá đang hoạt động cho người dùng
+ * @access Authenticated (hoặc public nếu muốn)
+ */
+router.get(
+  "/public",
+  Authenticate,
+  AsyncHandler(DiscountController.ListPublic)
+);
+
+/**
  * POST /api/v1/discount/deactivate
  * @description Vô hiệu hoá mã giảm giá để ngăn áp dụng cho đơn hàng mới
  * @body code: string
