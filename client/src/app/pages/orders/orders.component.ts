@@ -47,10 +47,14 @@ export class OrdersComponent implements OnInit {
       next: res => {
         this.orders = res.data?.orders || [];
         this._paging.setPaging(res.data?.pageIndex || 1, res.data?.pageSize || 10, res.data?.total || 0);
+        this.isLoading = false;
+
       },
       error: err => {
         console.error('Error loading orders:', err);
         this._appServices.NotificationService.createNotification('Không thể tải danh sách đơn hàng', NotificationStatus.ERROR);
+        this.isLoading = false;
+
       },
       complete: () => this.isLoading = false
     });
