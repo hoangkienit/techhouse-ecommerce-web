@@ -1,1 +1,65 @@
-<p>dashboard works!</p>
+<nb-card>
+    <nb-card-body>
+        <div class="dashboard">
+            <h2>Dashboard Admin</h2>
+
+            <!-- Tổng đơn & trạng thái -->
+            <div class="cards">
+                <div class="card">
+                    <h3>Tổng đơn</h3>
+                    <p>{{dashboard.totalOrders}}</p>
+                </div>
+                <div class="card" *ngFor="let status of statusChartData.labels; let i = index">
+                    <h3>{{status}}</h3>
+                    <p>{{statusChartData.datasets[0].data[i]}}</p>
+                </div>
+            </div>
+
+            <!-- Chart trạng thái đơn -->
+            <div style="max-width: 400px;">
+                <canvas baseChart [data]="statusChartData" chartType="doughnut">
+                </canvas>
+            </div>
+
+            <!-- Doanh thu -->
+            <div class="revenue">
+                <h3>Doanh thu</h3>
+                <p>Tổng: {{revenue.totalRevenue | currency:'VND'}}</p>
+                <p>Giảm giá: {{revenue.totalDiscount | currency:'VND'}}</p>
+                <p>Số đơn: {{revenue.totalOrders}}</p>
+            </div>
+
+            <!-- Top Products -->
+            <div class="top-products">
+                <h3>Top sản phẩm</h3>
+                <ul>
+                    <li *ngFor="let p of topProducts">
+                        {{p._id}} - {{p.qty}} đơn - {{p.revenue | currency:'VND'}}
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Top Customers -->
+            <div class="top-customers">
+                <h3>Top khách hàng</h3>
+                <ul>
+                    <li *ngFor="let c of topCustomers">
+                        User ID: {{c._id}} - Đơn: {{c.totalOrders}} - Chi tiêu: {{c.totalSpent | currency:'VND'}}
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="payment-methods">
+                <h3>Phương thức thanh toán</h3>
+                <ul>
+                    <li *ngFor="let p of paymentMethods">
+                        {{p.method}} - Đơn: {{p.orders}} - Doanh thu: {{p.revenue | currency:'VND'}}
+                    </li>
+                </ul>
+                <canvas baseChart [data]="paymentChartData" chartType="pie" style="max-width: 400px;">
+                </canvas>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

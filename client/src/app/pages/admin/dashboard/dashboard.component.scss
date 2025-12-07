@@ -1,0 +1,110 @@
+.dashboard {
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    background: #f4f7fa;
+
+    h2 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #222;
+    }
+
+    .cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 30px;
+
+        .card {
+            flex: 1 1 150px;
+            min-width: 150px;
+            padding: 20px;
+            border-radius: 16px;
+            color: #fff;
+            text-align: center;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+            h3 {
+                font-size: 16px;
+                font-weight: 500;
+                margin-bottom: 10px;
+                color: rgba(255, 255, 255, 0.85);
+            }
+
+            p {
+                font-size: 22px;
+                font-weight: 700;
+                color: #fff;
+            }
+
+            &:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+            }
+        }
+    }
+
+    .revenue,
+    .top-products,
+    .top-customers,
+    .payment-methods {
+        background: #fff;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 25px;
+
+        h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #2575fc;
+        }
+
+        p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                padding: 10px 0;
+                border-bottom: 1px solid #f0f0f0;
+                font-size: 15px;
+                display: flex;
+                justify-content: space-between;
+                color: #444;
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                &:hover {
+                    background: #f0f6ff;
+                    border-radius: 8px;
+                }
+            }
+        }
+    }
+
+    canvas {
+        margin-top: 15px;
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+
+    @media (max-width: 768px) {
+        .cards {
+            flex-direction: column;
+        }
+    }
+}
