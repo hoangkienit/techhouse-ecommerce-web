@@ -24,7 +24,7 @@ export interface UserDtoRequest {
     socialProvider?: string | null;
     socialId?: string | null;
     address?: AddressDto;
-    addresses?: string[];
+    addresses?: any[];
     isBanned: boolean;
     createdAt: string;
     updatedAt: string;
