@@ -18,6 +18,7 @@ import { LoginComponent } from 'src/app/pages/account/auth/login/login.component
 import { RegisterComponent } from 'src/app/pages/account/auth/register/register.component';
 import { AdminOrdersComponent } from './pages/admin/orders/admin-orders.component';
 import { LogoutComponent } from './pages/account/auth/logout/logout.component';
+import { DetailProdComponent } from './pages/catalog/products/detail-prod/detail-prod.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
 
   { path: 'catalog/products', component: ProductsComponent },
+  { path: 'products/detail', component: DetailProdComponent },
   { path: 'catalog/categories', component: CategoriesComponent },
   { path: 'catalog/brands', component: BrandsComponent },
 
