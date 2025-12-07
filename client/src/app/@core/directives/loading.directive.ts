@@ -1,9 +1,9 @@
-import { Directive, Input, Renderer2 } from '@angular/core';
+import { Directive, Input, OnDestroy, Renderer2 } from '@angular/core';
 
 @Directive({
   selector: '[isLoading]'
 })
-export class LoadingDirective {
+export class LoadingDirective implements OnDestroy {
 
   @Input('isLoading') set loading(isLoading: boolean) {
     if (isLoading) {
@@ -41,5 +41,10 @@ export class LoadingDirective {
       this.renderer.removeChild(document.body, this.overlay);
       this.overlay = undefined!;
     }
+  }
+
+  ngOnDestroy(): void {
+    // Ensure leftover overlay is removed if the host component gets destroyed while loading is true
+    this.hide();
   }
 }

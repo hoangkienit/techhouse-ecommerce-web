@@ -1,5 +1,5 @@
 export const host = 'https://hoangkien.cloud';
-export const host_test = 'http://localhost:5000';
+export const host_test = 'http://localhost:5001';
 export const apiBase = '/api/v1/';
 
 export const GOOGLE_CLIENT_ID = '978918518346 - 3dlv8k6cu1kcer9uiveut9dhqoh9tgqs.apps.googleusercontent.com';
