@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Route, Router } from '@angular/router';
 import { NbPosition, NbThemeService } from '@nebular/theme';
 import { TranslateService } from '@ngx-translate/core';
 import { AppServices } from 'src/app/@core/services/AppServices.service';
@@ -20,7 +21,7 @@ export class HeaderComponent {
     avatar: 'assets/images/default-user.jpg',
   };
 
-  constructor(private themeService: NbThemeService, private translate: TranslateService, private _appservices: AppServices) { }
+  constructor(private themeService: NbThemeService, private translate: TranslateService, private _appservices: AppServices, private router: Router) { }
 
   ngOnInit() {
     this._appservices.GlobalStateService.currentUser$.subscribe(user => {
@@ -56,5 +57,10 @@ export class HeaderComponent {
   toggleTheme() {
     this.currentTheme = this.currentTheme === 'dark' ? 'default' : 'dark';
     this.themeService.changeTheme(this.currentTheme);
+  }
+
+  goToCart() {
+    // Chuyển tới trang catalog/products và truyền query param
+    this.router.navigate(['/cart']);
   }
 }

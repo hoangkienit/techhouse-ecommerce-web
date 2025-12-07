@@ -27,17 +27,20 @@
               </div>
             </td>
             <td>{{ formatPrice(item.unitPrice) }}</td>
-            <td class="text-center">
-              <div class="qty-control">
-                <button nbButton size="tiny" status="basic" (click)="changeQty(item, -1)" [disabled]="updatingItem===item._id">-</button>
+            <td class="text-center ">
+              <div class="qty-control justify-content-center">
+                <button nbButton size="tiny" status="basic" (click)="changeQty(item, -1)"
+                  [disabled]="updatingItem===item._id">-</button>
                 <input nbInput type="number" class="qty-input" [ngModel]="item.quantity"
                   (ngModelChange)="updateQty(item, $event)" min="0">
-                <button nbButton size="tiny" status="basic" (click)="changeQty(item, 1)" [disabled]="updatingItem===item._id">+</button>
+                <button nbButton size="tiny" status="basic" (click)="changeQty(item, 1)"
+                  [disabled]="updatingItem===item._id">+</button>
               </div>
             </td>
             <td class="text-end">{{ formatPrice(item.lineTotal) }}</td>
             <td class="text-end">
-              <button nbButton size="tiny" status="danger" (click)="removeItem(item)" [disabled]="updatingItem===item._id">
+              <button nbButton size="tiny" status="danger" (click)="removeItem(item)"
+                [disabled]="updatingItem===item._id">
                 <nb-icon icon="trash-2-outline"></nb-icon>
               </button>
             </td>

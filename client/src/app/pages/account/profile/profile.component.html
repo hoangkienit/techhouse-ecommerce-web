@@ -1,9 +1,14 @@
 <div class="profile-container">
-  <h2>Profile</h2>
+  <h2 class="fst-italic text-uppercase">Profile</h2>
   <div *ngIf="user">
     <p><strong>Họ tên:</strong> {{ user.fullname }}</p>
     <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Địa chỉ:</strong> {{ user.address?.street }}, {{ user.address?.city }}, {{ user.address?.country }}</p>
+    <ng-container *ngFor="let ads of user.addresses">
+      <p *ngIf="ads.isDefault">
+        <strong>Địa chỉ:</strong>
+        {{ ads.street }}, {{ ads.city }}, {{ ads.country }}
+      </p>
+    </ng-container>
   </div>
   <div *ngIf="!user">
     <p>Chưa có thông tin người dùng.</p>
@@ -16,17 +21,24 @@
         <div class="col-12">
           <label class="form-label">Mật khẩu hiện tại</label>
           <input nbInput fullWidth type="password" formControlName="oldPassword" placeholder="Nhập mật khẩu hiện tại">
-          <small class="text-danger" *ngIf="changePassForm.get('oldPassword')?.invalid && changePassForm.get('oldPassword')?.touched">Bắt buộc</small>
+          <small class="text-danger"
+            *ngIf="changePassForm.get('oldPassword')?.invalid && changePassForm.get('oldPassword')?.touched">Bắt
+            buộc</small>
         </div>
         <div class="col-md-6">
           <label class="form-label">Mật khẩu mới</label>
           <input nbInput fullWidth type="password" formControlName="newPassword" placeholder="Mật khẩu mới (>=6 ký tự)">
-          <small class="text-danger" *ngIf="changePassForm.get('newPassword')?.invalid && changePassForm.get('newPassword')?.touched">Tối thiểu 6 ký tự</small>
+          <small class="text-danger"
+            *ngIf="changePassForm.get('newPassword')?.invalid && changePassForm.get('newPassword')?.touched">Tối thiểu 6
+            ký tự</small>
         </div>
         <div class="col-md-6">
           <label class="form-label">Xác nhận mật khẩu mới</label>
-          <input nbInput fullWidth type="password" formControlName="confirmPassword" placeholder="Nhập lại mật khẩu mới">
-          <small class="text-danger" *ngIf="changePassForm.get('confirmPassword')?.invalid && changePassForm.get('confirmPassword')?.touched">Bắt buộc</small>
+          <input nbInput fullWidth type="password" formControlName="confirmPassword"
+            placeholder="Nhập lại mật khẩu mới">
+          <small class="text-danger"
+            *ngIf="changePassForm.get('confirmPassword')?.invalid && changePassForm.get('confirmPassword')?.touched">Bắt
+            buộc</small>
         </div>
         <div class="col-12 text-end">
           <button nbButton status="primary" (click)="onChangePassword()" [disabled]="isSubmitting">Cập nhật</button>
@@ -47,9 +59,11 @@
             <div class="address-item" *ngFor="let addr of addresses">
               <div class="d-flex justify-content-between align-items-start">
                 <div>
-                  <div class="fw-bold">{{ addr.label || 'Địa chỉ' }} <nb-badge *ngIf="addr.isDefault" text="Mặc định" status="success"></nb-badge></div>
+                  <div class="fw-bold">{{ addr.label || 'Địa chỉ' }} <nb-badge *ngIf="addr.isDefault" text="Mặc định"
+                      status="success"></nb-badge></div>
                   <div>{{ addr.fullName }} | {{ addr.phone || 'Không có số' }}</div>
-                  <div>{{ addr.street }}, {{ addr.city }}{{ addr.state ? ', ' + addr.state : '' }}, {{ addr.country }}</div>
+                  <div>{{ addr.street }}, {{ addr.city }}{{ addr.state ? ', ' + addr.state : '' }}, {{ addr.country }}
+                  </div>
                   <div *ngIf="addr.postalCode">Mã bưu chính: {{ addr.postalCode }}</div>
                 </div>
                 <div class="d-flex gap-2">
@@ -58,7 +72,8 @@
                 </div>
               </div>
               <div class="mt-2">
-                <button nbButton size="tiny" status="primary" (click)="setDefault(addr)" *ngIf="!addr.isDefault">Đặt làm mặc định</button>
+                <button nbButton size="tiny" status="primary" (click)="setDefault(addr)" *ngIf="!addr.isDefault">Đặt làm
+                  mặc định</button>
               </div>
             </div>
           </div>
@@ -74,18 +89,21 @@
             </div>
             <div class="col-12">
               <input nbInput fullWidth placeholder="Họ tên" formControlName="fullName">
-              <small class="text-danger" *ngIf="addressForm.get('fullName')?.invalid && addressForm.get('fullName')?.touched">Bắt buộc</small>
+              <small class="text-danger"
+                *ngIf="addressForm.get('fullName')?.invalid && addressForm.get('fullName')?.touched">Bắt buộc</small>
             </div>
             <div class="col-12">
               <input nbInput fullWidth placeholder="Số điện thoại" formControlName="phone">
             </div>
             <div class="col-12">
               <input nbInput fullWidth placeholder="Địa chỉ" formControlName="street">
-              <small class="text-danger" *ngIf="addressForm.get('street')?.invalid && addressForm.get('street')?.touched">Bắt buộc</small>
+              <small class="text-danger"
+                *ngIf="addressForm.get('street')?.invalid && addressForm.get('street')?.touched">Bắt buộc</small>
             </div>
             <div class="col-md-6">
               <input nbInput fullWidth placeholder="Thành phố" formControlName="city">
-              <small class="text-danger" *ngIf="addressForm.get('city')?.invalid && addressForm.get('city')?.touched">Bắt buộc</small>
+              <small class="text-danger"
+                *ngIf="addressForm.get('city')?.invalid && addressForm.get('city')?.touched">Bắt buộc</small>
             </div>
             <div class="col-md-6">
               <input nbInput fullWidth placeholder="Tỉnh/Bang" formControlName="state">
@@ -100,7 +118,8 @@
               <nb-checkbox formControlName="isDefault">Đặt làm mặc định</nb-checkbox>
             </div>
             <div class="col-12 text-end">
-              <button nbButton status="primary" (click)="submitAddress()" [disabled]="isAddressLoading">{{ editingAddressId ? 'Cập nhật' : 'Lưu' }}</button>
+              <button nbButton status="primary" (click)="submitAddress()" [disabled]="isAddressLoading">{{
+                editingAddressId ? 'Cập nhật' : 'Lưu' }}</button>
             </div>
           </form>
         </div>
