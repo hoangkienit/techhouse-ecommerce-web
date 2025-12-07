@@ -29,6 +29,7 @@ export class LoyaltyComponent implements OnInit {
         console.error('Load loyalty points failed:', err);
         this.error = err.error?.message || 'Không thể tải điểm tích luỹ';
         this._appServices.NotificationService.createNotification(this.error || 'Không thể tải điểm tích luỹ', NotificationStatus.ERROR);
+        this.isLoading = false
       },
       complete: () => this.isLoading = false
     });

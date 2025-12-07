@@ -33,10 +33,12 @@ export class ResetRequestComponent {
         this.token = res.data?.token || null;
         this.expires = res.data?.expires || null;
         this._appServices.NotificationService.createNotification('Đã gửi yêu cầu đặt lại mật khẩu', NotificationStatus.SUCSSESS);
+        this.isLoading = false;
       },
       error: err => {
         console.error(err);
         this._appServices.NotificationService.createNotification(err.error?.message || 'Không thể tạo token', NotificationStatus.ERROR);
+        this.isLoading = false;
       },
       complete: () => this.isLoading = false
     });

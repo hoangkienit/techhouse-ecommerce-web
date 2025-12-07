@@ -27,6 +27,7 @@ export class DiscountComponent implements OnInit {
       error: err => {
         console.error(err);
         this._appServices.NotificationService.createNotification('Không thể tải mã giảm giá', NotificationStatus.ERROR);
+        this.isLoading = false
       },
       complete: () => this.isLoading = false
     });
